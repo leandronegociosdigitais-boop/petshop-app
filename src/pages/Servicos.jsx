@@ -46,7 +46,7 @@ export default function Servicos() {
       .order('nome', { ascending: true })
 
     if (error) {
-      showToast('Erro ao carregar servicos.', 'error')
+      showToast('Erro ao carregar servicos: ' + error.message, 'error')
     } else {
       setServicos(data || [])
     }

@@ -83,7 +83,7 @@ export default function Pets() {
       .from('pets')
       .select('id, nome, especie, raca, idade, peso, observacoes, created_at, cliente:cliente_id (id, nome)')
       .order('nome', { ascending: true })
-    if (error) { showToast('Erro ao carregar pets.', 'error') } else { setPets(data || []) }
+    if (error) { showToast('Erro ao carregar pets: ' + error.message, 'error') } else { setPets(data || []) }
     setLoading(false)
   }
 

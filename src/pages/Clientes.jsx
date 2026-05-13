@@ -57,7 +57,7 @@ export default function Clientes() {
   async function fetchClientes() {
     setLoading(true)
     const { data, error } = await supabase.from('clientes').select('*').order('codigo', { ascending: true, nullsFirst: false })
-    if (error) { showToast('Erro ao carregar clientes.', 'error') } else { setClientes(data || []) }
+    if (error) { showToast('Erro ao carregar clientes: ' + error.message, 'error') } else { setClientes(data || []) }
     setLoading(false)
   }
 

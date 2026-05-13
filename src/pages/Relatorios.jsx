@@ -179,7 +179,7 @@ export default function Relatorios() {
       .lte('data_hora', range.end + 'T23:59:59')
       .order('data_hora', { ascending: false })
     if (error) {
-      showToast('Erro ao carregar atendimentos.', 'error')
+      showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
     } else {
       setAtendimentos(data || [])
     }
@@ -196,7 +196,7 @@ export default function Relatorios() {
       .lte('data', range.end)
       .order('data', { ascending: false })
     if (error) {
-      showToast('Erro ao carregar dados financeiros.', 'error')
+      showToast('Erro ao carregar dados financeiros: ' + error.message, 'error')
     } else {
       setFinanceiro(data || [])
     }

@@ -180,7 +180,7 @@ export default function Financeiro() {
       .order('data', { ascending: false })
 
     if (error) {
-      showToast('Erro ao carregar registros financeiros.', 'error')
+      showToast('Erro ao carregar registros financeiros: ' + error.message, 'error')
     } else {
       setRegistros(data || [])
     }

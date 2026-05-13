@@ -62,7 +62,7 @@ export default function Comissoes() {
       .gte('data_hora', start + 'T00:00:00')
       .lte('data_hora', end + 'T23:59:59')
       .order('data_hora', { ascending: false })
-    if (error) { showToast('Erro ao carregar comissoes.', 'error') } else { setAtendimentos(data || []) }
+    if (error) { showToast('Erro ao carregar comissoes: ' + error.message, 'error') } else { setAtendimentos(data || []) }
     setLoading(false)
   }
 

@@ -200,7 +200,7 @@ export default function Atendimentos() {
       .order('data_hora', { ascending: false })
 
     if (error) {
-      showToast('Erro ao carregar atendimentos.', 'error')
+      showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
     } else {
       setAtendimentos(data || [])
     }
