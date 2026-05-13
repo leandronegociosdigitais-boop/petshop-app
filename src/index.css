@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ===== GLASSMORPHISM THEME ===== */
+/* Applied when [data-theme="glass"] is set on <html> */
+
+/* Gradient background */
+[data-theme="glass"] {
+  --glass-bg: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  --glass-panel: rgba(255, 255, 255, 0.08);
+  --glass-panel-hover: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-glow: rgba(139, 92, 246, 0.4);
+  --glass-text: rgba(255, 255, 255, 0.9);
+  --glass-text-secondary: rgba(255, 255, 255, 0.6);
+  --glass-accent: #a78bfa;
+  --glass-accent-bright: #c4b5fd;
+  --glass-emerald: #6ee7b7;
+  --glass-red: #fca5a5;
+  --glass-amber: #fcd34d;
+  --glass-indigo: #818cf8;
+  --glass-sidebar: rgba(255, 255, 255, 0.05);
+}
+
+/* Body background */
+[data-theme="glass"] body,
+[data-theme="glass"] .min-h-screen {
+  background: var(--glass-bg) !important;
+  background-attachment: fixed !important;
+  min-height: 100vh;
+  color: var(--glass-text);
+}
+
+/* ===== PANELS & CARDS ===== */
+[data-theme="glass"] .rounded-xl,
+[data-theme="glass"] .rounded-lg {
+  background: var(--glass-panel) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: var(--glass-border) !important;
+  color: var(--glass-text);
+}
+
+[data-theme="glass"] .bg-white {
+  background: var(--glass-panel) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: var(--glass-text);
+}
+
+[data-theme="glass"] .bg-white:hover,
+[data-theme="glass"] .hover\:bg-gray-50:hover {
+  background: var(--glass-panel-hover) !important;
+}
+
+/* ===== BORDER OVERRIDES ===== */
+[data-theme="glass"] .border-gray-200,
+[data-theme="glass"] .border-gray-100,
+[data-theme="glass"] .border-gray-300 {
+  border-color: var(--glass-border) !important;
+}
+
+[data-theme="glass"] .divide-y > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ===== TEXT COLORS ===== */
+[data-theme="glass"] .text-gray-900 {
+  color: var(--glass-text) !important;
+}
+
+[data-theme="glass"] .text-gray-700,
+[data-theme="glass"] .text-gray-600 {
+  color: var(--glass-text-secondary) !important;
+}
+
+[data-theme="glass"] .text-gray-500,
+[data-theme="glass"] .text-gray-400,
+[data-theme="glass"] .text-gray-300 {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* ===== ACCENT COLORS ===== */
+[data-theme="glass"] .text-indigo-600,
+[data-theme="glass"] .text-indigo-700,
+[data-theme="glass"] .text-blue-600,
+[data-theme="glass"] .text-blue-700 {
+  color: var(--glass-accent) !important;
+}
+
+[data-theme="glass"] .text-emerald-700,
+[data-theme="glass"] .text-emerald-800,
+[data-theme="glass"] .text-green-700 {
+  color: var(--glass-emerald) !important;
+}
+
+[data-theme="glass"] .text-red-700,
+[data-theme="glass"] .text-red-800 {
+  color: var(--glass-red) !important;
+}
+
+[data-theme="glass"] .text-amber-700,
+[data-theme="glass"] .text-amber-800 {
+  color: var(--glass-amber) !important;
+}
+
+/* ===== BACKGROUNDS (colored panels) ===== */
+[data-theme="glass"] .bg-indigo-50,
+[data-theme="glass"] .bg-blue-50 {
+  background: rgba(129, 140, 248, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-emerald-50,
+[data-theme="glass"] .bg-green-50 {
+  background: rgba(110, 231, 183, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-red-50 {
+  background: rgba(252, 165, 165, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-amber-50 {
+  background: rgba(252, 211, 77, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-gray-50 {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* ===== INPUTS ===== */
+[data-theme="glass"] input,
+[data-theme="glass"] select,
+[data-theme="glass"] textarea {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--glass-border) !important;
+  color: var(--glass-text) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+[data-theme="glass"] input::placeholder,
+[data-theme="glass"] textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="glass"] input:focus,
+[data-theme="glass"] select:focus,
+[data-theme="glass"] textarea:focus {
+  border-color: var(--glass-accent) !important;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.25) !important;
+}
+
+/* ===== BUTTONS ===== */
+[data-theme="glass"] .bg-indigo-600,
+[data-theme="glass"] .bg-blue-600 {
+  background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3) !important;
+}
+
+[data-theme="glass"] .bg-emerald-600,
+[data-theme="glass"] .bg-green-600 {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="glass"] .bg-red-600 {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* ===== SIDEBAR ===== */
+[data-theme="glass"] aside {
+  background: rgba(15, 12, 41, 0.8) !important;
+  backdrop-filter: blur(24px) !important;
+  border-color: var(--glass-border) !important;
+}
+
+[data-theme="glass"] aside .bg-blue-50,
+[data-theme="glass"] aside .bg-indigo-50 {
+  background: rgba(167, 139, 250, 0.15) !important;
+}
+
+/* ===== TABLES ===== */
+[data-theme="glass"] thead {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="glass"] tfoot {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ===== BADGES ===== */
+[data-theme="glass"] .ring-gray-500\/20,
+[data-theme="glass"] .ring-gray-600\/20 {
+  --tw-ring-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ===== SUMMARY CARDS - GLOW EFFECT ===== */
+[data-theme="glass"] .shadow-sm {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ===== MODALS ===== */
+[data-theme="glass"] .fixed.inset-0 > .relative {
+  background: rgba(30, 27, 56, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+
+/* ===== SPINNER ===== */
+[data-theme="glass"] .animate-spin {
+  border-color: rgba(167, 139, 250, 0.2) !important;
+  border-top-color: var(--glass-accent) !important;
+}
+
+/* ===== SCROLLBAR (webkit) ===== */
+[data-theme="glass"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-thumb {
+  background: rgba(167, 139, 250, 0.3);
+  border-radius: 3px;
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 139, 250, 0.5);
+}
