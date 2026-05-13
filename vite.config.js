@@ -8,7 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      disabled: true,
       registerType: 'autoUpdate',
       manifest: {
         name: 'PetShop',
