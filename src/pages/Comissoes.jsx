@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatCurrency, formatDateTime, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
-import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint } from 'lucide-react'
+import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint, CalendarDays } from 'lucide-react'
 
 const COMISSAO_RATE = 0.4
 
@@ -109,6 +109,41 @@ export default function Comissoes() {
   }, [filtered])
 
   const isCurrentMonth = selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear()
+
+  function getISOWeekKey(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00')
+    const dayNum = d.getUTCDay() || 7
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+    const weekNum = Math.ceil(((d - yearStart) / 86400000 + 1) / 7)
+    return { year: d.getUTCFullYear(), week: weekNum }
+  }
+
+  const porSemana = useMemo(() => {
+    const semanas = {}
+    for (const a of filtered) {
+      const dateStr = a.data_hora ? extractDateKey(a.data_hora) : ''
+      if (!dateStr) continue
+      const { year, week } = getISOWeekKey(dateStr)
+      const key = `${year}-W${String(week).padStart(2, '0')}`
+      if (!semanas[key]) {
+        semanas[key] = { key, year, week, items: [], total: 0, comissao: 0, pets: new Set(), dates: new Set() }
+      }
+      const valor = parseFloat(a.valor) || 0
+      semanas[key].items.push(a)
+      semanas[key].total += valor
+      semanas[key].comissao += valor * COMISSAO_RATE
+      if (a.pet?.id) semanas[key].pets.add(a.pet.id)
+      semanas[key].dates.add(dateStr)
+    }
+    return Object.values(semanas).sort((a, b) => a.key.localeCompare(b.key))
+  }, [filtered])
+
+  const currentWeekKey = useMemo(() => {
+    const today = getLocalDateISO()
+    const { year, week } = getISOWeekKey(today)
+    return `${year}-W${String(week).padStart(2, '0')}`
+  }, [])
 
   const monthLabel = MESES.find(m => m.value === selectedMonth)?.label || ''
 
@@ -235,6 +270,68 @@ export default function Comissoes() {
         </div>
       ) : (
         <div className="space-y-4">
+{/* Comissoes por Semana */}
+<div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+<div className="border-b border-gray-100 bg-gray-50 px-6 py-3">
+<div className="flex items-center gap-2">
+<CalendarDays size={16} className="text-amber-600" />
+<span className="text-sm font-semibold text-gray-900">Comissoes por Semana - {monthLabel} {selectedYear}</span>
+</div>
+</div>
+<div className="overflow-x-auto">
+<table className="min-w-full divide-y divide-gray-100">
+<thead>
+<tr>
+<th className="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Semana</th>
+<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Dias</th>
+<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Pets</th>
+<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Servicos</th>
+<th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
+<th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
+<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Status</th>
+</tr>
+</thead>
+<tbody className="divide-y divide-gray-50">
+{porSemana.map((sem) => {
+const isCurrent = sem.key === currentWeekKey
+const sortedDates = [...sem.dates].sort()
+const firstDate = sortedDates[0]
+const lastDate = sortedDates[sortedDates.length - 1]
+return (
+<tr key={sem.key} className={isCurrent ? 'bg-indigo-50' : 'hover:bg-gray-50 transition-colors'}>
+<td className="px-6 py-3 text-sm font-medium text-gray-900">
+<span className="text-xs text-gray-500 mr-1">S{sem.week}</span>
+{formatDate(firstDate)}{firstDate !== lastDate && <span className="text-gray-400"> a {formatDate(lastDate)}</span>}
+</td>
+<td className="px-6 py-3 text-center text-sm text-gray-600">{sem.dates.size}</td>
+<td className="px-6 py-3 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{sem.pets.size}</span></td>
+<td className="px-6 py-3 text-center text-sm text-gray-600">{sem.items.length}</td>
+<td className="px-6 py-3 text-right text-sm font-semibold text-gray-900">{formatCurrency(sem.total)}</td>
+<td className="px-6 py-3 text-right text-sm font-bold text-indigo-700">{formatCurrency(sem.comissao)}</td>
+<td className="px-6 py-3 text-center">
+{isCurrent ? (
+<span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">Semana Atual</span>
+) : (
+<span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">Fechada</span>
+)}
+</td>
+</tr>
+)
+})}
+<tr className="bg-gray-50">
+<td className="px-6 py-3 text-sm font-bold text-gray-900">Total</td>
+<td className="px-6 py-3 text-center text-sm font-bold text-gray-900">{porSemana.reduce((s, w) => s + w.dates.size, 0)}</td>
+<td className="px-6 py-3 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-200 px-2.5 py-0.5 text-xs font-bold text-indigo-800">{new Set(filtered.flatMap(a => a.pet?.id ? [a.pet.id] : [])).size}</span></td>
+<td className="px-6 py-3 text-center text-sm font-bold text-gray-900">{filtered.length}</td>
+<td className="px-6 py-3 text-right text-sm font-bold text-gray-900">{formatCurrency(summaryServicosMes)}</td>
+<td className="px-6 py-3 text-right text-sm font-bold text-indigo-800">{formatCurrency(summaryMes)}</td>
+<td className="px-6 py-3"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
 {/* Pets por Dia - Resumo */}
 <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
 <div className="border-b border-gray-100 bg-gray-50 px-6 py-3">
