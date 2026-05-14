@@ -480,49 +480,39 @@ export default function Relatorios() {
           <Spinner />
         ) : (
           <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 lg:grid-cols-5">
-            <div className="flex rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
-              <div className="flex flex-1 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
-                  <p className="mt-1 text-2xl font-bold text-emerald-800">{formatCurrency(totalEntradas)}</p>
-                </div>
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><TrendingUp size={24} /></div>
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+              <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
+              <div className="mt-2 flex items-end justify-between">
+                <p className="text-2xl font-bold text-emerald-800">{formatCurrency(totalEntradas)}</p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><TrendingUp size={20} /></div>
               </div>
             </div>
-            <div className="flex rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
-              <div className="flex flex-1 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-red-700">Total Saidas</p>
-                  <p className="mt-1 text-2xl font-bold text-red-800">{formatCurrency(totalSaidas)}</p>
-                </div>
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600"><TrendingDown size={24} /></div>
+            <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
+              <p className="text-sm font-medium text-red-700">Total Saidas</p>
+              <div className="mt-2 flex items-end justify-between">
+                <p className="text-2xl font-bold text-red-800">{formatCurrency(totalSaidas)}</p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600"><TrendingDown size={20} /></div>
               </div>
             </div>
-            <div className={`flex rounded-xl border p-5 shadow-sm ${lucro >= 0 ? 'border-indigo-200 bg-indigo-50' : 'border-red-200 bg-red-50'}`}>
-              <div className="flex flex-1 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className={`text-sm font-medium ${lucro >= 0 ? 'text-indigo-700' : 'text-red-700'}`}>Lucro</p>
-                  <p className={`mt-1 text-2xl font-bold ${lucro >= 0 ? 'text-indigo-800' : 'text-red-800'}`}>{formatCurrency(lucro)}</p>
-                </div>
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${lucro >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}><DollarSign size={24} /></div>
+            <div className={`rounded-xl border p-5 shadow-sm ${lucro >= 0 ? 'border-indigo-200 bg-indigo-50' : 'border-red-200 bg-red-50'}`}>
+              <p className={`text-sm font-medium ${lucro >= 0 ? 'text-indigo-700' : 'text-red-700'}`}>Lucro</p>
+              <div className="mt-2 flex items-end justify-between">
+                <p className={`text-2xl font-bold ${lucro >= 0 ? 'text-indigo-800' : 'text-red-800'}`}>{formatCurrency(lucro)}</p>
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${lucro >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}><DollarSign size={20} /></div>
               </div>
             </div>
-            <div className="flex rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
-              <div className="flex flex-1 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-amber-700">Total Comissoes (40%)</p>
-                  <p className="mt-1 text-2xl font-bold text-amber-800">{formatCurrency(totalComissoes)}</p>
-                </div>
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600"><FileText size={24} /></div>
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+              <p className="text-sm font-medium text-amber-700">Comissoes (40%)</p>
+              <div className="mt-2 flex items-end justify-between">
+                <p className="text-2xl font-bold text-amber-800">{formatCurrency(totalComissoes)}</p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600"><FileText size={20} /></div>
               </div>
             </div>
-            <div className="flex rounded-xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
-              <div className="flex flex-1 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-blue-700">Clientes Atendidos</p>
-                  <p className="mt-1 text-2xl font-bold text-blue-800">{uniqueClientes}</p>
-                </div>
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600"><Users size={24} /></div>
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
+              <p className="text-sm font-medium text-blue-700">Clientes Atendidos</p>
+              <div className="mt-2 flex items-end justify-between">
+                <p className="text-2xl font-bold text-blue-800">{uniqueClientes}</p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600"><Users size={20} /></div>
               </div>
             </div>
           </div>
