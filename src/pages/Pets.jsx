@@ -34,7 +34,7 @@ const RACAS_CACHORRO = [
   'Shih Tzu', 'Yorkshire Terrier', 'Spitz Alemao', 'Golden Retriever',
   'Labrador Retriever', 'Bulldog Frances', 'Poodle', 'Pinscher',
   'Dachshund', 'Border Collie', 'Pastor Alemao', 'Rottweiler',
-  'Maltes', 'Beagle', 'American Bully', 'Outro',
+  'Maltes', 'Beagle', 'American Bully', 'Chow Chow', 'Pit Bull', 'Vira-lata', 'Outro',
 ]
 
 const RACAS_GATO = ['Siames', 'Persa', 'Maine Coon', 'Ragdoll', 'Sphynx', 'Angora', 'Outro']

@@ -27,6 +27,7 @@ const EMPTY_FORM = {
   forma_pagamento: 'pix',
   grupo: '',
   banco: '',
+  status_pagamento: 'pago',
 }
 
 const CATEGORIAS_ENTRADA = ['Servicos', 'Produtos', 'Outros']
@@ -60,6 +61,11 @@ const BANCO_OPTIONS = [
   { value: 'caixa_loja', label: 'Caixa da Loja' },
   { value: 'permuta', label: 'Permuta' },
 ]
+
+const STATUS_PAGAMENTO_FIN_COLORS = {
+  pago: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
+  pendente: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+}
 
 const FORMA_PAGAMENTO_COLORS = {
   dinheiro: 'bg-green-50 text-green-700 ring-green-600/20',
@@ -806,7 +812,7 @@ export default function Financeiro() {
                       {dia.items.map((registro) => {
                         const isEntrada = registro.tipo === 'entrada'
                         return (
-                          <tr key={registro.id} className={`transition-colors hover:bg-gray-50 ${isEntrada ? 'border-l-4 border-l-emerald-400' : 'border-l-4 border-l-red-400'}`}>
+                          <tr key={registro.id} className={`transition-colors hover:bg-gray-50 ${isEntrada ? 'border-l-2 border-l-emerald-400' : 'border-l-2 border-l-red-400'}`}>
                             <td className="px-4 py-2.5">
                               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${isEntrada ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}`}>
                                 {isEntrada ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
@@ -929,7 +935,21 @@ export default function Financeiro() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
+              {form.tipo === 'saida' && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Status do Pagamento</label>
+              <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+                <button type="button" onClick={() => handleFormChange('status_pagamento', 'pago')} className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors ${form.status_pagamento === 'pago' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
+                  Concluido
+                </button>
+                <button type="button" onClick={() => handleFormChange('status_pagamento', 'pendente')} className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors ${form.status_pagamento === 'pendente' ? 'bg-amber-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
+                  Pendente
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={closeModal} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                   Cancelar
                 </button>

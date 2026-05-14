@@ -105,7 +105,7 @@ export default function Comissoes() {
       dias[key].comissao += valor * COMISSAO_RATE
       if (a.pet?.id) dias[key].pets.add(a.pet.id)
     }
-    return Object.values(dias).sort((a, b) => a.date.localeCompare(b.date))
+    return Object.values(dias).sort((a, b) => b.date.localeCompare(a.date))
   }, [filtered])
 
   const isCurrentMonth = selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear()
@@ -262,7 +262,7 @@ Hoje
         <div className="space-y-4">
 {/* Comissoes por Semana */}
 <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-<div className="border-b border-gray-100 bg-gray-50 px-6 py-3">
+<div className="border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-3">
 <div className="flex items-center gap-2">
 <CalendarDays size={16} className="text-amber-600" />
 <span className="text-sm font-semibold text-gray-900">Comissoes por Semana - {monthLabel} {selectedYear}</span>
@@ -324,7 +324,7 @@ return (
 
 {/* Pets por Dia - Resumo */}
 <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-<div className="border-b border-gray-100 bg-gray-50 px-6 py-3">
+<div className="border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-3">
 <div className="flex items-center gap-2">
   <PawPrint size={16} className="text-indigo-600" />
   <span className="text-sm font-semibold text-gray-900">Pets por Dia - {monthLabel} {selectedYear}</span>
@@ -373,7 +373,7 @@ return (
             const diaFormatado = formatDate(dia.date)
             return (
               <div key={dia.date} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50 px-4 sm:px-6 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Calendar size={16} className="text-indigo-600" />
                     <span className="text-sm font-semibold text-gray-900">{diaSemana} - {diaFormatado}</span>

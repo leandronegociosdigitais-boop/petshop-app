@@ -331,7 +331,7 @@ export default function Relatorios() {
       dias[key].items.push(a)
       dias[key].total += valor
     }
-    return Object.values(dias).sort((a, b) => a.date.localeCompare(b.date))
+    return Object.values(dias).sort((a, b) => b.date.localeCompare(a.date))
   }, [filteredAtendimentos])
 
   const entradasPorDia = useMemo(() => {
@@ -344,7 +344,7 @@ export default function Relatorios() {
       dias[key].items.push(r)
       dias[key].total += valor
     }
-    return Object.values(dias).sort((a, b) => a.date.localeCompare(b.date))
+    return Object.values(dias).sort((a, b) => b.date.localeCompare(a.date))
   }, [entradas])
 
   // Report: by bank (financeiro entradas)
@@ -527,13 +527,13 @@ export default function Relatorios() {
           <EmptyState icon={Calendar} message="Nenhum atendimento no periodo selecionado." />
         ) : (
           <>
-            <div className="px-6 pt-4">
+            <div className="p-4">
               <div className="relative max-w-md">
                 <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input type="text" placeholder="Buscar por pet, cliente ou servico..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
               </div>
             </div>
-            <div className="px-6 pt-4">
+            <div className="p-4">
               <div className="overflow-x-auto rounded-lg border border-gray-200">
                 <table className="min-w-full divide-y divide-gray-100">
                   <thead className="bg-gray-50">
@@ -560,12 +560,12 @@ export default function Relatorios() {
                 </table>
               </div>
             </div>
-            <div className="px-6 pt-4 space-y-3">
+            <div className="p-4 space-y-3">
               {atendimentosPorDia.map((dia) => {
                 const diaSemana = DIAS_SEMANA[getDayOfWeek(dia.date)]
                 return (
                   <div key={dia.date} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         <Calendar size={14} className="text-indigo-600" />
                         <span className="text-sm font-semibold text-gray-900">{diaSemana} - {formatDate(dia.date)}</span>
@@ -662,7 +662,7 @@ export default function Relatorios() {
               const diaSemana = DIAS_SEMANA[getDayOfWeek(dia.date)]
               return (
                 <div key={dia.date} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} className="text-emerald-600" />
                       <span className="text-sm font-semibold text-gray-900">{diaSemana} - {formatDate(dia.date)}</span>
@@ -849,7 +849,7 @@ export default function Relatorios() {
             </div>
             {Object.entries(porBanco).sort(([,a], [,b]) => b.total - a.total).map(([banco, data]) => (
               <div key={banco} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                   <div className="flex items-center gap-2">
                     <Landmark size={14} className="text-indigo-600" />
                     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${BANCO_COLORS[banco] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>{getBancoLabel(banco)}</span>
@@ -926,7 +926,7 @@ export default function Relatorios() {
             </div>
             {Object.entries(porFormaPagamento).sort(([,a], [,b]) => b.total - a.total).map(([forma, data]) => (
               <div key={forma} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                   <div className="flex items-center gap-2">
                     <CreditCard size={14} className="text-indigo-600" />
                     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${FORMA_PAGAMENTO_COLORS[forma] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>{getFormaLabel(forma)}</span>
@@ -1011,7 +1011,7 @@ export default function Relatorios() {
               const saldo = m.totalEntrada - m.totalSaida
               return (
                 <div key={m.month} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                     <div className="flex items-center gap-2">
                       <BarChart3 size={14} className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-900">{label}</span>
