@@ -160,7 +160,7 @@ export default function Servicos() {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${
+          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
             toast.type === 'error'
               ? 'bg-red-600 text-white'
               : 'bg-emerald-600 text-white'
@@ -240,14 +240,14 @@ export default function Servicos() {
                 <div className="flex shrink-0 items-center gap-1">
                   <button
                     onClick={() => openEditModal(servico)}
-                    className="rounded-md p-1.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                    className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                     title="Editar"
                   >
                     <Pencil size={16} />
                   </button>
                   <button
                     onClick={() => setDeleteId(servico.id)}
-                    className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                     title="Excluir"
                   >
                     <Trash2 size={16} />
@@ -283,13 +283,13 @@ export default function Servicos() {
                 <span className="text-xs font-medium text-gray-500">Status</span>
                 <button
                   onClick={() => handleToggleAtivo(servico)}
-                  className="flex items-center gap-1.5 transition-colors"
+                  className="flex items-center gap-1.5 rounded-md p-2 transition-colors"
                   title={servico.ativo ? 'Desativar servico' : 'Ativar servico'}
                 >
                   {servico.ativo ? (
-                    <ToggleRight size={24} className="text-indigo-600" />
+                    <ToggleRight size={26} className="text-indigo-600" />
                   ) : (
-                    <ToggleLeft size={24} className="text-gray-400" />
+                    <ToggleLeft size={26} className="text-gray-400" />
                   )}
                 </button>
               </div>
@@ -305,7 +305,7 @@ export default function Servicos() {
             className="fixed inset-0 bg-black/40 backdrop-blur-sm"
             onClick={closeModal}
           />
-          <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 {editingId ? 'Editar Servico' : 'Novo Servico'}

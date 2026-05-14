@@ -115,7 +115,7 @@ export default function Layout({ children }) {
         </header>
 
         {/* Page content */}
-        <main className="p-6 overflow-y-auto">
+        <main className="p-4 sm:p-6 overflow-y-auto pb-[env(safe-area-inset-bottom,0px)]">
           {children}
         </main>
       </div>

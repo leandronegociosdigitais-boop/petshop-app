@@ -199,7 +199,7 @@ export default function Pets() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
+        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
           <span>{toast.message}</span>
           <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
         </div>
@@ -253,7 +253,7 @@ export default function Pets() {
                               {pet.nome}
                               <ChevronRight size={14} className="text-gray-300 group-hover:text-indigo-500 transition-colors" />
                             </button>
-                            {pet.observacoes && <div className="mt-0.5 max-w-[180px] truncate text-xs text-gray-500">{pet.observacoes}</div>}
+                            {pet.observacoes && <div className="mt-0.5 max-w-[120px] sm:max-w-[180px] truncate text-xs text-gray-500">{pet.observacoes}</div>}
                           </div>
                         </div>
                       </td>
@@ -263,10 +263,10 @@ export default function Pets() {
                       <td className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.idade || <span className="text-gray-400">—</span>}</td>
                       <td className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.peso != null ? `${pet.peso} kg` : <span className="text-gray-400">—</span>}</td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => openHistory(pet)} className="rounded-md p-2 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Historico"><Calendar size={16} /></button>
-                          <button onClick={() => openEditModal(pet)} className="rounded-md p-2 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar"><Pencil size={16} /></button>
-                          <button onClick={() => setDeleteId(pet.id)} className="rounded-md p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir"><Trash2 size={16} /></button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => openHistory(pet)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Historico"><Calendar size={16} /></button>
+                          <button onClick={() => openEditModal(pet)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar"><Pencil size={16} /></button>
+                          <button onClick={() => setDeleteId(pet.id)} className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir"><Trash2 size={16} /></button>
                         </div>
                       </td>
                     </tr>
@@ -282,7 +282,7 @@ export default function Pets() {
       {historyPet && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setHistoryPet(null)} />
-          <div className="relative w-full max-w-xl bg-white shadow-2xl overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-white shadow-2xl overflow-y-auto pb-[env(safe-area-inset-bottom,0px)]">
             {/* Drawer Header */}
             <div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-6 py-4">
               <div className="flex items-center justify-between">
@@ -375,7 +375,7 @@ export default function Pets() {
       {modalOpen && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">{editingId ? 'Editar Pet' : 'Novo Pet'}</h2>
               <button onClick={closeModal} className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"><X size={20} /></button>

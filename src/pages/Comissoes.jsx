@@ -173,7 +173,7 @@ export default function Comissoes() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
+        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
           <span>{toast.message}</span>
           <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
         </div>
@@ -217,34 +217,24 @@ export default function Comissoes() {
       </div>
 
       {/* Month Navigator */}
-      <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <button onClick={goToPrevMonth} className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-          <ChevronLeft size={16} /> Anterior
-        </button>
-        <div className="flex items-center gap-2">
-          <button onClick={goToPrevMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Mes anterior">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <button onClick={goToPrevMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Mes anterior">
             <ChevronLeft size={20} />
           </button>
-          <div className="flex items-center gap-2">
-            <select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+          <select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
               {MESES.map(m => (<option key={m.value} value={m.value}>{m.label}</option>))}
             </select>
             <select value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
               {availableYears.map(y => (<option key={y} value={y}>{y}</option>))}
-            </select>
-          </div>
-          <button onClick={goToNextMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Proximo mes">
+</select>
+<button onClick={goToNextMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Proximo mes">
             <ChevronRight size={20} />
           </button>
           <button onClick={goToToday} className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors">
-            Hoje
-          </button>
-        </div>
-        <button onClick={goToNextMonth} className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-          Proximo <ChevronRight size={16} />
-        </button>
+Hoje
+</button>
       </div>
 
       {/* Search */}
@@ -282,13 +272,13 @@ export default function Comissoes() {
 <table className="min-w-full divide-y divide-gray-100">
 <thead>
 <tr>
-<th className="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Semana</th>
-<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Dias</th>
-<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Pets</th>
-<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Servicos</th>
-<th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
-<th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
-<th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Status</th>
+<th className="px-3 sm:px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Semana</th>
+<th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400 hidden sm:table-cell">Dias</th>
+<th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400 hidden sm:table-cell">Pets</th>
+<th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400 hidden md:table-cell">Servicos</th>
+<th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
+<th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
+<th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400 hidden md:table-cell">Status</th>
 </tr>
 </thead>
 <tbody className="divide-y divide-gray-50">
@@ -299,16 +289,16 @@ const firstDate = sortedDates[0]
 const lastDate = sortedDates[sortedDates.length - 1]
 return (
 <tr key={sem.key} className={isCurrent ? 'bg-indigo-50' : 'hover:bg-gray-50 transition-colors'}>
-<td className="px-6 py-3 text-sm font-medium text-gray-900">
+<td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900">
 <span className="text-xs text-gray-500 mr-1">S{sem.week}</span>
 {formatDate(firstDate)}{firstDate !== lastDate && <span className="text-gray-400"> a {formatDate(lastDate)}</span>}
 </td>
-<td className="px-6 py-3 text-center text-sm text-gray-600">{sem.dates.size}</td>
-<td className="px-6 py-3 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{sem.pets.size}</span></td>
-<td className="px-6 py-3 text-center text-sm text-gray-600">{sem.items.length}</td>
-<td className="px-6 py-3 text-right text-sm font-semibold text-gray-900">{formatCurrency(sem.total)}</td>
-<td className="px-6 py-3 text-right text-sm font-bold text-indigo-700">{formatCurrency(sem.comissao)}</td>
-<td className="px-6 py-3 text-center">
+<td className="px-3 sm:px-6 py-3 text-center text-sm text-gray-600 hidden sm:table-cell">{sem.dates.size}</td>
+<td className="px-3 sm:px-6 py-3 text-center hidden sm:table-cell"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{sem.pets.size}</span></td>
+<td className="px-3 sm:px-6 py-3 text-center text-sm text-gray-600 hidden md:table-cell">{sem.items.length}</td>
+<td className="px-3 sm:px-6 py-3 text-right text-sm font-semibold text-gray-900">{formatCurrency(sem.total)}</td>
+<td className="px-3 sm:px-6 py-3 text-right text-sm font-bold text-indigo-700">{formatCurrency(sem.comissao)}</td>
+<td className="px-3 sm:px-6 py-3 text-center hidden md:table-cell">
 {isCurrent ? (
 <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">Semana Atual</span>
 ) : (
@@ -319,13 +309,13 @@ return (
 )
 })}
 <tr className="bg-gray-50">
-<td className="px-6 py-3 text-sm font-bold text-gray-900">Total</td>
-<td className="px-6 py-3 text-center text-sm font-bold text-gray-900">{porSemana.reduce((s, w) => s + w.dates.size, 0)}</td>
-<td className="px-6 py-3 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-200 px-2.5 py-0.5 text-xs font-bold text-indigo-800">{new Set(filtered.flatMap(a => a.pet?.id ? [a.pet.id] : [])).size}</span></td>
-<td className="px-6 py-3 text-center text-sm font-bold text-gray-900">{filtered.length}</td>
-<td className="px-6 py-3 text-right text-sm font-bold text-gray-900">{formatCurrency(summaryServicosMes)}</td>
-<td className="px-6 py-3 text-right text-sm font-bold text-indigo-800">{formatCurrency(summaryMes)}</td>
-<td className="px-6 py-3"></td>
+<td className="px-3 sm:px-6 py-3 text-sm font-bold text-gray-900">Total</td>
+<td className="px-3 sm:px-6 py-3 text-center text-sm font-bold text-gray-900 hidden sm:table-cell">{porSemana.reduce((s, w) => s + w.dates.size, 0)}</td>
+<td className="px-3 sm:px-6 py-3 text-center hidden sm:table-cell"><span className="inline-flex items-center justify-center rounded-full bg-indigo-200 px-2.5 py-0.5 text-xs font-bold text-indigo-800">{new Set(filtered.flatMap(a => a.pet?.id ? [a.pet.id] : [])).size}</span></td>
+<td className="px-3 sm:px-6 py-3 text-center text-sm font-bold text-gray-900 hidden md:table-cell">{filtered.length}</td>
+<td className="px-3 sm:px-6 py-3 text-right text-sm font-bold text-gray-900">{formatCurrency(summaryServicosMes)}</td>
+<td className="px-3 sm:px-6 py-3 text-right text-sm font-bold text-indigo-800">{formatCurrency(summaryMes)}</td>
+<td className="px-3 sm:px-6 py-3 hidden md:table-cell"></td>
 </tr>
 </tbody>
 </table>
@@ -344,11 +334,11 @@ return (
 <table className="min-w-full divide-y divide-gray-100">
 <thead>
   <tr>
-    <th className="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Data</th>
-    <th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Pets</th>
-    <th className="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Servicos</th>
-    <th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
-    <th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
+    <th className="px-3 sm:px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Data</th>
+    <th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">Pets</th>
+    <th className="px-3 sm:px-6 py-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-400 hidden md:table-cell">Servicos</th>
+    <th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
+    <th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
   </tr>
 </thead>
 <tbody className="divide-y divide-gray-50">
@@ -358,11 +348,11 @@ return (
     const petsCount = dia.pets.size
     return (
       <tr key={dia.date} className="hover:bg-gray-50 transition-colors">
-        <td className="px-6 py-2.5 text-sm font-medium text-gray-900">{diaSemana2} - {diaFormatado2}</td>
-        <td className="px-6 py-2.5 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{petsCount}</span></td>
-        <td className="px-6 py-2.5 text-center text-sm text-gray-600">{dia.items.length}</td>
-        <td className="px-6 py-2.5 text-right text-sm font-semibold text-gray-900">{formatCurrency(dia.total)}</td>
-        <td className="px-6 py-2.5 text-right text-sm font-bold text-indigo-700">{formatCurrency(dia.comissao)}</td>
+        <td className="px-3 sm:px-6 py-2.5 text-sm font-medium text-gray-900">{diaSemana2} - {diaFormatado2}</td>
+        <td className="px-3 sm:px-6 py-2.5 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{petsCount}</span></td>
+        <td className="px-3 sm:px-6 py-2.5 text-center text-sm text-gray-600 hidden md:table-cell">{dia.items.length}</td>
+        <td className="px-3 sm:px-6 py-2.5 text-right text-sm font-semibold text-gray-900">{formatCurrency(dia.total)}</td>
+        <td className="px-3 sm:px-6 py-2.5 text-right text-sm font-bold text-indigo-700">{formatCurrency(dia.comissao)}</td>
       </tr>
     )
   })}
@@ -383,7 +373,7 @@ return (
             const diaFormatado = formatDate(dia.date)
             return (
               <div key={dia.date} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-6 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50 px-4 sm:px-6 py-3">
                   <div className="flex items-center gap-2">
                     <Calendar size={16} className="text-indigo-600" />
                     <span className="text-sm font-semibold text-gray-900">{diaSemana} - {diaFormatado}</span>
@@ -398,11 +388,11 @@ return (
                   <table className="min-w-full divide-y divide-gray-100">
                     <thead>
                       <tr>
-                        <th className="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Pet</th>
+                        <th className="px-3 sm:px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Pet</th>
                         <th className="hidden sm:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Cliente</th>
-                        <th className="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Servico</th>
+                        <th className="px-3 sm:px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Servico</th>
                         <th className="hidden md:table-cell px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Valor</th>
-                        <th className="px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
+                        <th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
                         <th className="hidden lg:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Forma Pag.</th>
                         <th className="hidden xl:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Banco</th>
                       </tr>

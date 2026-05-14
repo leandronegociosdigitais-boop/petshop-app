@@ -418,7 +418,7 @@ export default function Relatorios() {
     <div className="space-y-6">
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
+        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
           <span>{toast.message}</span>
           <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
         </div>
@@ -479,7 +479,7 @@ export default function Relatorios() {
         {loadingFinanceiro ? (
           <Spinner />
         ) : (
-          <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-4 p-4 sm:p-6 sm:grid-cols-2 lg:grid-cols-5">
             <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
               <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
               <div className="mt-2 flex items-end justify-between">
@@ -725,23 +725,23 @@ export default function Relatorios() {
                   <table className="min-w-full divide-y divide-gray-100">
                     <thead>
                       <tr>
-                        <th className="px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Data</th>
-                        <th className="px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Categoria</th>
-                        <th className="px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Descricao</th>
+                        <th className="px-3 sm:px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Data</th>
+                        <th className="px-3 sm:px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Categoria</th>
+                        <th className="px-3 sm:px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Descricao</th>
                         <th className="hidden sm:table-cell px-6 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-400">Forma Pag.</th>
-                        <th className="px-6 py-2 text-right text-xs font-medium uppercase tracking-wide text-gray-400">Valor</th>
+                        <th className="px-3 sm:px-6 py-2 text-right text-xs font-medium uppercase tracking-wide text-gray-400">Valor</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
                       {saidasByGrupo[grupo].items.map((r) => (
                         <tr key={r.id} className="transition-colors hover:bg-gray-50">
-                          <td className="px-6 py-3 text-sm text-gray-700">{formatDateOnly(r.data)}</td>
-                          <td className="px-6 py-3 text-sm text-gray-600">{r.categoria || '—'}</td>
-                          <td className="px-6 py-3 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
+                          <td className="px-3 sm:px-6 py-3 text-sm text-gray-700">{formatDateOnly(r.data)}</td>
+                          <td className="px-3 sm:px-6 py-3 text-sm text-gray-600">{r.categoria || '—'}</td>
+                          <td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
                           <td className="hidden sm:table-cell px-6 py-3">
                             <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || '—'}</span>
                           </td>
-                          <td className="px-6 py-3 text-right text-sm font-semibold text-red-700">- {formatCurrency(r.valor)}</td>
+                          <td className="px-3 sm:px-6 py-3 text-right text-sm font-semibold text-red-700">- {formatCurrency(r.valor)}</td>
                         </tr>
                       ))}
                     </tbody>

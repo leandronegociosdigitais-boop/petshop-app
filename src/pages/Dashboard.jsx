@@ -418,7 +418,7 @@ export default function Dashboard() {
       )}
 
       {/* ====== TOP SUMMARY CARDS ====== */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 sm:grid-cols-3">
         <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -472,14 +472,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* ENTRADAS POR FORMA DE PAGAMENTO */}
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 px-6 py-4">
+          <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
             <div className="flex items-center gap-2">
               <TrendingUp size={20} className="text-emerald-600" />
               <h2 className="text-lg font-semibold text-gray-900">Entradas por Forma de Pagamento</h2>
             </div>
             <p className="mt-0.5 text-sm text-gray-500">{monthName} {year}</p>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             {formaOrder.map((key) => {
               const valor = entradasPorForma[key] || 0
               const label = FORMA_PAGAMENTO_LABEL[key] || key
@@ -530,14 +530,14 @@ export default function Dashboard() {
 
         {/* SAIDAS POR GRUPO */}
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 px-6 py-4">
+          <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
             <div className="flex items-center gap-2">
               <TrendingDown size={20} className="text-red-600" />
               <h2 className="text-lg font-semibold text-gray-900">Saidas por Grupo</h2>
             </div>
             <p className="mt-0.5 text-sm text-gray-500">{monthName} {year}</p>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             {grupoOrder.map((key) => {
               const valor = saidasPorGrupo[key] || 0
               const label = GRUPO_LABEL[key] || key
@@ -618,7 +618,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Receita x Lucro por Mes */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 px-6 py-4">
+            <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
               <div className="flex items-center gap-2">
                 <DollarSign size={20} className="text-indigo-600" />
                 <h2 className="text-lg font-semibold text-gray-900">Receita x Lucro</h2>
@@ -642,7 +642,7 @@ export default function Dashboard() {
 
           {/* Analise Evolutiva - Entradas x Despesas */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 px-6 py-4">
+            <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
               <div className="flex items-center gap-2">
                 <TrendingUp size={20} className="text-emerald-600" />
                 <h2 className="text-lg font-semibold text-gray-900">Analise Evolutiva</h2>
@@ -669,7 +669,7 @@ export default function Dashboard() {
       {/* ====== TABELA RESUMO MENSAL ====== */}
       {dadosMensais.length > 0 && (
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-200 px-6 py-4">
+          <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
             <div className="flex items-center gap-2">
               <BarChart size={20} className="text-indigo-600" />
               <h2 className="text-lg font-semibold text-gray-900">Resumo por Mes</h2>
@@ -733,7 +733,7 @@ export default function Dashboard() {
 
       {/* ====== ATENDIMENTOS DE HOJE ====== */}
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
+        <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2">
             <Calendar size={20} className="text-indigo-600" />
             <h2 className="text-lg font-semibold text-gray-900">Atendimentos de Hoje</h2>
@@ -785,7 +785,7 @@ export default function Dashboard() {
 
       {/* ====== ULTIMOS ATENDIMENTOS ====== */}
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
+        <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2">
             <Clock size={20} className="text-indigo-600" />
             <h2 className="text-lg font-semibold text-gray-900">Ultimos Atendimentos</h2>
@@ -804,8 +804,8 @@ export default function Dashboard() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Pet / Cliente</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Servico</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Pet / Cliente</th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Servico</th>
                   <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Data / Hora</th>
                   <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Status</th>
                 </tr>
@@ -813,7 +813,7 @@ export default function Dashboard() {
               <tbody className="divide-y divide-gray-100">
                 {ultimosAtendimentos.map((atendimento) => (
                   <tr key={atendimento.id} className="transition-colors hover:bg-gray-50">
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                           <PawPrint size={16} />
@@ -824,9 +824,9 @@ export default function Dashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || '—'}</td>
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-600">{formatDate(atendimento.data_hora)} {formatTime(atendimento.data_hora)}</td>
-                    <td className="hidden md:table-cell px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || '—'}</td>
+                    <td className="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-gray-600">{formatDate(atendimento.data_hora)} {formatTime(atendimento.data_hora)}</td>
+                    <td className="hidden md:table-cell px-3 sm:px-6 py-4">
                       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado}`}>
                         {STATUS_LABEL[atendimento.status] || atendimento.status}
                       </span>

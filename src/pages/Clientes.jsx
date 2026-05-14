@@ -157,7 +157,7 @@ export default function Clientes() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
+        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
           <span>{toast.message}</span>
           <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
         </div>
@@ -222,13 +222,13 @@ export default function Clientes() {
                       ) : (<span className="text-sm text-gray-400">—</span>)}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-2">
                         {cliente.telefone && (
-                          <button onClick={() => openWhatsApp(cliente.telefone)} className="rounded-md p-2 text-green-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="WhatsApp"><MessageCircle size={16} /></button>
+                          <button onClick={() => openWhatsApp(cliente.telefone)} className="rounded-md p-2.5 text-green-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="WhatsApp"><MessageCircle size={16} /></button>
                         )}
-                        <button onClick={() => openHistory(cliente)} className="rounded-md p-2 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Historico"><Calendar size={16} /></button>
-                        <button onClick={() => openEditModal(cliente)} className="rounded-md p-2 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar"><Pencil size={16} /></button>
-                        <button onClick={() => setDeleteId(cliente.id)} className="rounded-md p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir"><Trash2 size={16} /></button>
+                        <button onClick={() => openHistory(cliente)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Historico"><Calendar size={16} /></button>
+                        <button onClick={() => openEditModal(cliente)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar"><Pencil size={16} /></button>
+                        <button onClick={() => setDeleteId(cliente.id)} className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir"><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
@@ -243,7 +243,7 @@ export default function Clientes() {
       {historyCliente && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setHistoryCliente(null)} />
-          <div className="relative w-full max-w-xl bg-white shadow-2xl overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-white shadow-2xl overflow-y-auto pb-[env(safe-area-inset-bottom,0px)]">
             {/* Drawer Header */}
             <div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-6 py-4">
               <div className="flex items-center justify-between">
@@ -285,7 +285,7 @@ export default function Clientes() {
                 </div>
 
                 {/* Summary Cards */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3 text-center">
                     <p className="text-xs font-medium text-indigo-600">Pets</p>
                     <p className="mt-1 text-xl font-bold text-indigo-800">{historyPets.length}</p>
@@ -296,7 +296,7 @@ export default function Clientes() {
                   </div>
                   <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center">
                     <p className="text-xs font-medium text-amber-600">Total Gasto</p>
-                    <p className="mt-1 text-lg font-bold text-amber-800">{formatCurrency(totalGasto)}</p>
+                    <p className="mt-1 text-sm sm:text-lg font-bold text-amber-800">{formatCurrency(totalGasto)}</p>
                   </div>
                 </div>
 
@@ -367,7 +367,7 @@ export default function Clientes() {
       {modalOpen && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">{editingId ? 'Editar Cliente' : 'Novo Cliente'}</h2>
               <button onClick={closeModal} className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"><X size={20} /></button>

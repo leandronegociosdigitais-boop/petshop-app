@@ -409,7 +409,7 @@ export default function Financeiro() {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${
+          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
             toast.type === 'error'
               ? 'bg-red-600 text-white'
               : 'bg-emerald-600 text-white'
@@ -470,17 +470,17 @@ export default function Financeiro() {
           >
             <ChevronRight size={18} />
           </button>
-          <span className="mx-1 h-6 w-px bg-gray-200" />
+          <span className="mx-1 h-6 w-px bg-gray-200 hidden sm:block" />
           <button
             onClick={() => openCreateModal('entrada')}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 sm:px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
           >
             <TrendingUp size={18} />
             Nova Entrada
           </button>
           <button
             onClick={() => openCreateModal('saida')}
-            className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 sm:px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors"
           >
             <TrendingDown size={18} />
             Nova Saida
@@ -530,7 +530,7 @@ export default function Financeiro() {
       {/* Search + Filters + Tabs */}
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative max-w-md flex-1">
+          <div className="relative max-w-full sm:max-w-md flex-1">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -833,11 +833,11 @@ export default function Financeiro() {
                               {isEntrada ? '+' : '-'}{formatCurrency(registro.valor)}
                             </td>
                             <td className="px-4 py-2.5 text-right">
-                              <div className="flex items-center justify-end gap-1">
-                                <button onClick={() => openEditModal(registro)} className="rounded-md p-1 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar">
+                              <div className="flex items-center justify-end gap-2">
+                                <button onClick={() => openEditModal(registro)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar">
                                   <Pencil size={14} />
                                 </button>
-                                <button onClick={() => setDeleteId(registro.id)} className="rounded-md p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir">
+                                <button onClick={() => setDeleteId(registro.id)} className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Excluir">
                                   <Trash2 size={14} />
                                 </button>
                               </div>
@@ -858,7 +858,7 @@ export default function Financeiro() {
       {modalOpen && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 {editingId ? 'Editar Registro' : form.tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saida'}

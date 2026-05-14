@@ -575,7 +575,7 @@ export default function Atendimentos() {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed top-6 right-6 z-50 flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${
+          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
             toast.type === 'error'
               ? 'bg-red-600 text-white'
               : 'bg-emerald-600 text-white'
@@ -752,10 +752,10 @@ export default function Atendimentos() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Pet / Cliente
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Servico
                   </th>
                   <th className="hidden sm:table-cell px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -773,7 +773,7 @@ export default function Atendimentos() {
                   <th className="hidden lg:table-cell px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Valor
                   </th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <th className="px-3 sm:px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Acoes
                   </th>
                 </tr>
@@ -812,7 +812,7 @@ export default function Atendimentos() {
                       </td>
 
                       {/* Servico */}
-                      <td className="px-4 py-2 text-sm text-gray-700">
+                      <td className="px-3 sm:px-4 py-2 text-sm text-gray-700">
                         {atendimento.servico?.nome || '—'}
                       </td>
 
@@ -881,13 +881,13 @@ export default function Atendimentos() {
                       </td>
 
                       {/* Acoes */}
-                      <td className="px-4 py-2 text-right">
-                        <div className="flex items-center justify-end gap-1">
+                      <td className="px-3 sm:px-4 py-2 text-right">
+                        <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
                           {/* Marcar como Pago button (only on pendente/vencido) */}
                           {(pagamentoStatus === 'pendente' || pagamentoStatus === 'vencido') && (
                             <button
                               onClick={() => handleMarcarPago(atendimento)}
-                              className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                              className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
                               title="Marcar como Pago"
                             >
                               <Banknote size={12} />
@@ -898,7 +898,7 @@ export default function Atendimentos() {
                           {nextStatus && nextLabel && (
                             <button
                               onClick={() => handleChangeStatus(atendimento, nextStatus)}
-                              className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold transition-colors ${
+                              className={`inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
                                 nextStatus === 'em_andamento'
                                   ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                                   : nextStatus === 'concluido'
@@ -916,7 +916,7 @@ export default function Atendimentos() {
                           {atendimento.status !== 'cancelado' && (
                             <button
                               onClick={() => handleChangeStatus(atendimento, 'cancelado')}
-                              className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                               title="Cancelar atendimento"
                             >
                               <XCircle size={16} />
@@ -924,14 +924,14 @@ export default function Atendimentos() {
                           )}
                           <button
                             onClick={() => openEditModal(atendimento)}
-                            className="rounded-md p-1.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                            className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                             title="Editar"
                           >
                             <Pencil size={16} />
                           </button>
                           <button
                             onClick={() => setDeleteId(atendimento.id)}
-                            className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                            className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                             title="Excluir"
                           >
                             <Trash2 size={16} />
@@ -954,7 +954,7 @@ export default function Atendimentos() {
             className="fixed inset-0 bg-black/40 backdrop-blur-sm"
             onClick={closeModal}
           />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
                 {editingId ? 'Editar Atendimento' : 'Novo Atendimento'}
