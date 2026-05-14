@@ -347,39 +347,57 @@ export default function Atendimentos() {
           : 'Atendimento criado com sucesso!'
       )
 
-      // Sync financeiro entry when editing a concluded atendimento
-      if (editingId && payload.status === 'concluido' && payload.valor) {
-        const { data: finEntry } = await supabase
-          .from('financeiro')
-          .select('id')
-          .eq('atendimento_id', editingId)
-          .limit(1)
+      const valorNum = payload.valor ? parseFloat(payload.valor) : 0
 
-        if (finEntry && finEntry.length > 0) {
-          await supabase
+      if (editingId) {
+        // Editing existing atendimento
+        if (payload.status === 'concluido' && valorNum > 0) {
+          const { data: finEntry } = await supabase
             .from('financeiro')
-            .update({
-              valor: payload.valor,
-              forma_pagamento: payload.forma_pagamento,
-              data: getLocalDateISO(new Date(payload.data_hora)),
-            })
-            .eq('id', finEntry[0].id)
+            .select('id')
+            .eq('atendimento_id', editingId)
+            .limit(1)
+
+          if (finEntry && finEntry.length > 0) {
+            await supabase
+              .from('financeiro')
+              .update({
+                valor: valorNum,
+                forma_pagamento: payload.forma_pagamento,
+                data: getLocalDateISO(new Date(payload.data_hora)),
+              })
+              .eq('id', finEntry[0].id)
+          } else {
+            await createFinanceiroFromAtendimento(editingId, payload)
+          }
         }
-      }
 
-      // Remove financeiro entry if status changed away from concluido
-      if (editingId && payload.status !== 'concluido') {
-        const { data: finEntry } = await supabase
-          .from('financeiro')
+        if (payload.status !== 'concluido') {
+          const { data: finEntry } = await supabase
+            .from('financeiro')
+            .select('id')
+            .eq('atendimento_id', editingId)
+            .limit(1)
+
+          if (finEntry && finEntry.length > 0) {
+            await supabase
+              .from('financeiro')
+              .delete()
+              .eq('id', finEntry[0].id)
+          }
+        }
+      } else if (payload.status === 'concluido' && valorNum > 0) {
+        // New atendimento created as concluido — needs financeiro entry
+        const { data: newAtend } = await supabase
+          .from('atendimentos')
           .select('id')
-          .eq('atendimento_id', editingId)
+          .eq('cliente_id', payload.cliente_id)
+          .eq('data_hora', payload.data_hora)
+          .order('created_at', { ascending: false })
           .limit(1)
 
-        if (finEntry && finEntry.length > 0) {
-          await supabase
-            .from('financeiro')
-            .delete()
-            .eq('id', finEntry[0].id)
+        if (newAtend && newAtend.length > 0) {
+          await createFinanceiroFromAtendimento(newAtend[0].id, payload)
         }
       }
 
@@ -387,6 +405,55 @@ export default function Atendimentos() {
       fetchAtendimentos()
     }
     setSaving(false)
+  }
+
+  async function createFinanceiroFromAtendimento(atendimentoId, payloadOrAtendimento) {
+    const { data: existing } = await supabase
+      .from('financeiro')
+      .select('id')
+      .eq('atendimento_id', atendimentoId)
+      .limit(1)
+
+    if (existing && existing.length > 0) return
+
+    let servicoNome = payloadOrAtendimento.servico?.nome
+    let petNome = payloadOrAtendimento.pet?.nome
+    let clienteNome = payloadOrAtendimento.cliente?.nome
+
+    if (!servicoNome || !petNome || !clienteNome) {
+      const { data: fullAtend } = await supabase
+        .from('atendimentos')
+        .select('*, pet:pet_id(id, nome), cliente:cliente_id(id, nome), servico:servico_id(id, nome)')
+        .eq('id', atendimentoId)
+        .limit(1)
+
+      if (fullAtend && fullAtend.length > 0) {
+        servicoNome = servicoNome || fullAtend[0].servico?.nome || 'Servico'
+        petNome = petNome || fullAtend[0].pet?.nome || ''
+        clienteNome = clienteNome || fullAtend[0].cliente?.nome || ''
+      }
+    }
+
+    const valor = parseFloat(payloadOrAtendimento.valor) || 0
+    if (valor <= 0) return
+
+    const dataPag = payloadOrAtendimento.data_hora
+      ? getLocalDateISO(new Date(payloadOrAtendimento.data_hora))
+      : getLocalDateISO()
+
+    await supabase.from('financeiro').insert([{
+      tipo: 'entrada',
+      categoria: 'Servicos',
+      descricao: (servicoNome || 'Servico') + ' - ' + petNome + ' (' + clienteNome + ')',
+      valor: valor,
+      data: dataPag,
+      forma_pagamento: payloadOrAtendimento.forma_pagamento || 'pix',
+      banco: payloadOrAtendimento.banco || null,
+      grupo: 'Servicos',
+      atendimento_id: atendimentoId,
+    }])
+
+    showToast('Entrada financeira criada automaticamente!')
   }
 
   async function handleChangeStatus(atendimento, newStatus) {
@@ -413,37 +480,7 @@ export default function Atendimentos() {
 
       // Auto-create financeiro entry when concluded (prevent duplicates)
       if (newStatus === 'concluido') {
-        const valor = parseFloat(atendimento.valor) || 0
-        if (valor > 0) {
-          const { data: existing } = await supabase
-            .from('financeiro')
-            .select('id')
-            .eq('atendimento_id', atendimento.id)
-            .limit(1)
-
-          if (!existing || existing.length === 0) {
-            const servicoNome = atendimento.servico?.nome || 'Servico'
-            const petNome = atendimento.pet?.nome || ''
-            const clienteNome = atendimento.cliente?.nome || ''
-            const dataPag = atendimento.data_hora
-              ? getLocalDateISO(new Date(atendimento.data_hora))
-              : getLocalDateISO()
-
-            const { error: finError } = await supabase.from('financeiro').insert([{
-              tipo: 'entrada',
-              categoria: 'Servicos',
-              descricao: `${servicoNome} - ${petNome} (${clienteNome})`,
-              valor: valor,
-              data: dataPag,
-              forma_pagamento: atendimento.forma_pagamento || 'pix',
-              grupo: 'Servicos',
-              atendimento_id: atendimento.id,
-            }])
-            if (!finError) {
-              showToast(`Entrada financeira criada automaticamente!`)
-            }
-          }
-        }
+        await createFinanceiroFromAtendimento(atendimento.id, atendimento)
       }
 
       // Remove financeiro entry when status changes away from concluido
