@@ -187,31 +187,31 @@ export default function Comissoes() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600"><Percent size={24} /></div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-indigo-700">Comissao do Mes</p>
-              <p className="mt-1 text-2xl font-bold text-indigo-800">{formatCurrency(summaryMes)}</p>
+              <p className="mt-1 text-xl font-bold text-indigo-800 truncate">{formatCurrency(summaryMes)}</p>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600"><Percent size={24} /></div>
           </div>
         </div>
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><DollarSign size={24} /></div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-emerald-700">Total Servicos do Mes</p>
-              <p className="mt-1 text-2xl font-bold text-emerald-800">{formatCurrency(summaryServicosMes)}</p>
+              <p className="mt-1 text-xl font-bold text-emerald-800 truncate">{formatCurrency(summaryServicosMes)}</p>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><DollarSign size={24} /></div>
           </div>
         </div>
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600"><Calendar size={24} /></div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-amber-700">Atendimentos no Mes</p>
-              <p className="mt-1 text-2xl font-bold text-amber-800">{filtered.length}</p>
+              <p className="mt-1 text-xl font-bold text-amber-800 truncate">{filtered.length}</p>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600"><Calendar size={24} /></div>
           </div>
         </div>
       </div>
@@ -348,7 +348,7 @@ return (
     const petsCount = dia.pets.size
     return (
       <tr key={dia.date} className="hover:bg-gray-50 transition-colors">
-        <td className="px-3 sm:px-6 py-2.5 text-sm font-medium text-gray-900">{diaSemana2} - {diaFormatado2}</td>
+        <td className="px-3 sm:px-6 py-2.5 text-sm font-medium text-gray-900"><span className="inline-block w-8 text-right">{diaSemana2}</span> - {diaFormatado2}</td>
         <td className="px-3 sm:px-6 py-2.5 text-center"><span className="inline-flex items-center justify-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-700">{petsCount}</span></td>
         <td className="px-3 sm:px-6 py-2.5 text-center text-sm text-gray-600 hidden md:table-cell">{dia.items.length}</td>
         <td className="px-3 sm:px-6 py-2.5 text-right text-sm font-semibold text-gray-900">{formatCurrency(dia.total)}</td>
@@ -376,7 +376,7 @@ return (
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Calendar size={16} className="text-indigo-600" />
-                    <span className="text-sm font-semibold text-gray-900">{diaSemana} - {diaFormatado}</span>
+                    <span className="text-sm font-semibold text-gray-900"><span className="inline-block w-8 text-right">{diaSemana}</span> - {diaFormatado}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm">
                     <span className="text-gray-500">{dia.items.length} servico{dia.items.length > 1 ? 's' : ''}</span>

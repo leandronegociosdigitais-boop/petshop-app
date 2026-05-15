@@ -546,7 +546,7 @@ export default function Relatorios() {
                   <tbody className="divide-y divide-gray-50">
                     {atendimentosPorDia.map((dia) => (
                       <tr key={dia.date} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-2 text-sm font-medium text-gray-900">{DIAS_SEMANA[getDayOfWeek(dia.date)]} - {formatDate(dia.date)}</td>
+                        <td className="px-4 py-2 text-sm font-medium text-gray-900"><span className="inline-block w-8 text-right">{DIAS_SEMANA[getDayOfWeek(dia.date)]}</span> - {formatDate(dia.date)}</td>
                         <td className="px-4 py-2 text-center text-sm text-gray-600">{dia.items.length}</td>
                         <td className="px-4 py-2 text-right text-sm font-semibold text-gray-900">{formatCurrency(dia.total)}</td>
                       </tr>
@@ -568,7 +568,7 @@ export default function Relatorios() {
                     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         <Calendar size={14} className="text-indigo-600" />
-                        <span className="text-sm font-semibold text-gray-900">{diaSemana} - {formatDate(dia.date)}</span>
+                        <span className="text-sm font-semibold text-gray-900"><span className="inline-block w-8 text-right">{diaSemana}</span> - {formatDate(dia.date)}</span>
                       </div>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="text-gray-500">{dia.items.length} servico{dia.items.length > 1 ? 's' : ''}</span>
@@ -645,7 +645,7 @@ export default function Relatorios() {
                 <tbody className="divide-y divide-gray-50">
                   {entradasPorDia.map((dia) => (
                     <tr key={dia.date} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-2 text-sm font-medium text-gray-900">{DIAS_SEMANA[getDayOfWeek(dia.date)]} - {formatDate(dia.date)}</td>
+                      <td className="px-4 py-2 text-sm font-medium text-gray-900"><span className="inline-block w-8 text-right">{DIAS_SEMANA[getDayOfWeek(dia.date)]}</span> - {formatDate(dia.date)}</td>
                       <td className="px-4 py-2 text-center text-sm text-gray-600">{dia.items.length}</td>
                       <td className="px-4 py-2 text-right text-sm font-semibold text-emerald-700">{formatCurrency(dia.total)}</td>
                     </tr>
@@ -665,7 +665,7 @@ export default function Relatorios() {
                   <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-3 sm:px-4 py-2.5">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} className="text-emerald-600" />
-                      <span className="text-sm font-semibold text-gray-900">{diaSemana} - {formatDate(dia.date)}</span>
+                      <span className="text-sm font-semibold text-gray-900"><span className="inline-block w-8 text-right">{diaSemana}</span> - {formatDate(dia.date)}</span>
                     </div>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="text-gray-500">{dia.items.length} entrada{dia.items.length > 1 ? 's' : ''}</span>

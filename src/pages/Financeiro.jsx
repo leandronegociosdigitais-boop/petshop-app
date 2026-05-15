@@ -496,38 +496,38 @@ export default function Financeiro() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
-              <p className="mt-1 text-2xl font-bold text-emerald-800">{formatCurrency(summary.entradas)}</p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
               <TrendingUp size={24} />
             </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
+              <p className="mt-1 text-xl font-bold text-emerald-800 truncate">{formatCurrency(summary.entradas)}</p>
+            </div>
           </div>
         </div>
-        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-red-700">Total Saidas</p>
-              <p className="mt-1 text-2xl font-bold text-red-800">{formatCurrency(summary.saidas)}</p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
               <TrendingDown size={24} />
             </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-red-700">Total Saidas</p>
+              <p className="mt-1 text-xl font-bold text-red-800 truncate">{formatCurrency(summary.saidas)}</p>
+            </div>
           </div>
         </div>
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-5 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+              <DollarSign size={24} />
+            </div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-indigo-700">Saldo</p>
-              <p className={`mt-1 text-2xl font-bold ${summary.saldo >= 0 ? 'text-indigo-800' : 'text-red-700'}`}>
+              <p className={`mt-1 text-xl font-bold ${summary.saldo >= 0 ? 'text-indigo-800' : 'text-red-700'} truncate`}>
                 {formatCurrency(summary.saldo)}
               </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-              <DollarSign size={24} />
             </div>
           </div>
         </div>
@@ -762,7 +762,7 @@ export default function Financeiro() {
                   {porDia.map((dia) => (
                     <tr key={dia.date} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-2 text-sm font-medium text-gray-900">
-                        {DIAS_SEMANA[getDayOfWeek(dia.date)]} - {formatDate(dia.date)}
+                        <span className="inline-block w-8 text-right">{DIAS_SEMANA[getDayOfWeek(dia.date)]}</span> - {formatDate(dia.date)}
                       </td>
                       <td className="px-4 py-2 text-center text-sm text-gray-600">{dia.items.length}</td>
                       <td className="px-4 py-2 text-right text-sm font-semibold text-emerald-700">{formatCurrency(dia.totalEntrada)}</td>
@@ -787,7 +787,7 @@ export default function Financeiro() {
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
                   <div className="flex items-center gap-2">
                     <Calendar size={16} className="text-indigo-600" />
-                    <span className="text-sm font-semibold text-gray-900">{diaSemana} - {formatDate(dia.date)}</span>
+                    <span className="text-sm font-semibold text-gray-900"><span className="inline-block w-8 text-right">{diaSemana}</span> - {formatDate(dia.date)}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm">
                     <span className="text-gray-500">{dia.items.length} registro{dia.items.length > 1 ? 's' : ''}</span>

@@ -419,51 +419,51 @@ export default function Dashboard() {
 
       {/* ====== TOP SUMMARY CARDS ====== */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 sm:grid-cols-3">
-        <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-4 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><TrendingUp size={20} /></div>
+            <div className="min-w-0">
               <p className="text-xs font-medium text-emerald-700">Entradas</p>
-              <p className="mt-1 text-xl font-bold text-emerald-900">{formatCurrency(financeiroMes.entradas)}</p>
+              <p className="mt-1 text-lg font-bold text-emerald-900 truncate">{formatCurrency(financeiroMes.entradas)}</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><TrendingUp size={20} /></div>
           </div>
         </div>
-        <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-rose-50 p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-rose-50 p-4 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600"><TrendingDown size={20} /></div>
+            <div className="min-w-0">
               <p className="text-xs font-medium text-red-700">Saidas</p>
-              <p className="mt-1 text-xl font-bold text-red-900">{formatCurrency(financeiroMes.saidas)}</p>
+              <p className="mt-1 text-lg font-bold text-red-900 truncate">{formatCurrency(financeiroMes.saidas)}</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600"><TrendingDown size={20} /></div>
           </div>
         </div>
-        <div className={`rounded-xl border ${lucroMes >= 0 ? 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50' : 'border-red-300 bg-gradient-to-br from-red-50 to-rose-50'} p-4 shadow-sm`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium text-gray-600">Lucro</p>
-              <p className={`mt-1 text-xl font-bold ${lucroMes >= 0 ? 'text-indigo-900' : 'text-red-700'}`}>{formatCurrency(lucroMes)}</p>
-            </div>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-full ${lucroMes >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}>
+        <div className={`rounded-xl border ${lucroMes >= 0 ? 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50' : 'border-red-300 bg-gradient-to-br from-red-50 to-rose-50'} p-4 shadow-sm overflow-hidden`}>
+          <div className="flex items-center gap-3">
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${lucroMes >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}>
               <DollarSign size={20} />
             </div>
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-gray-600">Lucro</p>
+              <p className={`mt-1 text-lg font-bold ${lucroMes >= 0 ? 'text-indigo-900' : 'text-red-700'} truncate`}>{formatCurrency(lucroMes)}</p>
+            </div>
           </div>
         </div>
-        <div className="rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-50 p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-50 p-4 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600"><Percent size={20} /></div>
+            <div className="min-w-0">
               <p className="text-xs font-medium text-amber-700">Comissoes (40%)</p>
-              <p className="mt-1 text-xl font-bold text-amber-900">{formatCurrency(comissoesMes)}</p>
+              <p className="mt-1 text-lg font-bold text-amber-900 truncate">{formatCurrency(comissoesMes)}</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600"><Percent size={20} /></div>
           </div>
         </div>
-        <div className="col-span-2 lg:col-span-1 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-fuchsia-50 p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="col-span-2 lg:col-span-1 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-fuchsia-50 p-4 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-600"><Calendar size={20} /></div>
+            <div className="min-w-0">
               <p className="text-xs font-medium text-purple-700">Atendimentos</p>
-              <p className="mt-1 text-xl font-bold text-purple-900">{atendimentosMes}</p>
+              <p className="mt-1 text-lg font-bold text-purple-900 truncate">{atendimentosMes}</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600"><Calendar size={20} /></div>
           </div>
         </div>
       </div>
@@ -841,39 +841,39 @@ export default function Dashboard() {
 
       {/* ====== QUICK STATS ROW ====== */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm overflow-hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><Users size={18} /></div>
-            <div>
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><Users size={18} /></div>
+            <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Clientes</p>
-              <p className="text-xl font-bold text-gray-900">{totalClientes ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalClientes ?? '—'}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm overflow-hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple-50 text-purple-600"><PawPrint size={18} /></div>
-            <div>
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600"><PawPrint size={18} /></div>
+            <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Pets</p>
-              <p className="text-xl font-bold text-gray-900">{totalPets ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalPets ?? '—'}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm overflow-hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-600"><Calendar size={18} /></div>
-            <div>
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-600"><Calendar size={18} /></div>
+            <div className="min-w-0">
               <p className="text-xs text-gray-500">Atendimentos Hoje</p>
-              <p className="text-xl font-bold text-gray-900">{atendimentosHoje ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{atendimentosHoje ?? '—'}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm overflow-hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-amber-600"><Percent size={18} /></div>
-            <div>
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600"><Percent size={18} /></div>
+            <div className="min-w-0">
               <p className="text-xs text-gray-500">Comissoes do Mes</p>
-              <p className="text-xl font-bold text-gray-900">{formatCurrency(comissoesMes)}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{formatCurrency(comissoesMes)}</p>
             </div>
           </div>
         </div>
