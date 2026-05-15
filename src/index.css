@@ -1,24 +1,23 @@
 @import "tailwindcss";
 
-/* ===== GLASSMORPHISM THEME ===== */
+/* ===== GLASSMORPHISM THEME (LIGHT) ===== */
 /* Applied when [data-theme="glass"] is set on <html> */
 
-/* Gradient background */
 [data-theme="glass"] {
-  --glass-bg: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-  --glass-panel: rgba(255, 255, 255, 0.08);
-  --glass-panel-hover: rgba(255, 255, 255, 0.12);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --glass-border-glow: rgba(139, 92, 246, 0.4);
-  --glass-text: rgba(255, 255, 255, 0.9);
-  --glass-text-secondary: rgba(255, 255, 255, 0.6);
-  --glass-accent: #a78bfa;
-  --glass-accent-bright: #c4b5fd;
-  --glass-emerald: #6ee7b7;
-  --glass-red: #fca5a5;
-  --glass-amber: #fcd34d;
-  --glass-indigo: #818cf8;
-  --glass-sidebar: rgba(255, 255, 255, 0.05);
+  --glass-bg: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 35%, #fef3c7 65%, #fce7f3 100%);
+  --glass-panel: rgba(255, 255, 255, 0.55);
+  --glass-panel-hover: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(139, 92, 246, 0.15);
+  --glass-border-glow: rgba(139, 92, 246, 0.25);
+  --glass-text: #1e1b4b;
+  --glass-text-secondary: #3b3670;
+  --glass-accent: #7c3aed;
+  --glass-accent-bright: #8b5cf6;
+  --glass-emerald: #059669;
+  --glass-red: #dc2626;
+  --glass-amber: #d97706;
+  --glass-indigo: #4f46e5;
+  --glass-sidebar: rgba(255, 255, 255, 0.5);
 }
 
 /* Body background */
@@ -34,16 +33,16 @@
 [data-theme="glass"] .rounded-xl,
 [data-theme="glass"] .rounded-lg {
   background: var(--glass-panel) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-color: var(--glass-border) !important;
   color: var(--glass-text);
 }
 
 [data-theme="glass"] .bg-white {
   background: var(--glass-panel) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   color: var(--glass-text);
 }
 
@@ -60,7 +59,7 @@
 }
 
 [data-theme="glass"] .divide-y > :not([hidden]) ~ :not([hidden]) {
-  border-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(139, 92, 246, 0.08) !important;
 }
 
 /* ===== TEXT COLORS ===== */
@@ -76,61 +75,175 @@
 [data-theme="glass"] .text-gray-500,
 [data-theme="glass"] .text-gray-400,
 [data-theme="glass"] .text-gray-300 {
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: rgba(30, 27, 75, 0.45) !important;
 }
 
 /* ===== ACCENT COLORS ===== */
 [data-theme="glass"] .text-indigo-600,
 [data-theme="glass"] .text-indigo-700,
+[data-theme="glass"] .text-indigo-800,
+[data-theme="glass"] .text-indigo-900,
 [data-theme="glass"] .text-blue-600,
 [data-theme="glass"] .text-blue-700 {
-  color: var(--glass-accent) !important;
+  color: var(--glass-indigo) !important;
 }
 
+[data-theme="glass"] .text-emerald-600,
 [data-theme="glass"] .text-emerald-700,
 [data-theme="glass"] .text-emerald-800,
+[data-theme="glass"] .text-emerald-900,
+[data-theme="glass"] .text-green-600,
 [data-theme="glass"] .text-green-700 {
   color: var(--glass-emerald) !important;
 }
 
+[data-theme="glass"] .text-red-600,
 [data-theme="glass"] .text-red-700,
-[data-theme="glass"] .text-red-800 {
+[data-theme="glass"] .text-red-800,
+[data-theme="glass"] .text-red-900 {
   color: var(--glass-red) !important;
 }
 
+[data-theme="glass"] .text-amber-600,
 [data-theme="glass"] .text-amber-700,
-[data-theme="glass"] .text-amber-800 {
+[data-theme="glass"] .text-amber-800,
+[data-theme="glass"] .text-amber-900 {
   color: var(--glass-amber) !important;
+}
+
+[data-theme="glass"] .text-purple-600,
+[data-theme="glass"] .text-purple-700,
+[data-theme="glass"] .text-purple-800,
+[data-theme="glass"] .text-purple-900 {
+  color: var(--glass-accent) !important;
 }
 
 /* ===== BACKGROUNDS (colored panels) ===== */
 [data-theme="glass"] .bg-indigo-50,
-[data-theme="glass"] .bg-blue-50 {
-  background: rgba(129, 140, 248, 0.12) !important;
+[data-theme="glass"] .bg-indigo-100,
+[data-theme="glass"] .bg-blue-50,
+[data-theme="glass"] .bg-blue-100 {
+  background: rgba(129, 140, 248, 0.15) !important;
 }
 
 [data-theme="glass"] .bg-emerald-50,
-[data-theme="glass"] .bg-green-50 {
-  background: rgba(110, 231, 183, 0.12) !important;
+[data-theme="glass"] .bg-emerald-100,
+[data-theme="glass"] .bg-green-50,
+[data-theme="glass"] .bg-green-100 {
+  background: rgba(16, 185, 129, 0.15) !important;
 }
 
-[data-theme="glass"] .bg-red-50 {
-  background: rgba(252, 165, 165, 0.12) !important;
+[data-theme="glass"] .bg-red-50,
+[data-theme="glass"] .bg-red-100,
+[data-theme="glass"] .bg-rose-50,
+[data-theme="glass"] .bg-rose-100 {
+  background: rgba(239, 68, 68, 0.12) !important;
 }
 
-[data-theme="glass"] .bg-amber-50 {
-  background: rgba(252, 211, 77, 0.12) !important;
+[data-theme="glass"] .bg-amber-50,
+[data-theme="glass"] .bg-amber-100,
+[data-theme="glass"] .bg-yellow-50,
+[data-theme="glass"] .bg-yellow-100 {
+  background: rgba(217, 119, 6, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-purple-50,
+[data-theme="glass"] .bg-purple-100,
+[data-theme="glass"] .bg-fuchsia-50,
+[data-theme="glass"] .bg-fuchsia-100 {
+  background: rgba(139, 92, 246, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-sky-50,
+[data-theme="glass"] .bg-sky-100 {
+  background: rgba(14, 165, 233, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-teal-50,
+[data-theme="glass"] .bg-teal-100 {
+  background: rgba(20, 184, 166, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-pink-50,
+[data-theme="glass"] .bg-pink-100 {
+  background: rgba(236, 72, 153, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-orange-50,
+[data-theme="glass"] .bg-orange-100 {
+  background: rgba(249, 115, 22, 0.12) !important;
+}
+
+[data-theme="glass"] .bg-slate-50,
+[data-theme="glass"] .bg-slate-100 {
+  background: rgba(100, 116, 139, 0.12) !important;
 }
 
 [data-theme="glass"] .bg-gray-50 {
-  background: rgba(255, 255, 255, 0.04) !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===== GRADIENT BACKGROUNDS ===== */
+[data-theme="glass"] .bg-gradient-to-br.from-indigo-50,
+[data-theme="glass"] .bg-gradient-to-r.from-indigo-600,
+[data-theme="glass"] .bg-gradient-to-r.from-indigo-600 {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2), rgba(99, 102, 241, 0.15)) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-br.from-emerald-50,
+[data-theme="glass"] .bg-gradient-to-br.from-green-50 {
+  background: linear-gradient(135deg, rgba(110, 231, 183, 0.2), rgba(16, 185, 129, 0.15)) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-br.from-red-50,
+[data-theme="glass"] .bg-gradient-to-br.from-rose-50,
+[data-theme="glass"] .bg-gradient-to-r.from-red-600 {
+  background: linear-gradient(135deg, rgba(252, 165, 165, 0.2), rgba(239, 68, 68, 0.15)) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-br.from-amber-50,
+[data-theme="glass"] .bg-gradient-to-br.from-yellow-50 {
+  background: linear-gradient(135deg, rgba(252, 211, 77, 0.2), rgba(217, 119, 6, 0.15)) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-br.from-purple-50,
+[data-theme="glass"] .bg-gradient-to-br.from-fuchsia-50 {
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.2), rgba(168, 85, 247, 0.15)) !important;
+}
+
+/* Big accent gradient cards (Lucro do Mes etc.) */
+[data-theme="glass"] .bg-gradient-to-r.from-indigo-600.to-blue-600 {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(99, 102, 241, 0.2)) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(99, 102, 241, 0.2) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-r.from-red-600.to-rose-600 {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(244, 63, 94, 0.15)) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Inadimplencia card */
+[data-theme="glass"] .bg-gradient-to-r.from-red-600.to-red-700 {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(185, 28, 28, 0.2)) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+[data-theme="glass"] .bg-gradient-to-r.from-purple-500\/20,
+[data-theme="glass"] .bg-gradient-to-r.from-purple-500 {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15)) !important;
 }
 
 /* ===== INPUTS ===== */
 [data-theme="glass"] input,
 [data-theme="glass"] select,
 [data-theme="glass"] textarea {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.4) !important;
   border-color: var(--glass-border) !important;
   color: var(--glass-text) !important;
   backdrop-filter: blur(8px) !important;
@@ -138,77 +251,95 @@
 
 [data-theme="glass"] input::placeholder,
 [data-theme="glass"] textarea::placeholder {
-  color: rgba(255, 255, 255, 0.3) !important;
+  color: rgba(30, 27, 75, 0.35) !important;
 }
 
 [data-theme="glass"] input:focus,
 [data-theme="glass"] select:focus,
 [data-theme="glass"] textarea:focus {
   border-color: var(--glass-accent) !important;
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
 }
 
 /* ===== BUTTONS ===== */
 [data-theme="glass"] .bg-indigo-600,
 [data-theme="glass"] .bg-blue-600 {
   background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3) !important;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.2) !important;
+  color: white !important;
 }
 
 [data-theme="glass"] .bg-emerald-600,
 [data-theme="glass"] .bg-green-600 {
   background: linear-gradient(135deg, #059669, #10b981) !important;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.2) !important;
+  color: white !important;
 }
 
 [data-theme="glass"] .bg-red-600 {
   background: linear-gradient(135deg, #dc2626, #ef4444) !important;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.25) !important;
+  box-shadow: 0 2px 12px rgba(239, 68, 68, 0.2) !important;
+  color: white !important;
 }
 
 /* ===== SIDEBAR ===== */
 [data-theme="glass"] aside {
-  background: rgba(15, 12, 41, 0.8) !important;
+  background: rgba(255, 255, 255, 0.45) !important;
   backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   border-color: var(--glass-border) !important;
 }
 
 [data-theme="glass"] aside .bg-blue-50,
 [data-theme="glass"] aside .bg-indigo-50 {
-  background: rgba(167, 139, 250, 0.15) !important;
+  background: rgba(139, 92, 246, 0.12) !important;
 }
 
 /* ===== TABLES ===== */
 [data-theme="glass"] thead {
-  background: rgba(255, 255, 255, 0.04) !important;
+  background: rgba(139, 92, 246, 0.06) !important;
 }
 
 [data-theme="glass"] tfoot {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(139, 92, 246, 0.08) !important;
 }
 
 /* ===== BADGES ===== */
 [data-theme="glass"] .ring-gray-500\/20,
 [data-theme="glass"] .ring-gray-600\/20 {
-  --tw-ring-color: rgba(255, 255, 255, 0.15) !important;
+  --tw-ring-color: rgba(139, 92, 246, 0.15) !important;
 }
 
-/* ===== SUMMARY CARDS - GLOW EFFECT ===== */
+/* ===== SUMMARY CARDS ===== */
 [data-theme="glass"] .shadow-sm {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 16px rgba(139, 92, 246, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="glass"] .shadow-lg {
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.1), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
 }
 
 /* ===== MODALS ===== */
 [data-theme="glass"] .fixed.inset-0 > .relative {
-  background: rgba(30, 27, 56, 0.95) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
   backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   border: 1px solid var(--glass-border) !important;
 }
 
 /* ===== SPINNER ===== */
 [data-theme="glass"] .animate-spin {
-  border-color: rgba(167, 139, 250, 0.2) !important;
+  border-color: rgba(124, 58, 237, 0.15) !important;
   border-top-color: var(--glass-accent) !important;
+}
+
+/* ===== CHART GRID ===== */
+[data-theme="glass"] .recharts-cartesian-grid line {
+  stroke: rgba(139, 92, 246, 0.08) !important;
+}
+
+[data-theme="glass"] .recharts-text {
+  fill: var(--glass-text-secondary) !important;
 }
 
 /* ===== SCROLLBAR (webkit) ===== */
@@ -222,10 +353,10 @@
 }
 
 [data-theme="glass"] ::-webkit-scrollbar-thumb {
-  background: rgba(167, 139, 250, 0.3);
+  background: rgba(124, 58, 237, 0.2);
   border-radius: 3px;
 }
 
 [data-theme="glass"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(167, 139, 250, 0.5);
+  background: rgba(124, 58, 237, 0.35);
 }

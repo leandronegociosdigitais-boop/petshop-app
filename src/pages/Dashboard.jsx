@@ -25,7 +25,7 @@ import {
   Receipt,
   Home,
 } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
 const STATUS_BADGE = {
   agendado: 'bg-blue-50 text-blue-700 ring-blue-600/20',
@@ -624,13 +624,19 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-6">
           {/* Receita x Lucro por Mes */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
-              <div className="flex items-center gap-2">
-                <DollarSign size={20} className="text-indigo-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Receita x Lucro</h2>
-              </div>
-              <p className="mt-0.5 text-sm text-gray-500">Comparativo mensal â€” {year}</p>
-            </div>
+      <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <DollarSign size={20} className="text-indigo-600" />
+            <h2 className="text-lg font-semibold text-gray-900">Receita x Lucro</h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-gray-600"><span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />Receita</span>
+            <span className="flex items-center gap-1.5 text-xs font-medium text-gray-600"><span className="inline-block h-2.5 w-2.5 rounded-full bg-indigo-500" />Lucro</span>
+          </div>
+        </div>
+        <p className="mt-0.5 text-sm text-gray-500">Comparativo mensal — {year}</p>
+      </div>
             <div className="p-4">
               <ResponsiveContainer width="100%" height={340}>
                 <BarChart data={dadosMensais} margin={{ top: 30, right: 30, left: 10, bottom: 5 }}>
@@ -638,7 +644,6 @@ export default function Dashboard() {
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
                   <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
-                  <Legend />
                   <Bar dataKey="entradas" name="Receita" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatBarLabel(v) }} />
                   <Bar dataKey="lucro" name="Lucro" fill="#6366f1" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#6366f1', formatter: (v) => formatBarLabel(v) }} />
                 </BarChart>
@@ -649,10 +654,16 @@ export default function Dashboard() {
           {/* Analise Evolutiva - Entradas x Despesas */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
-              <div className="flex items-center gap-2">
-                <TrendingUp size={20} className="text-emerald-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Analise Evolutiva</h2>
-              </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <TrendingUp size={20} className="text-emerald-600" />
+            <h2 className="text-lg font-semibold text-gray-900">Analise Evolutiva</h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-gray-600"><span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />Entradas</span>
+            <span className="flex items-center gap-1.5 text-xs font-medium text-gray-600"><span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />Despesas</span>
+          </div>
+        </div>
               <p className="mt-0.5 text-sm text-gray-500">Entradas x Despesas mensal â€” {year}</p>
             </div>
             <div className="p-4">
@@ -661,8 +672,6 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
-                  <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
-                  <Legend />
                   <Bar dataKey="entradas" name="Entradas" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatBarLabel(v) }} />
                   <Bar dataKey="saidas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#ef4444', formatter: (v) => formatBarLabel(v) }} />
                 </BarChart>
