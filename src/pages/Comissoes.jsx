@@ -136,7 +136,7 @@ export default function Comissoes() {
       if (a.pet?.id) semanas[key].pets.add(a.pet.id)
       semanas[key].dates.add(dateStr)
     }
-    return Object.values(semanas).sort((a, b) => a.key.localeCompare(b.key))
+    return Object.values(semanas).sort((a, b) => b.key.localeCompare(a.key))
   }, [filtered])
 
   const currentWeekKey = useMemo(() => {
