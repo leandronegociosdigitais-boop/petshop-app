@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+﻿import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatDateTime, formatTime, getLocalDateISO } from '../lib/dates'
 import {
@@ -365,7 +365,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Visao geral do petshop — {monthName} {year}
+            Visao geral do petshop â€” {monthName} {year}
           </p>
         </div>
         <button
@@ -387,7 +387,7 @@ export default function Dashboard() {
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-bold text-white">
-                Inadimplencia — {inadimplencia.length} pagamento{inadimplencia.length > 1 ? 's' : ''} vencido{inadimplencia.length > 1 ? 's' : ''}
+                Inadimplencia â€” {inadimplencia.length} pagamento{inadimplencia.length > 1 ? 's' : ''} vencido{inadimplencia.length > 1 ? 's' : ''}
               </h3>
               <p className="mt-0.5 text-sm text-red-100">
                 Atendimentos com pagamentos vencidos que precisam de atencao.
@@ -396,11 +396,11 @@ export default function Dashboard() {
                 {inadimplencia.slice(0, 3).map((item) => (
                   <div key={item.id} className="flex flex-col gap-1 rounded-lg bg-white/15 px-4 py-2.5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <span className="font-semibold text-white">{item.cliente?.nome || '—'}</span>
-                      <span className="mx-1 text-red-200">·</span>
-                      <span className="text-red-100">{item.pet?.nome || '—'}</span>
-                      <span className="mx-1 text-red-200">·</span>
-                      <span className="text-red-100">{item.servico?.nome || '—'}</span>
+                      <span className="font-semibold text-white">{item.cliente?.nome || 'â€”'}</span>
+                      <span className="mx-1 text-red-200">Â·</span>
+                      <span className="text-red-100">{item.pet?.nome || 'â€”'}</span>
+                      <span className="mx-1 text-red-200">Â·</span>
+                      <span className="text-red-100">{item.servico?.nome || 'â€”'}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-bold text-white">{formatCurrency(item.valor)}</span>
@@ -623,18 +623,18 @@ export default function Dashboard() {
                 <DollarSign size={20} className="text-indigo-600" />
                 <h2 className="text-lg font-semibold text-gray-900">Receita x Lucro</h2>
               </div>
-              <p className="mt-0.5 text-sm text-gray-500">Comparativo mensal — {year}</p>
+              <p className="mt-0.5 text-sm text-gray-500">Comparativo mensal â€” {year}</p>
             </div>
             <div className="p-4">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dadosMensais} margin={{ top: 20, right: 10, left: 0, bottom: 5 }}>
+              <ResponsiveContainer width="100%" height={340}>
+                <BarChart data={dadosMensais} margin={{ top: 30, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
                   <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
                   <Legend />
-                  <Bar dataKey="entradas" name="Receita" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151', formatter: (v) => formatTickK(v) }} />
-                  <Bar dataKey="lucro" name="Lucro" fill="#6366f1" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151', formatter: (v) => formatTickK(v) }} />
+                  <Bar dataKey="entradas" name="Receita" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatCurrency(v) }} />
+                  <Bar dataKey="lucro" name="Lucro" fill="#6366f1" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#6366f1', formatter: (v) => formatCurrency(v) }} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -647,18 +647,18 @@ export default function Dashboard() {
                 <TrendingUp size={20} className="text-emerald-600" />
                 <h2 className="text-lg font-semibold text-gray-900">Analise Evolutiva</h2>
               </div>
-              <p className="mt-0.5 text-sm text-gray-500">Entradas x Despesas mensal — {year}</p>
+              <p className="mt-0.5 text-sm text-gray-500">Entradas x Despesas mensal â€” {year}</p>
             </div>
             <div className="p-4">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dadosMensais} margin={{ top: 20, right: 10, left: 0, bottom: 5 }}>
+              <ResponsiveContainer width="100%" height={340}>
+                <BarChart data={dadosMensais} margin={{ top: 30, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
                   <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
                   <Legend />
-                  <Bar dataKey="entradas" name="Entradas" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151', formatter: (v) => formatTickK(v) }} />
-                  <Bar dataKey="saidas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151', formatter: (v) => formatTickK(v) }} />
+                  <Bar dataKey="entradas" name="Entradas" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatCurrency(v) }} />
+                  <Bar dataKey="saidas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#ef4444', formatter: (v) => formatCurrency(v) }} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -763,8 +763,8 @@ export default function Dashboard() {
                       <PawPrint size={18} />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{atendimento.pet?.nome || '—'}</p>
-                      <p className="text-xs text-gray-500">{atendimento.cliente?.nome || '—'} &middot; {atendimento.servico?.nome || '—'}</p>
+                      <p className="font-medium text-gray-900">{atendimento.pet?.nome || 'â€”'}</p>
+                      <p className="text-xs text-gray-500">{atendimento.cliente?.nome || 'â€”'} &middot; {atendimento.servico?.nome || 'â€”'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -819,12 +819,12 @@ export default function Dashboard() {
                           <PawPrint size={16} />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{atendimento.pet?.nome || '—'}</div>
-                          <div className="text-xs text-gray-500">{atendimento.cliente?.nome || '—'}</div>
+                          <div className="font-medium text-gray-900">{atendimento.pet?.nome || 'â€”'}</div>
+                          <div className="text-xs text-gray-500">{atendimento.cliente?.nome || 'â€”'}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || '—'}</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || 'â€”'}</td>
                     <td className="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-gray-600">{formatDate(atendimento.data_hora)} {formatTime(atendimento.data_hora)}</td>
                     <td className="hidden md:table-cell px-3 sm:px-6 py-4">
                       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado}`}>
@@ -846,7 +846,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><Users size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Clientes</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{totalClientes ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalClientes ?? 'â€”'}</p>
             </div>
           </div>
         </div>
@@ -855,7 +855,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600"><PawPrint size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Pets</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{totalPets ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalPets ?? 'â€”'}</p>
             </div>
           </div>
         </div>
@@ -864,7 +864,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-600"><Calendar size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Atendimentos Hoje</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{atendimentosHoje ?? '—'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{atendimentosHoje ?? 'â€”'}</p>
             </div>
           </div>
         </div>
@@ -881,3 +881,4 @@ export default function Dashboard() {
     </div>
   )
 }
+
