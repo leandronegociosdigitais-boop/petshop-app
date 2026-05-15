@@ -109,8 +109,13 @@ function formatCurrency(value) {
 }
 
 function formatTickK(v) {
-  if (v >= 1000) return `R$${(v / 1000).toFixed(0)}k`
-  return `R$${v}`
+  if (v >= 1000) return `${(v / 1000).toFixed(0)}k`
+  return `${v}`
+}
+
+function formatBarLabel(value) {
+  if (value == null) return '0'
+  return Math.round(parseFloat(value)).toLocaleString('pt-BR')
 }
 
 function getMonthRange() {
@@ -322,7 +327,8 @@ export default function Dashboard() {
       else if (r.tipo === 'saida') byMonth[m].saidas += v
     }
 
-    const meses = Object.keys(byMonth).sort((a, b) => a - b).map(m => ({
+    const currentMonth = new Date().getMonth() + 1
+    const meses = Object.keys(byMonth).sort((a, b) => a - b).filter(m => parseInt(m) <= currentMonth).map(m => ({
       mes: MONTH_NAMES[parseInt(m) - 1],
       entradas: byMonth[m].entradas,
       saidas: byMonth[m].saidas,
@@ -633,8 +639,8 @@ export default function Dashboard() {
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
                   <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
                   <Legend />
-                  <Bar dataKey="entradas" name="Receita" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatCurrency(v) }} />
-                  <Bar dataKey="lucro" name="Lucro" fill="#6366f1" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#6366f1', formatter: (v) => formatCurrency(v) }} />
+                  <Bar dataKey="entradas" name="Receita" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatBarLabel(v) }} />
+                  <Bar dataKey="lucro" name="Lucro" fill="#6366f1" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#6366f1', formatter: (v) => formatBarLabel(v) }} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -657,8 +663,8 @@ export default function Dashboard() {
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
                   <Tooltip formatter={(value) => formatCurrency(value)} labelStyle={{ fontWeight: 600 }} />
                   <Legend />
-                  <Bar dataKey="entradas" name="Entradas" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatCurrency(v) }} />
-                  <Bar dataKey="saidas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#ef4444', formatter: (v) => formatCurrency(v) }} />
+                  <Bar dataKey="entradas" name="Entradas" fill="#10b981" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#10b981', formatter: (v) => formatBarLabel(v) }} />
+                  <Bar dataKey="saidas" name="Despesas" fill="#ef4444" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 11, fontWeight: 600, fill: '#ef4444', formatter: (v) => formatBarLabel(v) }} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
