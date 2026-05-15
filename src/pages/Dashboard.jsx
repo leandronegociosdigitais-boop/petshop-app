@@ -615,7 +615,7 @@ export default function Dashboard() {
 
       {/* ====== GRAFICOS MENSAIS ====== */}
       {dadosMensais.length > 0 && (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6">
           {/* Receita x Lucro por Mes */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
@@ -881,4 +881,5 @@ export default function Dashboard() {
     </div>
   )
 }
+
 
