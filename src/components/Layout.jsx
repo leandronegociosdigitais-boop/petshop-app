@@ -22,10 +22,10 @@ export default function Layout({ children }) {
     `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
       isActive
         ? isGlass
-          ? 'bg-purple-100/60 text-purple-700'
+          ? 'bg-purple-200/60 text-purple-800'
           : 'bg-blue-50 text-blue-700'
         : isGlass
-          ? 'text-gray-700 hover:bg-purple-50/40 hover:text-gray-900'
+          ? 'text-gray-700 hover:bg-purple-100/40 hover:text-gray-900'
           : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
     }`
 
@@ -46,13 +46,13 @@ export default function Layout({ children }) {
         }`}
       >
         {/* Logo / Title */}
-        <div className={`flex items-center justify-between h-16 px-4 border-b ${isGlass ? 'border-purple-200/20' : 'border-gray-200'}`}>
+        <div className={`flex items-center justify-between h-16 px-4 border-b ${isGlass ? 'border-violet-200/25' : 'border-gray-200'}`}>
           <div className="flex items-center gap-2">
-            <PawPrint className={`w-7 h-7 ${isGlass ? 'text-purple-600' : 'text-blue-600'}`} />
+            <PawPrint className={`w-7 h-7 ${isGlass ? 'text-violet-700' : 'text-blue-600'}`} />
             <span className={`text-xl font-bold ${isGlass ? 'text-gray-900' : 'text-gray-900'}`}>PetShop</span>
           </div>
           <button
-            className={`p-1 rounded-md lg:hidden ${isGlass ? 'text-gray-500 hover:text-gray-700 hover:bg-purple-50/40' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+            className={`p-1 rounded-md lg:hidden ${isGlass ? 'text-gray-500 hover:text-gray-700 hover:bg-purple-100/40' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
             onClick={() => setSidebarOpen(false)}
           >
             <X className="w-5 h-5" />
@@ -76,12 +76,12 @@ export default function Layout({ children }) {
         </nav>
 
         {/* Theme Toggle */}
-        <div className={`px-3 py-4 border-t ${isGlass ? 'border-purple-200/20' : 'border-gray-200'}`}>
+        <div className={`px-3 py-4 border-t ${isGlass ? 'border-violet-200/25' : 'border-gray-200'}`}>
           <button
             onClick={toggleTheme}
             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
               isGlass
-                ? 'bg-gradient-to-r from-purple-100/60 to-indigo-100/60 text-purple-700 hover:from-purple-100/80 hover:to-indigo-100/80 border border-purple-200/30'
+                ? 'bg-gradient-to-r from-purple-200/60 to-violet-100/60 text-violet-800 hover:from-purple-100/80 hover:to-indigo-100/80 border border-purple-200/30'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
             }`}
           >
@@ -94,21 +94,21 @@ export default function Layout({ children }) {
       {/* Main content area */}
       <div className="lg:pl-64">
         {/* Top bar (mobile) */}
-        <header className={`sticky top-0 z-20 flex items-center h-16 px-4 bg-white border-b lg:hidden ${isGlass ? 'border-purple-200/20 bg-white/50 backdrop-blur-xl' : 'border-gray-200'}`}>
+        <header className={`sticky top-0 z-20 flex items-center h-16 px-4 bg-white border-b lg:hidden ${isGlass ? 'border-violet-200/25 bg-white/50 backdrop-blur-xl' : 'border-gray-200'}`}>
           <button
-            className={`p-1 rounded-md ${isGlass ? 'text-gray-500 hover:text-gray-700 hover:bg-purple-50/40' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+            className={`p-1 rounded-md ${isGlass ? 'text-gray-500 hover:text-gray-700 hover:bg-purple-100/40' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-2 ml-3">
-            <PawPrint className={`w-6 h-6 ${isGlass ? 'text-purple-600' : 'text-blue-600'}`} />
+            <PawPrint className={`w-6 h-6 ${isGlass ? 'text-violet-700' : 'text-blue-600'}`} />
             <span className={`text-lg font-bold ${isGlass ? 'text-gray-900' : 'text-gray-900'}`}>PetShop</span>
           </div>
           {/* Mobile theme toggle */}
           <button
             onClick={toggleTheme}
-            className={`ml-auto p-2 rounded-lg transition-colors ${isGlass ? 'text-purple-600 hover:bg-purple-50/40' : 'text-gray-500 hover:bg-gray-100'}`}
+            className={`ml-auto p-2 rounded-lg transition-colors ${isGlass ? 'text-violet-700 hover:bg-purple-100/40' : 'text-gray-500 hover:bg-gray-100'}`}
           >
             {isGlass ? <Sparkles className="w-5 h-5" /> : <LayoutGrid className="w-5 h-5" />}
           </button>

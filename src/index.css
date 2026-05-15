@@ -4,20 +4,20 @@
 /* Applied when [data-theme="glass"] is set on <html> */
 
 [data-theme="glass"] {
-  --glass-bg: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 35%, #fef3c7 65%, #fce7f3 100%);
-  --glass-panel: rgba(255, 255, 255, 0.55);
-  --glass-panel-hover: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(139, 92, 246, 0.15);
-  --glass-border-glow: rgba(139, 92, 246, 0.25);
-  --glass-text: #1e1b4b;
-  --glass-text-secondary: #3b3670;
-  --glass-accent: #7c3aed;
-  --glass-accent-bright: #8b5cf6;
+  --glass-bg: linear-gradient(135deg, #c4b5fd 0%, #ddd6fe 25%, #ede9fe 45%, #fce7f3 70%, #fbcfe8 100%);
+  --glass-panel: rgba(255, 255, 255, 0.45);
+  --glass-panel-hover: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(109, 40, 217, 0.18);
+  --glass-border-glow: rgba(109, 40, 217, 0.3);
+  --glass-text: #1e1044;
+  --glass-text-secondary: #3b1f8e;
+  --glass-accent: #6d28d9;
+  --glass-accent-bright: #7c3aed;
   --glass-emerald: #059669;
   --glass-red: #dc2626;
   --glass-amber: #d97706;
-  --glass-indigo: #4f46e5;
-  --glass-sidebar: rgba(255, 255, 255, 0.5);
+  --glass-indigo: #4338ca;
+  --glass-sidebar: rgba(255, 255, 255, 0.38);
 }
 
 /* Body background */
@@ -33,17 +33,19 @@
 [data-theme="glass"] .rounded-xl,
 [data-theme="glass"] .rounded-lg {
   background: var(--glass-panel) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   border-color: var(--glass-border) !important;
   color: var(--glass-text);
+  box-shadow: 0 4px 24px rgba(109, 40, 217, 0.08) !important;
 }
 
 [data-theme="glass"] .bg-white {
   background: var(--glass-panel) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   color: var(--glass-text);
+  box-shadow: 0 4px 24px rgba(109, 40, 217, 0.08) !important;
 }
 
 [data-theme="glass"] .bg-white:hover,
@@ -59,7 +61,7 @@
 }
 
 [data-theme="glass"] .divide-y > :not([hidden]) ~ :not([hidden]) {
-  border-color: rgba(139, 92, 246, 0.08) !important;
+  border-color: rgba(109, 40, 217, 0.08) !important;
 }
 
 /* ===== TEXT COLORS ===== */
@@ -75,7 +77,7 @@
 [data-theme="glass"] .text-gray-500,
 [data-theme="glass"] .text-gray-400,
 [data-theme="glass"] .text-gray-300 {
-  color: rgba(30, 27, 75, 0.45) !important;
+  color: rgba(30, 16, 68, 0.45) !important;
 }
 
 /* ===== ACCENT COLORS ===== */
@@ -151,7 +153,7 @@
 [data-theme="glass"] .bg-purple-100,
 [data-theme="glass"] .bg-fuchsia-50,
 [data-theme="glass"] .bg-fuchsia-100 {
-  background: rgba(139, 92, 246, 0.12) !important;
+  background: rgba(109, 40, 217, 0.15) !important;
 }
 
 [data-theme="glass"] .bg-sky-50,
@@ -180,7 +182,7 @@
 }
 
 [data-theme="glass"] .bg-gray-50 {
-  background: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
 }
 
 /* ===== GRADIENT BACKGROUNDS ===== */
@@ -208,42 +210,42 @@
 
 [data-theme="glass"] .bg-gradient-to-br.from-purple-50,
 [data-theme="glass"] .bg-gradient-to-br.from-fuchsia-50 {
-  background: linear-gradient(135deg, rgba(196, 181, 253, 0.2), rgba(168, 85, 247, 0.15)) !important;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(109, 40, 217, 0.18)) !important;
 }
 
 /* Big accent gradient cards (Lucro do Mes etc.) */
 [data-theme="glass"] .bg-gradient-to-r.from-indigo-600.to-blue-600 {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(99, 102, 241, 0.2)) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(99, 102, 241, 0.2) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.35), rgba(79, 70, 229, 0.25)) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(109, 40, 217, 0.25) !important;
 }
 
 [data-theme="glass"] .bg-gradient-to-r.from-red-600.to-rose-600 {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(244, 63, 94, 0.15)) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(244, 63, 94, 0.2)) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   border: 1px solid rgba(239, 68, 68, 0.2) !important;
 }
 
 /* Inadimplencia card */
 [data-theme="glass"] .bg-gradient-to-r.from-red-600.to-red-700 {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(185, 28, 28, 0.2)) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.3), rgba(185, 28, 28, 0.25)) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   border: 1px solid rgba(239, 68, 68, 0.2) !important;
 }
 
 [data-theme="glass"] .bg-gradient-to-r.from-purple-500\/20,
 [data-theme="glass"] .bg-gradient-to-r.from-purple-500 {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.15)) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.25), rgba(124, 58, 237, 0.2)) !important;
 }
 
 /* ===== INPUTS ===== */
 [data-theme="glass"] input,
 [data-theme="glass"] select,
 [data-theme="glass"] textarea {
-  background: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
   border-color: var(--glass-border) !important;
   color: var(--glass-text) !important;
   backdrop-filter: blur(8px) !important;
@@ -251,21 +253,21 @@
 
 [data-theme="glass"] input::placeholder,
 [data-theme="glass"] textarea::placeholder {
-  color: rgba(30, 27, 75, 0.35) !important;
+  color: rgba(30, 16, 68, 0.35) !important;
 }
 
 [data-theme="glass"] input:focus,
 [data-theme="glass"] select:focus,
 [data-theme="glass"] textarea:focus {
   border-color: var(--glass-accent) !important;
-  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2) !important;
 }
 
 /* ===== BUTTONS ===== */
 [data-theme="glass"] .bg-indigo-600,
 [data-theme="glass"] .bg-blue-600 {
-  background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
-  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.2) !important;
+  background: linear-gradient(135deg, #6d28d9, #7c3aed) !important;
+  box-shadow: 0 2px 12px rgba(109, 40, 217, 0.25) !important;
   color: white !important;
 }
 
@@ -284,58 +286,59 @@
 
 /* ===== SIDEBAR ===== */
 [data-theme="glass"] aside {
-  background: rgba(255, 255, 255, 0.45) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
   border-color: var(--glass-border) !important;
 }
 
 [data-theme="glass"] aside .bg-blue-50,
 [data-theme="glass"] aside .bg-indigo-50 {
-  background: rgba(139, 92, 246, 0.12) !important;
+  background: rgba(109, 40, 217, 0.15) !important;
 }
 
 /* ===== TABLES ===== */
 [data-theme="glass"] thead {
-  background: rgba(139, 92, 246, 0.06) !important;
+  background: rgba(109, 40, 217, 0.08) !important;
 }
 
 [data-theme="glass"] tfoot {
-  background: rgba(139, 92, 246, 0.08) !important;
+  background: rgba(109, 40, 217, 0.1) !important;
 }
 
 /* ===== BADGES ===== */
 [data-theme="glass"] .ring-gray-500\/20,
 [data-theme="glass"] .ring-gray-600\/20 {
-  --tw-ring-color: rgba(139, 92, 246, 0.15) !important;
+  --tw-ring-color: rgba(109, 40, 217, 0.18) !important;
 }
 
 /* ===== SUMMARY CARDS ===== */
 [data-theme="glass"] .shadow-sm {
-  box-shadow: 0 2px 16px rgba(139, 92, 246, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 2px 16px rgba(109, 40, 217, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
 }
 
 [data-theme="glass"] .shadow-lg {
-  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.1), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 4px 24px rgba(109, 40, 217, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
 }
 
 /* ===== MODALS ===== */
 [data-theme="glass"] .fixed.inset-0 > .relative {
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
   border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 8px 32px rgba(109, 40, 217, 0.12) !important;
 }
 
 /* ===== SPINNER ===== */
 [data-theme="glass"] .animate-spin {
-  border-color: rgba(124, 58, 237, 0.15) !important;
+  border-color: rgba(109, 40, 217, 0.15) !important;
   border-top-color: var(--glass-accent) !important;
 }
 
 /* ===== CHART GRID ===== */
 [data-theme="glass"] .recharts-cartesian-grid line {
-  stroke: rgba(139, 92, 246, 0.08) !important;
+  stroke: rgba(109, 40, 217, 0.08) !important;
 }
 
 [data-theme="glass"] .recharts-text {
@@ -353,10 +356,10 @@
 }
 
 [data-theme="glass"] ::-webkit-scrollbar-thumb {
-  background: rgba(124, 58, 237, 0.2);
+  background: rgba(109, 40, 217, 0.2);
   border-radius: 3px;
 }
 
 [data-theme="glass"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 58, 237, 0.35);
+  background: rgba(109, 40, 217, 0.35);
 }
