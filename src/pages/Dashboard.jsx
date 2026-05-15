@@ -633,7 +633,7 @@ export default function Dashboard() {
             </div>
             <div className="p-4">
               <ResponsiveContainer width="100%" height={340}>
-                <BarChart data={dadosMensais} margin={{ top: 30, right: 10, left: 0, bottom: 5 }}>
+                <BarChart data={dadosMensais} margin={{ top: 30, right: 30, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
@@ -657,7 +657,7 @@ export default function Dashboard() {
             </div>
             <div className="p-4">
               <ResponsiveContainer width="100%" height={340}>
-                <BarChart data={dadosMensais} margin={{ top: 30, right: 10, left: 0, bottom: 5 }}>
+                <BarChart data={dadosMensais} margin={{ top: 30, right: 30, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatTickK} />
