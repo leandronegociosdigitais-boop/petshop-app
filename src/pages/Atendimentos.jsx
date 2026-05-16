@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatDate, formatDateTime, formatCurrency, isToday, toLocalDatetimeValue, toLocalDateValue, getLocalDateISO, extractDateKey } from '../lib/dates'
+import { formatDate, formatDateTime, formatTime, formatCurrency, isToday, toLocalDatetimeValue, toLocalDateValue, getLocalDateISO, extractDateKey } from '../lib/dates'
 import {
   Plus,
   Pencil,
@@ -17,6 +17,7 @@ import {
   Banknote,
   ChevronLeft,
   ChevronRight,
+  PawPrint,
 } from 'lucide-react'
 
 const BANCO_OPTIONS = [
@@ -570,6 +571,30 @@ export default function Atendimentos() {
     return counts
   }, [atendimentos])
 
+  const DAY_NAMES = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado']
+
+  const groupedByDay = useMemo(() => {
+    const groups = []
+    const map = new Map()
+    for (const a of filtered) {
+      const key = extractDateKey(a.data_hora)
+      if (!map.has(key)) {
+        map.set(key, [])
+      }
+      map.get(key).push(a)
+    }
+    for (const [dateKey, items] of map) {
+      const d = new Date(dateKey + 'T12:00:00')
+      const dayName = DAY_NAMES[d.getDay()]
+      const day = String(d.getDate()).padStart(2, '0')
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const label = `${dayName}, ${day}/${month}`
+      const today = isToday(dateKey + 'T12:00:00')
+      groups.push({ dateKey, label, today, items })
+    }
+    return groups
+  }, [filtered])
+
   return (
     <div className="space-y-6">
       {/* Toast */}
@@ -747,207 +772,191 @@ export default function Atendimentos() {
           )}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50 sticky top-0 z-10">
-                <tr>
-                  <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Pet / Cliente
-                  </th>
-                  <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Servico
-                  </th>
-                  <th className="hidden sm:table-cell px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Data / Hora
-                  </th>
-                  <th className="hidden md:table-cell px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Status
-                  </th>
-                  <th className="hidden lg:table-cell px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Pagamento
-                  </th>
-                  <th className="hidden xl:table-cell px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Banco
-                  </th>
-                  <th className="hidden lg:table-cell px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Valor
-                  </th>
-                  <th className="px-3 sm:px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Acoes
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filtered.map((atendimento) => {
-                  const StatusIcon = STATUS_ICON[atendimento.status] || AlertCircle
-                  const nextStatus = NEXT_STATUS[atendimento.status]
-                  const nextLabel = NEXT_STATUS_LABEL[atendimento.status]
-                  const todayHighlight = isToday(atendimento.data_hora)
-                  const pagamentoStatus = atendimento.status_pagamento || 'pendente'
-                  const formaPagamento = atendimento.forma_pagamento || 'dinheiro'
+  <div className="space-y-4">
+    {groupedByDay.map((day) => (
+      <div key={day.dateKey} className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className={`px-4 sm:px-6 py-3 border-b border-gray-200 flex items-center justify-between ${
+          day.today ? "bg-indigo-50" : "bg-gray-50"
+        }`}>
+          <div className="flex items-center gap-2">
+            <Calendar size={18} className={day.today ? "text-indigo-600" : "text-gray-500"} />
+            <span className={`text-sm font-semibold ${day.today ? "text-indigo-700" : "text-gray-700"}`}>
+              {day.label}
+            </span>
+            {day.today && (
+              <span className="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700">
+                Hoje
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-medium text-gray-500">
+            {day.items.length} atendimento{day.items.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-100">
+            <thead>
+              <tr className="text-xs uppercase tracking-wide text-gray-500">
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold">Pet / Cliente</th>
+                <th className="px-3 sm:px-4 py-2 text-left font-semibold">Servico</th>
+                <th className="hidden sm:table-cell px-4 py-2 text-left font-semibold">Hora</th>
+                <th className="hidden md:table-cell px-4 py-2 text-left font-semibold">Status</th>
+                <th className="hidden lg:table-cell px-4 py-2 text-left font-semibold">Pagamento</th>
+                <th className="hidden xl:table-cell px-4 py-2 text-left font-semibold">Banco</th>
+                <th className="hidden lg:table-cell px-4 py-2 text-right font-semibold">Valor</th>
+                <th className="px-3 sm:px-4 py-2 text-right font-semibold">Acoes</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {day.items.map((atendimento) => {
+                const StatusIcon = STATUS_ICON[atendimento.status] || AlertCircle
+                const nextStatus = NEXT_STATUS[atendimento.status]
+                const nextLabel = NEXT_STATUS_LABEL[atendimento.status]
+                const pagamentoStatus = atendimento.status_pagamento || "pendente"
+                const formaPagamento = atendimento.forma_pagamento || "dinheiro"
 
-                  return (
-                    <tr
-                      key={atendimento.id}
-                      className={`transition-colors hover:bg-gray-50 ${
-                        todayHighlight ? 'bg-indigo-50/40' : ''
-                      }`}
-                    >
-                      {/* Pet / Cliente */}
-                      <td className="px-4 py-2">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-                            <Calendar size={14} />
+                return (
+                  <tr key={atendimento.id} className="transition-colors hover:bg-gray-50">
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                          <PawPrint size={14} />
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {atendimento.pet?.nome || "\u2014"}
                           </div>
-                          <div>
-                            <div className="font-medium text-gray-900">
-                              {atendimento.pet?.nome || '—'}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {atendimento.cliente?.nome || '—'}
-                            </div>
+                          <div className="text-xs text-gray-500">
+                            {atendimento.cliente?.nome || "\u2014"}
                           </div>
                         </div>
-                      </td>
+                      </div>
+                    </td>
 
-                      {/* Servico */}
-                      <td className="px-3 sm:px-4 py-2 text-sm text-gray-700">
-                        {atendimento.servico?.nome || '—'}
-                      </td>
+                    <td className="px-3 sm:px-4 py-2.5 text-sm text-gray-700">
+                      {atendimento.servico?.nome || "\u2014"}
+                    </td>
 
-                      {/* Data / Hora */}
-                      <td className="hidden sm:table-cell px-4 py-2">
-                        <div className="flex items-center gap-1 text-sm text-gray-700">
-                          <Clock size={14} className="text-gray-400" />
-                          <span>{formatDateTime(atendimento.data_hora)}</span>
-                        </div>
-                        {todayHighlight && (
-                          <span className="mt-0.5 inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700">
-                            Hoje
-                          </span>
-                        )}
-                      </td>
+                    <td className="hidden sm:table-cell px-4 py-2.5">
+                      <div className="flex items-center gap-1 text-sm text-gray-700">
+                        <Clock size={14} className="text-gray-400" />
+                        <span>{formatTime(atendimento.data_hora)}</span>
+                      </div>
+                    </td>
 
-                      {/* Status */}
-                      <td className="hidden md:table-cell px-4 py-2">
+                    <td className="hidden md:table-cell px-4 py-2.5">
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                          STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado
+                        }`}
+                      >
+                        <StatusIcon size={12} />
+                        {STATUS_LABEL[atendimento.status] || atendimento.status}
+                      </span>
+                    </td>
+
+                    <td className="hidden lg:table-cell px-4 py-2.5">
+                      <div className="flex flex-col gap-1">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                            STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                            PAGAMENTO_STATUS_BADGE[pagamentoStatus] || PAGAMENTO_STATUS_BADGE.pendente
                           }`}
                         >
-                          <StatusIcon size={12} />
-                          {STATUS_LABEL[atendimento.status] || atendimento.status}
+                          {pagamentoStatus === "pago" && <CheckCircle size={12} />}
+                          {pagamentoStatus === "pendente" && <Clock size={12} />}
+                          {pagamentoStatus === "vencido" && <AlertCircle size={12} />}
+                          {PAGAMENTO_STATUS_LABEL[pagamentoStatus] || pagamentoStatus}
                         </span>
-                      </td>
-
-                      {/* Pagamento */}
-                      <td className="hidden lg:table-cell px-4 py-2">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                              PAGAMENTO_STATUS_BADGE[pagamentoStatus] || PAGAMENTO_STATUS_BADGE.pendente
-                            }`}
-                          >
-                            {pagamentoStatus === 'pago' && <CheckCircle size={12} />}
-                            {pagamentoStatus === 'pendente' && <Clock size={12} />}
-                            {pagamentoStatus === 'vencido' && <AlertCircle size={12} />}
-                            {PAGAMENTO_STATUS_LABEL[pagamentoStatus] || pagamentoStatus}
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                            FORMA_PAGAMENTO_BADGE[formaPagamento] || FORMA_PAGAMENTO_BADGE.loja
+                          }`}
+                        >
+                          <DollarSign size={10} />
+                          {FORMA_PAGAMENTO_LABEL[formaPagamento] || formaPagamento}
+                        </span>
+                        {atendimento.data_vencimento && (
+                          <span className="text-xs text-gray-400">
+                            Venc: {formatDate(atendimento.data_vencimento)}
                           </span>
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                              FORMA_PAGAMENTO_BADGE[formaPagamento] || FORMA_PAGAMENTO_BADGE.loja
-                            }`}
-                          >
-                            <DollarSign size={10} />
-                            {FORMA_PAGAMENTO_LABEL[formaPagamento] || formaPagamento}
-                          </span>
-                          {atendimento.data_vencimento && (
-                            <span className="text-xs text-gray-400">
-                              Venc: {formatDate(atendimento.data_vencimento)}
-                            </span>
-                          )}
-                        </div>
-                      </td>
+                        )}
+                      </div>
+                    </td>
 
-        {/* Banco */}
-        <td className="hidden xl:table-cell px-4 py-2 text-sm text-gray-600">
-          {atendimento.banco ? (BANCO_LABEL[atendimento.banco] || atendimento.banco) : <span className="text-gray-400">—</span>}
-        </td>
+                    <td className="hidden xl:table-cell px-4 py-2.5 text-sm text-gray-600">
+                      {atendimento.banco ? (BANCO_LABEL[atendimento.banco] || atendimento.banco) : <span className="text-gray-400">{"\u2014"}</span>}
+                    </td>
 
-                      {/* Valor */}
-                      <td className="hidden lg:table-cell px-4 py-2 text-right text-sm font-semibold text-indigo-700">
-                        {formatCurrency(atendimento.valor)}
-                      </td>
+                    <td className="hidden lg:table-cell px-4 py-2.5 text-right text-sm font-semibold text-indigo-700">
+                      {formatCurrency(atendimento.valor)}
+                    </td>
 
-                      {/* Acoes */}
-                      <td className="px-3 sm:px-4 py-2 text-right">
-                        <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
-                          {/* Marcar como Pago button (only on pendente/vencido) */}
-                          {(pagamentoStatus === 'pendente' || pagamentoStatus === 'vencido') && (
-                            <button
-                              onClick={() => handleMarcarPago(atendimento)}
-                              className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
-                              title="Marcar como Pago"
-                            >
-                              <Banknote size={12} />
-                              Pago
-                            </button>
-                          )}
-                          {/* Quick status advancement */}
-                          {nextStatus && nextLabel && (
-                            <button
-                              onClick={() => handleChangeStatus(atendimento, nextStatus)}
-                              className={`inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
-                                nextStatus === 'em_andamento'
-                                  ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
-                                  : nextStatus === 'concluido'
-                                  ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                              }`}
-                              title={`Mover para ${STATUS_LABEL[nextStatus]}`}
-                            >
-                              {nextStatus === 'em_andamento' && <Clock size={12} />}
-                              {nextStatus === 'concluido' && <CheckCircle size={12} />}
-                              {nextLabel}
-                            </button>
-                          )}
-                          {/* Cancel button (only if not already cancelled) */}
-                          {atendimento.status !== 'cancelado' && (
-                            <button
-                              onClick={() => handleChangeStatus(atendimento, 'cancelado')}
-                              className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              title="Cancelar atendimento"
-                            >
-                              <XCircle size={16} />
-                            </button>
-                          )}
+                    <td className="px-3 sm:px-4 py-2.5 text-right">
+                      <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
+                        {(pagamentoStatus === "pendente" || pagamentoStatus === "vencido") && (
                           <button
-                            onClick={() => openEditModal(atendimento)}
-                            className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                            title="Editar"
+                            onClick={() => handleMarcarPago(atendimento)}
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                            title="Marcar como Pago"
                           >
-                            <Pencil size={16} />
+                            <Banknote size={12} />
+                            Pago
                           </button>
+                        )}
+                        {nextStatus && nextLabel && (
                           <button
-                            onClick={() => setDeleteId(atendimento.id)}
+                            onClick={() => handleChangeStatus(atendimento, nextStatus)}
+                            className={`inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
+                              nextStatus === "em_andamento"
+                                ? "bg-amber-50 text-amber-700 hover:bg-amber-100"
+                                : nextStatus === "concluido"
+                                ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                                : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                            }`}
+                            title={`Mover para ${STATUS_LABEL[nextStatus]}`}
+                          >
+                            {nextStatus === "em_andamento" && <Clock size={12} />}
+                            {nextStatus === "concluido" && <CheckCircle size={12} />}
+                            {nextLabel}
+                          </button>
+                        )}
+                        {atendimento.status !== "cancelado" && (
+                          <button
+                            onClick={() => handleChangeStatus(atendimento, "cancelado")}
                             className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                            title="Excluir"
+                            title="Cancelar atendimento"
                           >
-                            <Trash2 size={16} />
+                            <XCircle size={16} />
                           </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+                        )}
+                        <button
+                          onClick={() => openEditModal(atendimento)}
+                          className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                          title="Editar"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => setDeleteId(atendimento.id)}
+                          className="rounded-md p-2.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                          title="Excluir"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
+    ))}
+  </div>
+)}
 
-      {/* Create/Edit Modal */}
+{/* Create/Edit Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div
