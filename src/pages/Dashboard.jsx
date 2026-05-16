@@ -371,7 +371,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Visao geral do petshop â€” {monthName} {year}
+            Visao geral do petshop — {monthName} {year}
           </p>
         </div>
         <button
@@ -393,7 +393,7 @@ export default function Dashboard() {
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-bold text-white">
-                Inadimplencia â€” {inadimplencia.length} pagamento{inadimplencia.length > 1 ? 's' : ''} vencido{inadimplencia.length > 1 ? 's' : ''}
+                Inadimplencia — {inadimplencia.length} pagamento{inadimplencia.length > 1 ? 's' : ''} vencido{inadimplencia.length > 1 ? 's' : ''}
               </h3>
               <p className="mt-0.5 text-sm text-red-100">
                 Atendimentos com pagamentos vencidos que precisam de atencao.
@@ -402,11 +402,11 @@ export default function Dashboard() {
                 {inadimplencia.slice(0, 3).map((item) => (
                   <div key={item.id} className="flex flex-col gap-1 rounded-lg bg-white/15 px-4 py-2.5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <span className="font-semibold text-white">{item.cliente?.nome || 'â€”'}</span>
-                      <span className="mx-1 text-red-200">Â·</span>
-                      <span className="text-red-100">{item.pet?.nome || 'â€”'}</span>
-                      <span className="mx-1 text-red-200">Â·</span>
-                      <span className="text-red-100">{item.servico?.nome || 'â€”'}</span>
+                      <span className="font-semibold text-white">{item.cliente?.nome || '—'}</span>
+                      <span className="mx-1 text-red-200">·</span>
+                      <span className="text-red-100">{item.pet?.nome || '—'}</span>
+                      <span className="mx-1 text-red-200">·</span>
+                      <span className="text-red-100">{item.servico?.nome || '—'}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-bold text-white">{formatCurrency(item.valor)}</span>
@@ -664,7 +664,7 @@ export default function Dashboard() {
             <span className="flex items-center gap-1.5 text-xs font-medium text-gray-600"><span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />Despesas</span>
           </div>
         </div>
-              <p className="mt-0.5 text-sm text-gray-500">Entradas x Despesas mensal â€” {year}</p>
+              <p className="mt-0.5 text-sm text-gray-500">Entradas x Despesas mensal — {year}</p>
             </div>
             <div className="p-4">
               <ResponsiveContainer width="100%" height={340}>
@@ -778,8 +778,8 @@ export default function Dashboard() {
                       <PawPrint size={18} />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{atendimento.pet?.nome || 'â€”'}</p>
-                      <p className="text-xs text-gray-500">{atendimento.cliente?.nome || 'â€”'} &middot; {atendimento.servico?.nome || 'â€”'}</p>
+                      <p className="font-medium text-gray-900">{atendimento.pet?.nome || '—'}</p>
+                      <p className="text-xs text-gray-500">{atendimento.cliente?.nome || '—'} &middot; {atendimento.servico?.nome || '—'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -834,12 +834,12 @@ export default function Dashboard() {
                           <PawPrint size={16} />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{atendimento.pet?.nome || 'â€”'}</div>
-                          <div className="text-xs text-gray-500">{atendimento.cliente?.nome || 'â€”'}</div>
+                          <div className="font-medium text-gray-900">{atendimento.pet?.nome || '—'}</div>
+                          <div className="text-xs text-gray-500">{atendimento.cliente?.nome || '—'}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || 'â€”'}</td>
+                    <td className="px-3 sm:px-6 py-4 text-sm text-gray-700">{atendimento.servico?.nome || '—'}</td>
                     <td className="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-gray-600">{formatDate(atendimento.data_hora)} {formatTime(atendimento.data_hora)}</td>
                     <td className="hidden md:table-cell px-3 sm:px-6 py-4">
                       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado}`}>
@@ -861,7 +861,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><Users size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Clientes</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{totalClientes ?? 'â€”'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalClientes ?? '—'}</p>
             </div>
           </div>
         </div>
@@ -870,7 +870,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600"><PawPrint size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Total Pets</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{totalPets ?? 'â€”'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{totalPets ?? '—'}</p>
             </div>
           </div>
         </div>
@@ -879,7 +879,7 @@ export default function Dashboard() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-600"><Calendar size={18} /></div>
             <div className="min-w-0">
               <p className="text-xs text-gray-500">Atendimentos Hoje</p>
-              <p className="text-lg font-bold text-gray-900 truncate">{atendimentosHoje ?? 'â€”'}</p>
+              <p className="text-lg font-bold text-gray-900 truncate">{atendimentosHoje ?? '—'}</p>
             </div>
           </div>
         </div>
