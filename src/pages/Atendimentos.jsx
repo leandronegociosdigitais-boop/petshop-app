@@ -39,6 +39,8 @@ const EMPTY_FORM = {
   valor: '',
   observacoes: '',
   forma_pagamento: 'pix',
+  forma_pagamento_2: '',
+  valor_2: '',
   status_pagamento: 'pendente',
   data_vencimento: '',
   banco: '',
@@ -256,6 +258,8 @@ export default function Atendimentos() {
       valor: atendimento.valor != null ? String(atendimento.valor) : '',
       observacoes: atendimento.observacoes || '',
       forma_pagamento: atendimento.forma_pagamento || 'dinheiro',
+      forma_pagamento_2: atendimento.forma_pagamento_2 || '',
+      valor_2: atendimento.valor_2 != null ? String(atendimento.valor_2) : '',
       status_pagamento: atendimento.status_pagamento || 'pendente',
       data_vencimento: atendimento.data_vencimento ? toLocalDateValue(atendimento.data_vencimento) : '',
       banco: atendimento.banco || '',
@@ -324,6 +328,8 @@ export default function Atendimentos() {
       valor: form.valor ? parseFloat(form.valor) : null,
       observacoes: form.observacoes.trim(),
       forma_pagamento: form.forma_pagamento,
+      forma_pagamento_2: form.forma_pagamento_2 || null,
+      valor_2: form.forma_pagamento_2 && form.valor_2 ? parseFloat(form.valor_2) : null,
       status_pagamento: form.status_pagamento,
       data_vencimento: form.data_vencimento || null,
       banco: form.banco || null,
@@ -409,55 +415,79 @@ export default function Atendimentos() {
   }
 
   async function createFinanceiroFromAtendimento(atendimentoId, payloadOrAtendimento) {
-    const { data: existing } = await supabase
-      .from('financeiro')
-      .select('id')
-      .eq('atendimento_id', atendimentoId)
+  const { data: existing } = await supabase
+    .from('financeiro')
+    .select('id')
+    .eq('atendimento_id', atendimentoId)
+    .limit(1)
+
+  if (existing && existing.length > 0) return
+
+  let servicoNome = payloadOrAtendimento.servico?.nome
+  let petNome = payloadOrAtendimento.pet?.nome
+  let clienteNome = payloadOrAtendimento.cliente?.nome
+
+  if (!servicoNome || !petNome || !clienteNome) {
+    const { data: fullAtend } = await supabase
+      .from('atendimentos')
+      .select('*, pet:pet_id(id, nome), cliente:cliente_id(id, nome), servico:servico_id(id, nome)')
+      .eq('id', atendimentoId)
       .limit(1)
 
-    if (existing && existing.length > 0) return
-
-    let servicoNome = payloadOrAtendimento.servico?.nome
-    let petNome = payloadOrAtendimento.pet?.nome
-    let clienteNome = payloadOrAtendimento.cliente?.nome
-
-    if (!servicoNome || !petNome || !clienteNome) {
-      const { data: fullAtend } = await supabase
-        .from('atendimentos')
-        .select('*, pet:pet_id(id, nome), cliente:cliente_id(id, nome), servico:servico_id(id, nome)')
-        .eq('id', atendimentoId)
-        .limit(1)
-
-      if (fullAtend && fullAtend.length > 0) {
-        servicoNome = servicoNome || fullAtend[0].servico?.nome || 'Servico'
-        petNome = petNome || fullAtend[0].pet?.nome || ''
-        clienteNome = clienteNome || fullAtend[0].cliente?.nome || ''
-      }
+    if (fullAtend && fullAtend.length > 0) {
+      servicoNome = servicoNome || fullAtend[0].servico?.nome || 'Servico'
+      petNome = petNome || fullAtend[0].pet?.nome || ''
+      clienteNome = clienteNome || fullAtend[0].cliente?.nome || ''
     }
+  }
 
-    const valor = parseFloat(payloadOrAtendimento.valor) || 0
-    if (valor <= 0) return
+  const valor = parseFloat(payloadOrAtendimento.valor) || 0
+  const valor2 = parseFloat(payloadOrAtendimento.valor_2) || 0
+  if (valor <= 0 && valor2 <= 0) return
 
-    const dataPag = payloadOrAtendimento.data_hora
-      ? getLocalDateISO(new Date(payloadOrAtendimento.data_hora))
-      : getLocalDateISO()
+  const dataPag = payloadOrAtendimento.data_hora
+    ? getLocalDateISO(new Date(payloadOrAtendimento.data_hora))
+    : getLocalDateISO()
 
-    await supabase.from('financeiro').insert([{
+  const baseDesc = (servicoNome || 'Servico') + ' - ' + petNome + ' (' + clienteNome + ')'
+
+  const entries = []
+
+  if (valor > 0) {
+    entries.push({
       tipo: 'entrada',
       categoria: 'Servicos',
-      descricao: (servicoNome || 'Servico') + ' - ' + petNome + ' (' + clienteNome + ')',
+      descricao: baseDesc,
       valor: valor,
       data: dataPag,
       forma_pagamento: payloadOrAtendimento.forma_pagamento || 'pix',
       banco: payloadOrAtendimento.banco || null,
       grupo: 'Servicos',
       atendimento_id: atendimentoId,
-    }])
-
-    showToast('Entrada financeira criada automaticamente!')
+    })
   }
 
-  async function handleChangeStatus(atendimento, newStatus) {
+  if (valor2 > 0 && payloadOrAtendimento.forma_pagamento_2) {
+    entries.push({
+      tipo: 'entrada',
+      categoria: 'Servicos',
+      descricao: baseDesc + ' (2a forma)',
+      valor: valor2,
+      data: dataPag,
+      forma_pagamento: payloadOrAtendimento.forma_pagamento_2,
+      banco: payloadOrAtendimento.banco || null,
+      grupo: 'Servicos',
+      atendimento_id: atendimentoId,
+    })
+  }
+
+  if (entries.length > 0) {
+    await supabase.from('financeiro').insert(entries)
+    showToast('Entrada financeira criada automaticamente!')
+  }
+}
+
+async function handleChangeStatus(atendimento, newStatus) {
     const updates = { status: newStatus }
 
     if (newStatus === 'concluido') {
@@ -1152,7 +1182,45 @@ export default function Atendimentos() {
                 </div>
               </div>
 
-              {/* Data de Vencimento */}
+              {/* 2a Forma de Pagamento */}
+<div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
+  <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+    <CreditCard size={15} />
+    2a Forma de Pagamento
+    <span className="text-xs text-gray-400">(opcional)</span>
+  </label>
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <select
+      value={form.forma_pagamento_2}
+      onChange={(e) => handleFormChange('forma_pagamento_2', e.target.value)}
+      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+    >
+      <option value="">Nenhuma</option>
+      {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+    <div className="relative">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+        R$
+      </span>
+      <input
+        type="number"
+        step="0.01"
+        min="0"
+        value={form.valor_2}
+        onChange={(e) => handleFormChange('valor_2', e.target.value)}
+        className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        placeholder="Valor da 2a forma"
+        disabled={!form.forma_pagamento_2}
+      />
+    </div>
+  </div>
+</div>
+
+{/* Data de Vencimento */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Data de Vencimento
