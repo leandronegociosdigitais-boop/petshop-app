@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { Mail, Lock, PawPrint, Eye, EyeOff } from 'lucide-react'
 
@@ -18,9 +18,9 @@ export default function Login() {
     setSubmitting(true)
     try {
       await signIn(email, password)
-      navigate('/dashboard')
+      navigate('/dashboard', { replace: true })
     } catch (err) {
-      if (err.message.includes('Invalid login credentials')) {
+      if (err.message?.includes('Invalid login credentials')) {
         setError('Email ou senha incorretos.')
       } else {
         setError('Erro ao entrar. Tente novamente.')
@@ -30,10 +30,7 @@ export default function Login() {
     }
   }
 
-  if (user) {
-    navigate('/dashboard')
-    return null
-  }
+  if (user) return <Navigate to="/dashboard" replace />
 
   if (authLoading) {
     return (

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './lib/ThemeContext'
+import { AuthProvider } from './hooks/useAuth'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
@@ -15,28 +16,30 @@ import Relatorios from './pages/Relatorios'
 function App() {
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/clientes" element={<Clientes />} />
-            <Route path="/pets" element={<Pets />} />
-            <Route path="/servicos" element={<Servicos />} />
-            <Route path="/atendimentos" element={<Atendimentos />} />
-            <Route path="/financeiro" element={<Financeiro />} />
-            <Route path="/comissoes" element={<Comissoes />} />
-            <Route path="/relatorios" element={<Relatorios />} />
-          </Route>
-        </Routes>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/clientes" element={<Clientes />} />
+              <Route path="/pets" element={<Pets />} />
+              <Route path="/servicos" element={<Servicos />} />
+              <Route path="/atendimentos" element={<Atendimentos />} />
+              <Route path="/financeiro" element={<Financeiro />} />
+              <Route path="/comissoes" element={<Comissoes />} />
+              <Route path="/relatorios" element={<Relatorios />} />
+            </Route>
+          </Routes>
+        </ThemeProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
