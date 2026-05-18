@@ -63,8 +63,8 @@ const BANCO_OPTIONS = [
 ]
 
 const STATUS_PAGAMENTO_FIN_COLORS = {
-  pago: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  pendente: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+  pago: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+  pendente: 'bg-amber-100 text-amber-700 border border-amber-200',
 }
 
 const FORMA_PAGAMENTO_COLORS = {
@@ -503,7 +503,7 @@ export default function Financeiro() {
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
-              <p className="mt-1 text-xl font-bold text-emerald-800 truncate">{formatCurrency(summary.entradas)}</p>
+              <p className="mt-1 text-xl font-bold text-emerald-700 truncate">{formatCurrency(summary.entradas)}</p>
             </div>
           </div>
         </div>
@@ -514,7 +514,7 @@ export default function Financeiro() {
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-red-700">Total Saidas</p>
-              <p className="mt-1 text-xl font-bold text-red-800 truncate">{formatCurrency(summary.saidas)}</p>
+              <p className="mt-1 text-xl font-bold text-red-600 truncate">{formatCurrency(summary.saidas)}</p>
             </div>
           </div>
         </div>
@@ -525,7 +525,7 @@ export default function Financeiro() {
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-indigo-700">Saldo</p>
-              <p className={`mt-1 text-xl font-bold ${summary.saldo >= 0 ? 'text-indigo-800' : 'text-red-700'} truncate`}>
+              <p className={`mt-1 text-xl font-bold ${summary.saldo >= 0 ? 'text-indigo-700' : 'text-red-600'} truncate`}>
                 {formatCurrency(summary.saldo)}
               </p>
             </div>
@@ -812,7 +812,7 @@ export default function Financeiro() {
                       {dia.items.map((registro) => {
                         const isEntrada = registro.tipo === 'entrada'
                         return (
-                          <tr key={registro.id} className={`transition-colors hover:bg-gray-50 ${isEntrada ? 'border-l-2 border-l-emerald-400' : 'border-l-2 border-l-red-400'}`}>
+                          <tr key={registro.id} className={`even:bg-gray-50 hover:bg-blue-50 transition-colors ${isEntrada ? 'border-l-2 border-l-emerald-400' : 'border-l-2 border-l-red-400'}`}>
                             <td className="px-4 py-2.5">
                               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${isEntrada ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}`}>
                                 {isEntrada ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
@@ -835,7 +835,7 @@ export default function Financeiro() {
                             </td>
                             <td className="px-4 py-2.5 text-sm text-gray-700">{registro.categoria || '—'}</td>
                             <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{registro.descricao || '—'}</td>
-                            <td className={`hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold ${isEntrada ? 'text-emerald-700' : 'text-red-700'}`}>
+                            <td className={`hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold ${isEntrada ? 'text-emerald-700' : 'text-red-600'}`}>
                               {isEntrada ? '+' : '-'}{formatCurrency(registro.valor)}
                             </td>
                             <td className="px-4 py-2.5 text-right">
