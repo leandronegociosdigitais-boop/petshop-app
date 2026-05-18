@@ -21,9 +21,9 @@ export default function Login() {
       navigate('/dashboard', { replace: true })
     } catch (err) {
       if (err.message?.includes('Invalid login credentials')) {
-        setError('Email ou senha incorretos.')
+        setError('Email ou senha incorretos. Verifique se o email foi confirmado no Supabase.')
       } else {
-        setError('Erro ao entrar. Tente novamente.')
+        setError(err.message || 'Erro ao entrar. Tente novamente.')
       }
     } finally {
       setSubmitting(false)
