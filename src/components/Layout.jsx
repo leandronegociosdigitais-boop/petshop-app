@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { Home, Users, PawPrint, Scissors, Calendar, DollarSign, FileText, Percent, Menu, X, Sparkles, LayoutGrid, LogOut } from 'lucide-react'
 import { useTheme } from '../lib/ThemeContext'
 import { useAuth } from '../hooks/useAuth'
@@ -15,7 +15,7 @@ const navItems = [
   { to: '/comissoes', icon: Percent, label: 'Comissoes' },
 ]
 
-export default function Layout({ children }) {
+export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { isGlass, toggleTheme } = useTheme()
   const { signOut } = useAuth()
@@ -149,7 +149,7 @@ export default function Layout({ children }) {
 
         {/* Page content */}
         <main className="p-4 sm:p-6 overflow-y-auto pb-[env(safe-area-inset-bottom,0px)]">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>
