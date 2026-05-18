@@ -51,7 +51,7 @@ const DOT_COLORS = {
   permuta: '#F87171',
 }
 
-const RANKING_COLORS = ['text-amber-400', 'text-gray-400', 'text-amber-600', 'text-gray-600', 'text-gray-600']
+const RANKING_COLORS = ['text-yellow-400', 'text-gray-400', 'text-amber-500', 'text-gray-600', 'text-gray-600']
 
 const MONTH_NAMES_FULL = [
   'janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho',
@@ -590,7 +590,7 @@ export default function Dashboard() {
               Servicos mais vendidos
             </h2>
             {servicosMaisVendidos.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {servicosMaisVendidos.map((s, i) => (
                   <div key={s.nome}>
                     <div className="flex items-center justify-between mb-1">
@@ -684,7 +684,7 @@ export default function Dashboard() {
             </Link>
           </div>
           {proximosAtendimentos.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {proximosAtendimentos.map((a) => {
                 const d = new Date(a.data_hora)
                 const hours = String(d.getHours()).padStart(2, '0')
