@@ -441,7 +441,7 @@ export default function Relatorios() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <button onClick={goToPrevMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Mes anterior">
-              <ChevronDown size={20} className="rotate-90" />
+              <ChevronDown size={16} className="rotate-90" />
             </button>
             <div className="flex items-center gap-2">
               <select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))} className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
@@ -452,7 +452,7 @@ export default function Relatorios() {
               </select>
             </div>
             <button onClick={goToNextMonth} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Proximo mes">
-              <ChevronDown size={20} className="-rotate-90" />
+              <ChevronDown size={16} className="-rotate-90" />
             </button>
             <button onClick={goToToday} className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors">
               Hoje
@@ -484,35 +484,35 @@ export default function Relatorios() {
               <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
               <div className="mt-2 flex items-end justify-between">
                 <p className="text-2xl font-bold text-emerald-800">{formatCurrency(totalEntradas)}</p>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"><TrendingUp size={20} /></div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600"><TrendingUp size={16} /></div>
               </div>
             </div>
             <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
               <p className="text-sm font-medium text-red-700">Total Saidas</p>
               <div className="mt-2 flex items-end justify-between">
                 <p className="text-2xl font-bold text-red-800">{formatCurrency(totalSaidas)}</p>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600"><TrendingDown size={20} /></div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-600"><TrendingDown size={16} /></div>
               </div>
             </div>
             <div className={`rounded-xl border p-5 shadow-sm ${lucro >= 0 ? 'border-indigo-200 bg-indigo-50' : 'border-red-200 bg-red-50'}`}>
               <p className={`text-sm font-medium ${lucro >= 0 ? 'text-indigo-700' : 'text-red-700'}`}>Lucro</p>
               <div className="mt-2 flex items-end justify-between">
                 <p className={`text-2xl font-bold ${lucro >= 0 ? 'text-indigo-800' : 'text-red-800'}`}>{formatCurrency(lucro)}</p>
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${lucro >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}><DollarSign size={20} /></div>
+                <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${lucro >= 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}><DollarSign size={16} /></div>
               </div>
             </div>
             <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
               <p className="text-sm font-medium text-amber-700">Comissoes (40%)</p>
               <div className="mt-2 flex items-end justify-between">
                 <p className="text-2xl font-bold text-amber-800">{formatCurrency(totalComissoes)}</p>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600"><FileText size={20} /></div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600"><FileText size={16} /></div>
               </div>
             </div>
             <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
               <p className="text-sm font-medium text-blue-700">Clientes Atendidos</p>
               <div className="mt-2 flex items-end justify-between">
                 <p className="text-2xl font-bold text-blue-800">{uniqueClientes}</p>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600"><Users size={20} /></div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600"><Users size={16} /></div>
               </div>
             </div>
           </div>
