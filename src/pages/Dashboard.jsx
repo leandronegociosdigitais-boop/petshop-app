@@ -244,197 +244,218 @@ export default function Dashboard() {
 
   async function loadAllData() {
     setRefreshing(true)
-    await Promise.all([
-      fetchAtendimentosHoje(),
-      fetchFaturamentoMes(),
-      fetchFaturamentoMesAnterior(),
-      fetchAtendimentosMes(),
-      fetchAgendados7Dias(),
-      fetchFaturamentoDiario(),
-      fetchServicosMaisVendidos(),
-      fetchProximosAtendimentos(),
-      fetchFormasPagamento(),
-    ])
+    try {
+      await Promise.allSettled([
+        fetchAtendimentosHoje(),
+        fetchFaturamentoMes(),
+        fetchFaturamentoMesAnterior(),
+        fetchAtendimentosMes(),
+        fetchAgendados7Dias(),
+        fetchFaturamentoDiario(),
+        fetchServicosMaisVendidos(),
+        fetchProximosAtendimentos(),
+        fetchFormasPagamento(),
+      ])
+    } catch (err) {
+      console.error('Erro ao carregar dados:', err)
+    }
     setLoading(false)
     setRefreshing(false)
   }
 
   async function fetchAtendimentosHoje() {
-    const today = getLocalDateISO()
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const tomorrowStr = getLocalDateISO(tomorrow)
-    const { count, error } = await supabase
-      .from('atendimentos')
-      .select('*', { count: 'exact', head: true })
-      .gte('data_hora', today)
-      .lt('data_hora', tomorrowStr)
-    if (!error) setAtendimentosHojeCount(count || 0)
+    try {
+      const today = getLocalDateISO()
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowStr = getLocalDateISO(tomorrow)
+      const { count, error } = await supabase
+        .from('atendimentos')
+        .select('*', { count: 'exact', head: true })
+        .gte('data_hora', today)
+        .lt('data_hora', tomorrowStr)
+      if (!error) setAtendimentosHojeCount(count || 0)
+    } catch (err) { console.error('fetchAtendimentosHoje:', err) }
   }
 
   async function fetchFaturamentoMes() {
-    const { start, end } = getMonthRange()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (!error) {
-      const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
-      setFaturamentoMes(total)
-    }
+    try {
+      const { start, end } = getMonthRange()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (!error) {
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        setFaturamentoMes(total)
+      }
+    } catch (err) { console.error('fetchFaturamentoMes:', err) }
   }
 
   async function fetchFaturamentoMesAnterior() {
-    const { start, end } = getPrevMonthRange()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (!error) {
-      const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
-      setFaturamentoMesAnterior(total)
-    }
+    try {
+      const { start, end } = getPrevMonthRange()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (!error) {
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        setFaturamentoMesAnterior(total)
+      }
+    } catch (err) { console.error('fetchFaturamentoMesAnterior:', err) }
   }
 
   async function fetchAtendimentosMes() {
-    const { start, end } = getMonthRange()
-    const { count, error } = await supabase
-      .from('atendimentos')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (!error) setAtendimentosMes(count || 0)
+    try {
+      const { start, end } = getMonthRange()
+      const { count, error } = await supabase
+        .from('atendimentos')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (!error) setAtendimentosMes(count || 0)
+    } catch (err) { console.error('fetchAtendimentosMes:', err) }
   }
 
   async function fetchAgendados7Dias() {
-    const { start, end } = getNext7DaysRange()
-    const { count, error } = await supabase
-      .from('atendimentos')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'agendado')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (!error) setAgendados7Dias(count || 0)
+    try {
+      const { start, end } = getNext7DaysRange()
+      const { count, error } = await supabase
+        .from('atendimentos')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'agendado')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (!error) setAgendados7Dias(count || 0)
+    } catch (err) { console.error('fetchAgendados7Dias:', err) }
   }
 
   async function fetchFaturamentoDiario() {
-    const { start, end } = getLast30DaysRange()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('data_hora, valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (error || !data) return
+    try {
+      const { start, end } = getLast30DaysRange()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('data_hora, valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (error || !data) return
 
-    const byDay = {}
-    for (const r of data) {
-      const dayKey = r.data_hora?.slice(0, 10)
-      if (!dayKey) continue
-      byDay[dayKey] = (byDay[dayKey] || 0) + (parseFloat(r.valor) || 0)
-    }
+      const byDay = {}
+      for (const r of data) {
+        const dayKey = r.data_hora?.slice(0, 10)
+        if (!dayKey) continue
+        byDay[dayKey] = (byDay[dayKey] || 0) + (parseFloat(r.valor) || 0)
+      }
 
-    const chart = []
-    const cursor = new Date(start + 'T00:00:00')
-    const endDate = new Date(end + 'T00:00:00')
-    while (cursor < endDate) {
-      const key = getLocalDateISO(cursor)
-      const label = String(cursor.getDate()).padStart(2, '0')
-      chart.push({ dia: label, valor: byDay[key] || 0 })
-      cursor.setDate(cursor.getDate() + 1)
-    }
-    setFaturamentoDiario(chart)
+      const chart = []
+      const cursor = new Date(start + 'T00:00:00')
+      const endDate = new Date(end + 'T00:00:00')
+      while (cursor < endDate) {
+        const key = getLocalDateISO(cursor)
+        const label = String(cursor.getDate()).padStart(2, '0')
+        chart.push({ dia: label, valor: byDay[key] || 0 })
+        cursor.setDate(cursor.getDate() + 1)
+      }
+      setFaturamentoDiario(chart)
+    } catch (err) { console.error('fetchFaturamentoDiario:', err) }
   }
 
   async function fetchServicosMaisVendidos() {
-    const { start, end } = getMonthRange()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('servico_id, servicos:servico_id(nome)')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (error || !data) return
+    try {
+      const { start, end } = getMonthRange()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('servico_id, servicos:servico_id(nome)')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (error || !data) return
 
-    const byServico = {}
-    let totalAtend = 0
-    for (const r of data) {
-      const nome = r.servicos?.nome || 'Outro'
-      byServico[nome] = (byServico[nome] || 0) + 1
-      totalAtend++
-    }
+      const byServico = {}
+      let totalAtend = 0
+      for (const r of data) {
+        const nome = r.servicos?.nome || 'Outro'
+        byServico[nome] = (byServico[nome] || 0) + 1
+        totalAtend++
+      }
 
-    const sorted = Object.entries(byServico)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([nome, quantidade]) => ({
-        nome,
-        quantidade,
-        percentual: totalAtend > 0 ? Math.round((quantidade / totalAtend) * 100) : 0,
-      }))
+      const sorted = Object.entries(byServico)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([nome, quantidade]) => ({
+          nome,
+          quantidade,
+          percentual: totalAtend > 0 ? Math.round((quantidade / totalAtend) * 100) : 0,
+        }))
 
-    setServicosMaisVendidos(sorted)
+      setServicosMaisVendidos(sorted)
+    } catch (err) { console.error('fetchServicosMaisVendidos:', err) }
   }
 
   async function fetchProximosAtendimentos() {
-    const now = new Date()
-    const nowStr = now.toISOString()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('*, pet:pet_id(nome, raca), cliente:cliente_id(nome), servico:servico_id(nome)')
-      .gte('data_hora', nowStr)
-      .order('data_hora', { ascending: true })
-      .limit(5)
-    if (!error) setProximosAtendimentos(data || [])
+    try {
+      const now = new Date()
+      const nowStr = now.toISOString()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('*, pet:pet_id(nome, raca), cliente:cliente_id(nome), servico:servico_id(nome)')
+        .gte('data_hora', nowStr)
+        .order('data_hora', { ascending: true })
+        .limit(5)
+      if (!error) setProximosAtendimentos(data || [])
+    } catch (err) { console.error('fetchProximosAtendimentos:', err) }
   }
 
   async function fetchFormasPagamento() {
-    const { start, end } = getMonthRange()
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('forma_pagamento, valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (error || !data) return
+    try {
+      const { start, end } = getMonthRange()
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('forma_pagamento, valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (error || !data) return
 
-    const byForma = {}
-    let total = 0
-    for (const r of data) {
-      const key = r.forma_pagamento || 'outro'
-      const val = parseFloat(r.valor) || 0
-      byForma[key] = (byForma[key] || 0) + val
-      total += val
-    }
+      const byForma = {}
+      let total = 0
+      for (const r of data) {
+        const key = r.forma_pagamento || 'outro'
+        const val = parseFloat(r.valor) || 0
+        byForma[key] = (byForma[key] || 0) + val
+        total += val
+      }
 
-    const order = ['pix', 'cartao_debito', 'cartao_credito', 'dinheiro', 'permuta']
-    const result = order
-      .filter((k) => byForma[k] > 0)
-      .map((key) => ({
-        name: FORMA_PAGAMENTO_LABEL[key] || key,
-        value: byForma[key],
-        percentual: total > 0 ? Math.round((byForma[key] / total) * 100) : 0,
-        key,
-      }))
-
-    // Add any other forms not in the predefined order
-    Object.keys(byForma).forEach((key) => {
-      if (!order.includes(key) && byForma[key] > 0) {
-        result.push({
-          name: key,
+      const order = ['pix', 'cartao_debito', 'cartao_credito', 'dinheiro', 'permuta']
+      const result = order
+        .filter((k) => byForma[k] > 0)
+        .map((key) => ({
+          name: FORMA_PAGAMENTO_LABEL[key] || key,
           value: byForma[key],
           percentual: total > 0 ? Math.round((byForma[key] / total) * 100) : 0,
           key,
-        })
-      }
-    })
+        }))
 
-    setFormasPagamento(result)
+      Object.keys(byForma).forEach((key) => {
+        if (!order.includes(key) && byForma[key] > 0) {
+          result.push({
+            name: key,
+            value: byForma[key],
+            percentual: total > 0 ? Math.round((byForma[key] / total) * 100) : 0,
+            key,
+          })
+        }
+      })
+
+      setFormasPagamento(result)
+    } catch (err) { console.error('fetchFormasPagamento:', err) }
   }
 
   // Derived KPI values

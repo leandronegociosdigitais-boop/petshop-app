@@ -3,6 +3,7 @@ import { ThemeProvider } from './lib/ThemeContext'
 import { AuthProvider } from './hooks/useAuth'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import ErrorBoundary from './components/ErrorBoundary'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
@@ -28,7 +29,7 @@ function App() {
               }
             >
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/pets" element={<Pets />} />
               <Route path="/servicos" element={<Servicos />} />
