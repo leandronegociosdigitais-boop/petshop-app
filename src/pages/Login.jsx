@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { Mail, Lock, PawPrint, Eye, EyeOff } from 'lucide-react'
 
 export default function Login() {
-  const { signIn, loading: authLoading } = useAuth()
+  const { signIn, user, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -16,6 +18,7 @@ export default function Login() {
     setSubmitting(true)
     try {
       await signIn(email, password)
+      navigate('/dashboard')
     } catch (err) {
       if (err.message.includes('Invalid login credentials')) {
         setError('Email ou senha incorretos.')
@@ -25,6 +28,11 @@ export default function Login() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (user) {
+    navigate('/dashboard')
+    return null
   }
 
   if (authLoading) {
