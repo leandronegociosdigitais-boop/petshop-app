@@ -496,14 +496,14 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {/* Card 1 — Faturamento do Mes */}
           <div className="relative rounded-2xl bg-gradient-to-br from-emerald-950 to-[#0B1A14] border border-emerald-900 p-5 overflow-hidden">
-            <TrendingUp className="absolute right-4 top-4 w-8 h-8 text-emerald-400 opacity-10 text-4xl" />
+            <TrendingUp className="absolute right-4 top-4 text-4xl text-emerald-400 opacity-10" />
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
               <span className="text-[10px] tracking-widest uppercase text-emerald-400 font-medium">Faturamento do Mes</span>
             </div>
             <p className="text-3xl font-medium text-white">{formatCurrency(faturamentoMes)}</p>
             {comparativoFaturamento && (
-              <p className={`mt-1 text-xs font-medium ${comparativoFaturamento.startsWith('+') ? 'text-emerald-400' : 'text-red-400'}`}>
+              <p className={`mt-1 text-xs ${comparativoFaturamento.startsWith('+') ? 'text-emerald-400' : 'text-red-400'}`}>
                 {comparativoFaturamento.startsWith('+') ? '↑' : '↓'} {comparativoFaturamento} vs mes anterior
               </p>
             )}
@@ -511,18 +511,18 @@ export default function Dashboard() {
 
           {/* Card 2 — Atendimentos do Mes */}
           <div className="relative rounded-2xl bg-gradient-to-br from-violet-950 to-[#110C2E] border border-violet-900 p-5 overflow-hidden">
-            <Scissors className="absolute right-4 top-4 w-8 h-8 text-violet-400 opacity-10" />
+            <Scissors className="absolute right-4 top-4 text-4xl text-violet-400 opacity-10" />
             <div className="flex items-center gap-2 mb-3">
               <Scissors className="w-3.5 h-3.5 text-violet-400" />
               <span className="text-[10px] tracking-widest uppercase text-violet-400 font-medium">Atendimentos do Mes</span>
             </div>
             <p className="text-3xl font-medium text-white">{atendimentosMes}</p>
-            <p className="mt-1 text-xs text-gray-400">~{mediaDiaria} por dia util</p>
+            <p className="mt-1 text-xs text-violet-400">~{mediaDiaria} por dia util</p>
           </div>
 
           {/* Card 3 — Ticket Medio */}
           <div className="relative rounded-2xl bg-gradient-to-br from-amber-950 to-[#1C1100] border border-amber-900 p-5 overflow-hidden">
-            <Receipt className="absolute right-4 top-4 w-8 h-8 text-amber-400 opacity-10" />
+            <Receipt className="absolute right-4 top-4 text-4xl text-amber-400 opacity-10" />
             <div className="flex items-center gap-2 mb-3">
               <Receipt className="w-3.5 h-3.5 text-amber-400" />
               <span className="text-[10px] tracking-widest uppercase text-amber-400 font-medium">Ticket Medio</span>
@@ -530,18 +530,18 @@ export default function Dashboard() {
             <p className="text-3xl font-medium text-white">
               {formatCurrency(atendimentosMes > 0 ? faturamentoMes / atendimentosMes : 0)}
             </p>
-            <p className="mt-1 text-xs text-gray-400">por atendimento</p>
+            <p className="mt-1 text-xs text-amber-400">por atendimento</p>
           </div>
 
           {/* Card 4 — Agendados 7 dias */}
           <div className="relative rounded-2xl bg-gradient-to-br from-blue-950 to-[#060F1C] border border-blue-900 p-5 overflow-hidden">
-            <CalendarClock className="absolute right-4 top-4 w-8 h-8 text-blue-400 opacity-10" />
+            <CalendarClock className="absolute right-4 top-4 text-4xl text-blue-400 opacity-10" />
             <div className="flex items-center gap-2 mb-3">
               <CalendarClock className="w-3.5 h-3.5 text-blue-400" />
               <span className="text-[10px] tracking-widest uppercase text-blue-400 font-medium">Agendados (7 dias)</span>
             </div>
             <p className="text-3xl font-medium text-white">{agendados7Dias}</p>
-            <p className="mt-1 text-xs text-gray-400">proximos 7 dias</p>
+            <p className="mt-1 text-xs text-blue-400">proximos 7 dias</p>
           </div>
         </div>
       )}
