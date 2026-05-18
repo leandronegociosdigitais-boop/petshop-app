@@ -187,9 +187,9 @@ function SkeletonList() {
 const CustomTooltipFaturamento = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#1F2937] border border-[#374151] rounded-lg px-3 py-2 shadow-xl">
-      <p className="text-xs text-gray-400 mb-1">{label}</p>
-      <p className="text-sm font-semibold text-white">{formatCurrency(payload[0].value)}</p>
+    <div style={{ background: '#1F2937', border: '1px solid #374151', borderRadius: 8, fontSize: 12, padding: '8px 12px' }}>
+      <p style={{ color: '#9CA3AF' }}>{label}</p>
+      <p style={{ color: '#34D399', fontWeight: 600 }}>{formatCurrency(payload[0].value)}</p>
     </div>
   )
 }
@@ -558,7 +558,7 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={180}>
               <AreaChart data={faturamentoDiario} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="gradFaturamento" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#34D399" stopOpacity={0.25} />
                     <stop offset="100%" stopColor="#34D399" stopOpacity={0.02} />
                   </linearGradient>
@@ -567,7 +567,7 @@ export default function Dashboard() {
                 <XAxis dataKey="dia" tick={{ fontSize: 11, fill: '#4B5563' }} />
                 <YAxis tick={{ fontSize: 11, fill: '#4B5563' }} tickFormatter={formatTickK} />
                 <Tooltip content={<CustomTooltipFaturamento />} />
-                <Area type="monotone" dataKey="valor" stroke="#34D399" strokeWidth={2} fill="url(#gradFaturamento)" />
+                <Area type="monotone" dataKey="valor" stroke="#34D399" strokeWidth={2} fill="url(#areaGradient)" />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
