@@ -8,17 +8,18 @@ import {
   Receipt,
   CalendarClock,
   CalendarOff,
-  Clock,
   RefreshCw,
 } from 'lucide-react'
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
+  Cell,
 } from 'recharts'
 
 const STATUS_BADGE_DARK = {
@@ -52,6 +53,8 @@ const DOT_COLORS = {
 }
 
 const RANKING_COLORS = ['text-yellow-400', 'text-gray-400', 'text-amber-500', 'text-gray-600', 'text-gray-600']
+
+const MONTH_LABELS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
 const MONTH_NAMES_FULL = [
   'janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho',
@@ -116,20 +119,6 @@ function getPrevMonthRange() {
   return { start: toStr(start), end: toStr(end) }
 }
 
-function getLast30DaysRange() {
-  const now = new Date()
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
-  const start = new Date(end)
-  start.setDate(start.getDate() - 30)
-  const toStr = (d) => {
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }
-  return { start: toStr(start), end: toStr(end) }
-}
-
 function getNext7DaysRange() {
   const now = new Date()
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -158,9 +147,9 @@ function SkeletonChart() {
   return (
     <div className="rounded-2xl bg-[#111827] border border-[#1F2937] p-5 animate-pulse">
       <div className="h-4 w-48 bg-[#1F2937] rounded mb-6" />
-      <div className="flex items-end gap-2 h-[180px]">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex-1 bg-[#1F2937] rounded-t" style={{ height: `${30 + Math.random() * 70}%` }} />
+      <div className="flex items-end gap-2 h-[220px]">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="flex-1 bg-[#1F2937] rounded-t" style={{ height: `${20 + Math.random() * 80}%` }} />
         ))}
       </div>
     </div>
@@ -184,13 +173,27 @@ function SkeletonList() {
   )
 }
 
-const CustomTooltipFaturamento = ({ active, payload, label }) => {
+const CustomTooltipMensal = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
     <div style={{ background: '#1F2937', border: '1px solid #374151', borderRadius: 8, fontSize: 12, padding: '8px 12px' }}>
-      <p style={{ color: '#9CA3AF' }}>{label}</p>
-      <p style={{ color: '#34D399', fontWeight: 600 }}>{formatCurrency(payload[0].value)}</p>
+      <p style={{ color: '#9CA3AF', marginBottom: 4 }}>{label}</p>
+      {payload.map((p) => (
+        <p key={p.dataKey} style={{ color: p.color, fontWeight: 600 }}>
+          {p.dataKey === 'receita' ? 'Receitas' : 'Lucro Liquido'}: {formatCurrency(p.value)}
+        </p>
+      ))}
     </div>
+  )
+}
+
+const renderBarLabel = (props) => {
+  const { x, y, width, value } = props
+  if (!value) return null
+  return (
+    <text x={x + width / 2} y={y - 4} textAnchor="middle" fontSize={11} fill="#9CA3AF">
+      {value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value > 0 ? value.toFixed(0) : ''}
+    </text>
   )
 }
 
@@ -204,7 +207,7 @@ export default function Dashboard() {
   const [atendimentosMes, setAtendimentosMes] = useState(0)
   const [ticketMedio, setTicketMedio] = useState(0)
   const [agendados7Dias, setAgendados7Dias] = useState(0)
-  const [faturamentoDiario, setFaturamentoDiario] = useState([])
+  const [dadosMensais, setDadosMensais] = useState([])
   const [servicosMaisVendidos, setServicosMaisVendidos] = useState([])
   const [proximosAtendimentos, setProximosAtendimentos] = useState([])
   const [formasPagamento, setFormasPagamento] = useState([])
@@ -220,7 +223,7 @@ export default function Dashboard() {
         fetchFaturamentoMesAnterior(),
         fetchAtendimentosMes(),
         fetchAgendados7Dias(),
-        fetchFaturamentoDiario(),
+        fetchDadosMensais(),
         fetchServicosMaisVendidos(),
         fetchProximosAtendimentos(),
         fetchFormasPagamento(),
@@ -305,35 +308,36 @@ export default function Dashboard() {
     } catch (err) { console.error('fetchAgendados7Dias:', err) }
   }
 
-  async function fetchFaturamentoDiario() {
+  async function fetchDadosMensais() {
     try {
-      const { start, end } = getLast30DaysRange()
+      const year = new Date().getFullYear()
       const { data, error } = await supabase
         .from('atendimentos')
         .select('data_hora, valor')
         .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
+        .gte('data_hora', `${year}-01-01`)
+        .lte('data_hora', `${year}-12-31T23:59:59`)
       if (error || !data) return
 
-      const byDay = {}
+      const byMonth = {}
+      for (let m = 0; m < 12; m++) byMonth[m] = 0
       for (const r of data) {
-        const dayKey = r.data_hora?.slice(0, 10)
-        if (!dayKey) continue
-        byDay[dayKey] = (byDay[dayKey] || 0) + (parseFloat(r.valor) || 0)
+        const monthIdx = new Date(r.data_hora).getMonth()
+        byMonth[monthIdx] += parseFloat(r.valor) || 0
       }
 
       const chart = []
-      const cursor = new Date(start + 'T00:00:00')
-      const endDate = new Date(end + 'T00:00:00')
-      while (cursor < endDate) {
-        const key = getLocalDateISO(cursor)
-        const label = String(cursor.getDate()).padStart(2, '0')
-        chart.push({ dia: label, valor: byDay[key] || 0 })
-        cursor.setDate(cursor.getDate() + 1)
+      for (let m = 0; m < 12; m++) {
+        const receita = byMonth[m]
+        const lucro = receita * 0.6
+        chart.push({
+          mes: MONTH_LABELS[m],
+          receita: Math.round(receita),
+          lucro: Math.round(lucro),
+        })
       }
-      setFaturamentoDiario(chart)
-    } catch (err) { console.error('fetchFaturamentoDiario:', err) }
+      setDadosMensais(chart)
+    } catch (err) { console.error('fetchDadosMensais:', err) }
   }
 
   async function fetchServicosMaisVendidos() {
@@ -457,6 +461,8 @@ export default function Dashboard() {
     [servicosMaisVendidos]
   )
 
+  const currentYear = new Date().getFullYear()
+
   const greeting = getGreeting()
   const dateDisplay = getDateDisplay()
 
@@ -546,36 +552,29 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ━━━ SECTION 3 — GRAFICO FATURAMENTO DIARIO ━━━ */}
+      {/* ━━━ SECTION 3 — GRAFICO RECEITAS VS LUCRO LIQUIDO ━━━ */}
       {loading ? (
         <SkeletonChart />
       ) : (
         <div className="rounded-2xl bg-[#111827] border border-[#1F2937] p-5">
-          <h2 className="text-xs uppercase tracking-wider text-gray-400 mb-4">
-            Faturamento diario — ultimos 30 dias
+          <h2 className="text-xs uppercase tracking-wider text-gray-400">
+            Receitas vs Lucro Liquido — {currentYear}
           </h2>
-          {faturamentoDiario.length > 0 ? (
-            <ResponsiveContainer width="100%" height={180}>
-              <AreaChart data={faturamentoDiario} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#34D399" stopOpacity={0.25} />
-                    <stop offset="100%" stopColor="#34D399" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                <XAxis dataKey="dia" tick={{ fontSize: 11, fill: '#4B5563' }} />
-                <YAxis tick={{ fontSize: 11, fill: '#4B5563' }} tickFormatter={formatTickK} />
-                <Tooltip content={<CustomTooltipFaturamento />} />
-                <Area type="monotone" dataKey="valor" stroke="#34D399" strokeWidth={2} fill="url(#areaGradient)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-[180px] text-gray-600">
-              <TrendingUp className="w-10 h-10 mb-2" />
-              <p className="text-sm">Sem dados no periodo</p>
-            </div>
-          )}
+          <p className="text-xs text-gray-500 mb-4">Comparativo mensal do ano</p>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={dadosMensais} margin={{ top: 16, right: 5, left: -10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" vertical={false} />
+              <XAxis dataKey="mes" tick={{ fontSize: 11, fill: '#4B5563' }} />
+              <YAxis tick={{ fontSize: 11, fill: '#4B5563' }} tickFormatter={formatTickK} />
+              <Tooltip content={<CustomTooltipMensal />} />
+              <Legend
+                iconType="square"
+                wrapperStyle={{ fontSize: 12, color: '#9CA3AF', paddingTop: 12 }}
+              />
+              <Bar dataKey="receita" name="Receitas" fill="#34D399" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
+              <Bar dataKey="lucro" name="Lucro Liquido" fill="#6366F1" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
