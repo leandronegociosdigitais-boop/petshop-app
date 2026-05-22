@@ -16,6 +16,10 @@ import {
   ChevronLeft,
   ChevronRight,
   BarChart3,
+  Bell,
+  BellRing,
+  Clock,
+  CheckCircle2,
 } from 'lucide-react'
 
 const EMPTY_FORM = {
@@ -28,6 +32,7 @@ const EMPTY_FORM = {
   grupo: '',
   banco: '',
   status_pagamento: 'pago',
+  data_vencimento: '',
 }
 
 const CATEGORIAS_ENTRADA = ['Servicos', 'Produtos', 'Outros']
@@ -161,10 +166,15 @@ export default function Financeiro() {
   const [toast, setToast] = useState(null)
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
+  const [lembretes, setLembretes] = useState([])
 
   useEffect(() => {
     fetchRegistros()
   }, [selectedMonth, selectedYear])
+
+  useEffect(() => {
+    fetchLembretes()
+  }, [])
 
   useEffect(() => {
     if (toast) {
@@ -193,6 +203,19 @@ export default function Financeiro() {
     setLoading(false)
   }
 
+  async function fetchLembretes() {
+    const { data, error } = await supabase
+      .from('financeiro')
+      .select('*')
+      .eq('tipo', 'saida')
+      .eq('status_pagamento', 'pendente')
+      .order('data_vencimento', { ascending: true, nullsFirst: false })
+
+    if (!error && data) {
+      setLembretes(data)
+    }
+  }
+
   function showToast(message, type = 'success') {
     setToast({ message, type })
   }
@@ -213,6 +236,8 @@ export default function Financeiro() {
       data: registro.data || getToday(),
       forma_pagamento: registro.forma_pagamento || 'dinheiro',
       grupo: registro.grupo || '',
+      status_pagamento: registro.status_pagamento || 'pago',
+      data_vencimento: registro.data_vencimento || '',
     })
     setModalOpen(true)
   }
@@ -265,6 +290,10 @@ export default function Financeiro() {
       data: form.data,
       forma_pagamento: form.forma_pagamento || 'dinheiro',
       grupo: form.tipo === 'saida' ? (form.grupo || null) : null,
+      status_pagamento: form.tipo === 'saida' ? (form.status_pagamento || 'pago') : 'pago',
+      data_vencimento: form.tipo === 'saida' && form.status_pagamento === 'pendente' && form.data_vencimento
+        ? form.data_vencimento
+        : null,
     }
 
     let error
@@ -287,6 +316,7 @@ export default function Financeiro() {
       )
       closeModal()
       fetchRegistros()
+      fetchLembretes()
     }
     setSaving(false)
   }
@@ -303,8 +333,23 @@ export default function Financeiro() {
     } else {
       showToast('Registro excluido com sucesso!')
       fetchRegistros()
+      fetchLembretes()
     }
     setDeleteId(null)
+  }
+
+  async function marcarPago(id) {
+    const { error } = await supabase
+      .from('financeiro')
+      .update({ status_pagamento: 'pago' })
+      .eq('id', id)
+    if (error) {
+      showToast('Erro ao marcar como pago.', 'error')
+    } else {
+      showToast('Pagamento marcado como pago!')
+      fetchRegistros()
+      fetchLembretes()
+    }
   }
 
   function clearFilters() {
@@ -533,7 +578,70 @@ export default function Financeiro() {
         </div>
       </div>
 
-      {/* Search + Filters + Tabs */}
+      {/* Lembretes de Pagamento */}
+    {lembretes.length > 0 && (
+      <div className="overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 shadow-sm">
+        <div className="flex items-center gap-2 border-b border-amber-200 px-4 py-3 bg-amber-100/60">
+          <BellRing size={18} className="text-amber-600 animate-pulse" />
+          <h2 className="text-sm font-bold text-amber-800">Lembretes de Pagamento</h2>
+          <span className="inline-flex items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">{lembretes.length}</span>
+        </div>
+        <div className="divide-y divide-amber-100">
+          {lembretes.map((lembrete) => {
+            const today = getLocalDateISO()
+            const venc = lembrete.data_vencimento || lembrete.data
+            const isVencido = venc < today
+            const isHoje = venc === today
+            const diasAte = Math.ceil((new Date(venc + 'T00:00:00') - new Date(today + 'T00:00:00')) / (1000 * 60 * 60 * 24))
+            const urgency = isVencido
+              ? 'border-l-4 border-l-red-500 bg-red-50/60'
+              : isHoje
+              ? 'border-l-4 border-l-amber-500 bg-amber-50/60'
+              : diasAte <= 3
+              ? 'border-l-4 border-l-orange-400 bg-orange-50/40'
+              : 'border-l-4 border-l-amber-300'
+            const urgencyLabel = isVencido
+              ? { text: `Vencido ha ${Math.abs(diasAte)} dia${Math.abs(diasAte) > 1 ? 's' : ''}`, bg: 'bg-red-100 text-red-700' }
+              : isHoje
+              ? { text: 'Vence hoje!', bg: 'bg-amber-100 text-amber-700' }
+              : diasAte <= 3
+              ? { text: `Vence em ${diasAte} dia${diasAte > 1 ? 's' : ''}`, bg: 'bg-orange-100 text-orange-700' }
+              : { text: `Vence em ${diasAte} dias`, bg: 'bg-amber-50 text-amber-600' }
+            return (
+              <div key={lembrete.id} className={`flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${urgency}`}>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-900">{lembrete.descricao}</span>
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${urgencyLabel.bg}`}>
+                      <Clock size={10} />
+                      {urgencyLabel.text}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                    <span>Categoria: {lembrete.categoria}</span>
+                    {lembrete.grupo && <span>Grupo: {lembrete.grupo}</span>}
+                    <span>Vencimento: {formatDate(venc)}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-base font-bold text-red-600">-{formatCurrency(lembrete.valor)}</span>
+                  <button
+                    onClick={() => marcarPago(lembrete.id)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
+                    title="Marcar como pago"
+                  >
+                    <CheckCircle2 size={14} />
+                    Pago
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )}
+
+    {/* Search + Filters + Tabs */}
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative max-w-full sm:max-w-md flex-1">
@@ -834,7 +942,7 @@ export default function Financeiro() {
                               )}
                             </td>
                             <td className="px-4 py-2.5 text-sm text-gray-700">{registro.categoria || '—'}</td>
-                            <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{registro.descricao || '—'}</td>
+                            <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{registro.descricao || '—'}{!isEntrada && registro.status_pagamento === 'pendente' && (<span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700"><Bell size={10} />Pendente</span>)}</td>
                             <td className={`hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold ${isEntrada ? 'text-emerald-700' : 'text-red-600'}`}>
                               {isEntrada ? '+' : '-'}{formatCurrency(registro.valor)}
                             </td>
@@ -940,14 +1048,29 @@ export default function Financeiro() {
               <label className="mb-1 block text-sm font-medium text-gray-700">Status do Pagamento</label>
               <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                 <button type="button" onClick={() => handleFormChange('status_pagamento', 'pago')} className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors ${form.status_pagamento === 'pago' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
-                  Concluido
+                  <CheckCircle2 size={16} />                Concluido
                 </button>
                 <button type="button" onClick={() => handleFormChange('status_pagamento', 'pendente')} className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors ${form.status_pagamento === 'pendente' ? 'bg-amber-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
-                  Pendente
+                  <Clock size={16} />                Pendente
                 </button>
               </div>
             </div>
           )}
+
+        {form.tipo === "saida" && form.status_pagamento === "pendente" && (
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              <span className="inline-flex items-center gap-1"><Bell size={14} className="text-amber-500" /> Data de Vencimento</span>
+            </label>
+            <input
+              type="date"
+              value={form.data_vencimento || ""}
+              onChange={(e) => handleFormChange("data_vencimento", e.target.value)}
+              className="w-full rounded-lg border border-amber-300 bg-amber-50/50 px-3 py-2 text-sm text-gray-900 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            />
+            <p className="mt-1 text-xs text-amber-600">Informe quando este pagamento vence para receber um lembrete.</p>
+          </div>
+        )}
 
           <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={closeModal} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
