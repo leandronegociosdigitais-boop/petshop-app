@@ -4,7 +4,7 @@ import { AuthProvider } from './hooks/useAuth'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
-import Login from './pages/Login'
+// import Login from './pages/Login' -- bypass auth
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
 import Pets from './pages/Pets'
@@ -20,7 +20,7 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Navigate to="/dashboard" replace />} />
             <Route
               element={
                 <ProtectedRoute>
