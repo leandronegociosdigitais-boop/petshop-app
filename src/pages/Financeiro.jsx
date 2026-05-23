@@ -204,15 +204,20 @@ export default function Financeiro() {
   }
 
   async function fetchLembretes() {
-    const { data, error } = await supabase
-      .from('financeiro')
-      .select('*')
-      .eq('tipo', 'saida')
-      .eq('status_pagamento', 'pendente')
-      .order('data_vencimento', { ascending: true, nullsFirst: false })
+    try {
+      const { data, error } = await supabase
+        .from('financeiro')
+        .select('*')
+        .eq('tipo', 'saida')
+        .eq('status_pagamento', 'pendente')
+        .order('data_vencimento', { ascending: true, nullsFirst: false })
 
-    if (!error && data) {
-      setLembretes(data)
+      if (!error && data) {
+        setLembretes(data)
+      }
+    } catch {
+      // Colunas data_vencimento/status_pagamento ainda nao existem no banco
+      setLembretes([])
     }
   }
 
