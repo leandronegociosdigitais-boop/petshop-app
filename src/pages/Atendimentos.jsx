@@ -41,6 +41,7 @@ const EMPTY_FORM = {
   forma_pagamento: 'pix',
   forma_pagamento_2: '',
   valor_2: '',
+  banco_2: '',
   status_pagamento: 'pendente',
   data_vencimento: '',
   banco: '',
@@ -260,6 +261,7 @@ export default function Atendimentos() {
       forma_pagamento: atendimento.forma_pagamento || 'dinheiro',
       forma_pagamento_2: atendimento.forma_pagamento_2 || '',
       valor_2: atendimento.valor_2 != null ? String(atendimento.valor_2) : '',
+      banco_2: atendimento.banco_2 || '',
       status_pagamento: atendimento.status_pagamento || 'pendente',
       data_vencimento: atendimento.data_vencimento ? toLocalDateValue(atendimento.data_vencimento) : '',
       banco: atendimento.banco || '',
@@ -328,7 +330,7 @@ export default function Atendimentos() {
       valor: form.valor ? parseFloat(form.valor) : null,
       observacoes: form.observacoes.trim(),
       forma_pagamento: form.forma_pagamento,
-      ...(form.forma_pagamento_2 ? { forma_pagamento_2: form.forma_pagamento_2, valor_2: form.valor_2 ? parseFloat(form.valor_2) : null } : {}),
+      ...(form.forma_pagamento_2 ? { forma_pagamento_2: form.forma_pagamento_2, valor_2: form.valor_2 ? parseFloat(form.valor_2) : null, banco_2: form.banco_2 || null } : {}),
       status_pagamento: form.status_pagamento,
       data_vencimento: form.data_vencimento || null,
       banco: form.banco || null,
@@ -474,7 +476,7 @@ export default function Atendimentos() {
       valor: valor2,
       data: dataPag,
       forma_pagamento: payloadOrAtendimento.forma_pagamento_2,
-      banco: payloadOrAtendimento.banco || null,
+      banco: payloadOrAtendimento.banco_2 || payloadOrAtendimento.banco || null,
       grupo: 'Servicos',
       atendimento_id: atendimentoId,
     })
@@ -1135,130 +1137,131 @@ async function handleChangeStatus(atendimento, newStatus) {
                 </div>
               </div>
 
-              {/* Forma de Pagamento & Status Pagamento */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Forma de Pagamento
-                  </label>
-                  <div className="relative">
-                    <CreditCard
-                      size={15}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-                    <select
-                      value={form.forma_pagamento}
-                      onChange={(e) =>
-                        handleFormChange('forma_pagamento', e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                    >
-                      {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Status do Pagamento
-                  </label>
+              {/* 1a Forma de Pagamento + Banco + Status */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+                <CreditCard size={15} />
+                Pagamento
+              </label>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="relative">
+                  <CreditCard
+                    size={15}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <select
-                    value={form.status_pagamento}
+                    value={form.forma_pagamento}
                     onChange={(e) =>
-                      handleFormChange('status_pagamento', e.target.value)
+                      handleFormChange('forma_pagamento', e.target.value)
                     }
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   >
-                    {STATUS_PAGAMENTO_OPTIONS.map((opt) => (
+                    {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>
                     ))}
                   </select>
                 </div>
+                <select
+                  value={form.banco}
+                  onChange={(e) => handleFormChange('banco', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  {BANCO_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label === 'Nenhum' ? 'Sem banco' : opt.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={form.status_pagamento}
+                  onChange={(e) =>
+                    handleFormChange('status_pagamento', e.target.value)
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  {STATUS_PAGAMENTO_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+            </div>
 
-              {/* 2a Forma de Pagamento */}
-<div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
-  <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
-    <CreditCard size={15} />
-    2a Forma de Pagamento
-    <span className="text-xs text-gray-400">(opcional)</span>
-  </label>
-  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-    <select
-      value={form.forma_pagamento_2}
-      onChange={(e) => handleFormChange('forma_pagamento_2', e.target.value)}
-      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-    >
-      <option value="">Nenhuma</option>
-      {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
-    <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
-        R$
-      </span>
-      <input
-        type="number"
-        step="0.01"
-        min="0"
-        value={form.valor_2}
-        onChange={(e) => handleFormChange('valor_2', e.target.value)}
-        className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        placeholder="Valor da 2a forma"
-        disabled={!form.forma_pagamento_2}
-      />
-    </div>
-  </div>
-</div>
-
-{/* Data de Vencimento */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Data de Vencimento
-                </label>
+            {/* 2a Forma de Pagamento + Banco */}
+            <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
+              <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+                <CreditCard size={15} />
+                2a Forma de Pagamento
+                <span className="text-xs text-gray-400">(opcional)</span>
+              </label>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <select
+                  value={form.forma_pagamento_2}
+                  onChange={(e) => handleFormChange('forma_pagamento_2', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="">Nenhuma</option>
+                  {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
                 <div className="relative">
-                  <Calendar
-                    size={15}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  />
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+                    R$
+                  </span>
                   <input
-                    type="date"
-                    value={form.data_vencimento}
-                    onChange={(e) =>
-                      handleFormChange('data_vencimento', e.target.value)
-                    }
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.valor_2}
+                    onChange={(e) => handleFormChange('valor_2', e.target.value)}
                     className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    placeholder="Valor da 2a forma"
+                    disabled={!form.forma_pagamento_2}
                   />
                 </div>
+                <select
+                  value={form.banco_2}
+                  onChange={(e) => handleFormChange('banco_2', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  disabled={!form.forma_pagamento_2}
+                >
+                  {BANCO_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label === 'Nenhum' ? 'Sem banco' : opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+            </div>
 
-      {/* Banco */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Banco
-        </label>
-        <select
-          value={form.banco}
-          onChange={(e) => handleFormChange('banco', e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        >
-          {BANCO_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div>
+            {/* Data de Vencimento */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Data de Vencimento
+              </label>
+              <div className="relative">
+                <Calendar
+                  size={15}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  type="date"
+                  value={form.data_vencimento}
+                  onChange={(e) =>
+                    handleFormChange('data_vencimento', e.target.value)
+                  }
+                  className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
 
-              {/* Observacoes */}
+            {/* Observacoes */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Observacoes
