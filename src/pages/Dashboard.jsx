@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { getLocalDateISO } from '../lib/dates'
 import {
@@ -7,9 +6,9 @@ import {
   Scissors,
   Receipt,
   CalendarClock,
-  CalendarOff,
+  
   RefreshCw,
-  Landmark,
+  Wallet,
 } from 'lucide-react'
 import {
   BarChart,
@@ -23,19 +22,7 @@ import {
   Cell,
 } from 'recharts'
 
-const STATUS_BADGE_DARK = {
-  agendado: 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30',
-  em_andamento: 'bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30',
-  concluido: 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30',
-  cancelado: 'bg-gray-500/15 text-gray-400 ring-1 ring-gray-500/30',
-}
 
-const STATUS_LABEL = {
-  agendado: 'Agendado',
-  em_andamento: 'Em Andamento',
-  concluido: 'Concluido',
-  cancelado: 'Cancelado',
-}
 
 const FORMA_PAGAMENTO_LABEL = {
   pix: 'Pix',
@@ -153,7 +140,7 @@ function SkeletonChart() {
           <div key={i} className="flex-1 bg-[#1F2937] rounded-t" style={{ height: `${20 + Math.random() * 80}%` }} />
         ))}
       </div>
-    </div>
+      </div>
   )
 }
 
@@ -210,8 +197,7 @@ export default function Dashboard() {
   const [saldoEmCaixa, setSaldoEmCaixa] = useState(0)
   const [dadosMensais, setDadosMensais] = useState([])
   const [servicosMaisVendidos, setServicosMaisVendidos] = useState([])
-  const [proximosAtendimentos, setProximosAtendimentos] = useState([])
-  const [formasPagamento, setFormasPagamento] = useState([])
+    const [formasPagamento, setFormasPagamento] = useState([])
 
   useEffect(() => { loadAllData() }, [])
 
@@ -226,8 +212,7 @@ export default function Dashboard() {
         fetchSaldoEmCaixa(),
         fetchDadosMensais(),
         fetchServicosMaisVendidos(),
-        fetchProximosAtendimentos(),
-        fetchFormasPagamento(),
+                fetchFormasPagamento(),
       ])
     } catch (err) {
       console.error('Erro ao carregar dados:', err)
@@ -544,9 +529,9 @@ export default function Dashboard() {
 
         {/* Card 4 — Saldo em Caixa */}
         <div className="relative rounded-2xl bg-gradient-to-br from-teal-950 to-[#061C1A] border border-teal-900 p-5 overflow-hidden">
-          <Landmark className="absolute right-4 top-4 text-4xl text-teal-400 opacity-10" />
+          <Wallet className="absolute right-4 top-4 text-4xl text-teal-400 opacity-10" />
           <div className="flex items-center gap-2 mb-3">
-            <Landmark className="w-3.5 h-3.5 text-teal-400" />
+            <Wallet className="w-3.5 h-3.5 text-teal-400" />
             <span className="text-[10px] tracking-widest uppercase text-teal-400 font-medium">SALDO EM CAIXA</span>
           </div>
           <p className="text-3xl font-medium text-white">{formatCurrency(saldoEmCaixa)}</p>
@@ -668,62 +653,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      </div>
 
-      {/* ━━━ SECTION 5 — PROXIMOS ATENDIMENTOS ━━━ */}
-      {loading ? (
-        <SkeletonList />
-      ) : (
-        <div className="rounded-2xl bg-[#111827] border border-[#1F2937] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs uppercase tracking-wider text-gray-400">
-              Proximos atendimentos
-            </h2>
-            <Link
-              to="/atendimentos"
-              className="text-xs font-medium text-violet-400 hover:text-violet-300 transition-colors"
-            >
-              Ver todos
-            </Link>
-          </div>
-          {proximosAtendimentos.length > 0 ? (
-            <div className="space-y-4">
-              {proximosAtendimentos.map((a) => {
-                const d = new Date(a.data_hora)
-                const hours = String(d.getHours()).padStart(2, '0')
-                const minutes = String(d.getMinutes()).padStart(2, '0')
-                return (
-                  <div
-                    key={a.id}
-                    className="flex items-center gap-3 rounded-lg bg-[#0B0F1A] border border-[#1F2937] p-3 hover:border-[#374151] transition-colors"
-                  >
-                    <span className="text-sm font-mono font-medium text-violet-400 w-12 shrink-0">
-                      {hours}:{minutes}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">
-                        {a.pet?.nome || '—'}
-                        {a.pet?.raca ? <span className="text-gray-400 font-normal"> · {a.pet.raca}</span> : ''}
-                      </p>
-                      <p className="text-xs text-gray-400 truncate">
-                        {a.cliente?.nome || '—'} · {a.servico?.nome || '—'}
-                      </p>
-                    </div>
-                    <span className="text-sm font-semibold text-emerald-400 shrink-0">{formatCurrency(a.valor)}</span>
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${STATUS_BADGE_DARK[a.status] || STATUS_BADGE_DARK.agendado}`}>
-                      {STATUS_LABEL[a.status] || a.status}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="min-h-[140px] flex flex-col items-center justify-center text-gray-600">
-              <CalendarOff className="w-10 h-10 mb-2 text-gray-700" />
-              <p className="text-sm text-gray-500">Nenhum agendamento nos proximos 7 dias</p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
   )
 }
