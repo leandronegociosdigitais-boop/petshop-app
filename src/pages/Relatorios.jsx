@@ -321,6 +321,28 @@ export default function Relatorios() {
 
   const grupoNames = useMemo(() => Object.keys(saidasByGrupo).sort(), [saidasByGrupo])
 
+  const saidasByCategoria = useMemo(() => {
+    const cats = {}
+    for (const s of saidas) {
+      const cat = s.categoria || 'Outros'
+      const sub = s.subcategoria || s.descricao || 'Outros'
+      if (!cats[cat]) cats[cat] = { total: 0, subcategorias: {} }
+      const valor = parseFloat(s.valor) || 0
+      cats[cat].total += valor
+      if (!cats[cat].subcategorias[sub]) cats[cat].subcategorias[sub] = 0
+      cats[cat].subcategorias[sub] += valor
+    }
+    return Object.entries(cats)
+      .sort(([,a], [,b]) => b.total - a.total)
+      .map(([nome, data]) => ({
+        nome,
+        total: data.total,
+        subcategorias: Object.entries(data.subcategorias)
+          .sort(([,a], [,b]) => b - a)
+          .map(([subNome, subTotal]) => ({ nome: subNome, total: subTotal })),
+      }))
+  }, [saidas])
+
   const atendimentosPorDia = useMemo(() => {
     const dias = {}
     for (const a of filteredAtendimentos) {
@@ -516,6 +538,52 @@ export default function Relatorios() {
               </div>
             </div>
           </div>
+        )}
+      </CollapsibleSection>
+
+
+      {/* Saidas por Categoria */}
+      <CollapsibleSection title="Saidas por Categoria" icon={TrendingDown} defaultOpen={true}>
+        {loadingFinanceiro ? (
+          <Spinner />
+        ) : saidas.length === 0 ? (
+          <EmptyState icon={TrendingDown} message="Nenhuma saida no periodo selecionado." />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 p-4">
+              {saidasByCategoria.map((cat) => {
+                const pct = totalSaidas > 0 ? (cat.total / totalSaidas) * 100 : 0
+                return (
+                  <div key={cat.nome} className="rounded-xl border border-red-100 bg-white p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-gray-800">{cat.nome}</span>
+                      <span className="text-red-600 font-bold text-lg">{formatCurrency(cat.total)}</span>
+                    </div>
+                    <div className="mt-2 h-1.5 rounded bg-gray-100">
+                      <div
+                        className="h-1.5 rounded bg-red-500 transition-all"
+                        style={{ width: `${Math.min(pct, 100)}%` }}
+                      />
+                    </div>
+                    {cat.subcategorias.length > 0 && (
+                      <div className="mt-3 divide-y divide-gray-50">
+                        {cat.subcategorias.map((sub) => (
+                          <div key={sub.nome} className="flex items-center justify-between py-1.5">
+                            <span className="text-sm text-gray-500">{sub.nome}</span>
+                            <span className="text-sm text-red-400 font-medium">{formatCurrency(sub.total)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            <div className="border-t border-gray-200 pt-4 mt-2 mx-4 mb-4 flex items-center justify-between">
+              <span className="font-semibold text-gray-700">Total de Saidas:</span>
+              <span className="text-red-600 font-bold text-xl">{formatCurrency(totalSaidas)}</span>
+            </div>
+          </>
         )}
       </CollapsibleSection>
 
