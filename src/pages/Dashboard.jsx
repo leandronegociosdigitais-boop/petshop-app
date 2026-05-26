@@ -9,6 +9,7 @@ import {
   CalendarClock,
   CalendarOff,
   RefreshCw,
+  Landmark,
 } from 'lucide-react'
 import {
   BarChart,
@@ -206,7 +207,7 @@ export default function Dashboard() {
   const [faturamentoMesAnterior, setFaturamentoMesAnterior] = useState(0)
   const [atendimentosMes, setAtendimentosMes] = useState(0)
   const [ticketMedio, setTicketMedio] = useState(0)
-  const [agendados7Dias, setAgendados7Dias] = useState(0)
+  const [saldoEmCaixa, setSaldoEmCaixa] = useState(0)
   const [dadosMensais, setDadosMensais] = useState([])
   const [servicosMaisVendidos, setServicosMaisVendidos] = useState([])
   const [proximosAtendimentos, setProximosAtendimentos] = useState([])
@@ -222,7 +223,7 @@ export default function Dashboard() {
         fetchFaturamentoMes(),
         fetchFaturamentoMesAnterior(),
         fetchAtendimentosMes(),
-        fetchAgendados7Dias(),
+        fetchSaldoEmCaixa(),
         fetchDadosMensais(),
         fetchServicosMaisVendidos(),
         fetchProximosAtendimentos(),
@@ -295,17 +296,19 @@ export default function Dashboard() {
     } catch (err) { console.error('fetchAtendimentosMes:', err) }
   }
 
-  async function fetchAgendados7Dias() {
+  async function fetchSaldoEmCaixa() {
     try {
-      const { start, end } = getNext7DaysRange()
-      const { count, error } = await supabase
-        .from('atendimentos')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'agendado')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
-      if (!error) setAgendados7Dias(count || 0)
-    } catch (err) { console.error('fetchAgendados7Dias:', err) }
+      const year = new Date().getFullYear()
+      const start = `${year}-01-01`
+      const end = `${year}-12-31`
+      const [entradasRes, saidasRes] = await Promise.all([
+        supabase.from('financeiro').select('valor').eq('tipo', 'entrada').gte('data', start).lte('data', end),
+        supabase.from('financeiro').select('valor').eq('tipo', 'saida').gte('data', start).lte('data', end),
+      ])
+      const totalEntradas = (entradasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)
+      const totalSaidas = (saidasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)
+      setSaldoEmCaixa(totalEntradas - totalSaidas)
+    } catch (err) { console.error('fetchSaldoEmCaixa:', err) }
   }
 
   async function fetchDadosMensais() {
@@ -539,16 +542,16 @@ export default function Dashboard() {
             <p className="mt-1 text-xs text-amber-400">por atendimento</p>
           </div>
 
-          {/* Card 4 — Agendados 7 dias */}
-          <div className="relative rounded-2xl bg-gradient-to-br from-blue-950 to-[#060F1C] border border-blue-900 p-5 overflow-hidden">
-            <CalendarClock className="absolute right-4 top-4 text-4xl text-blue-400 opacity-10" />
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarClock className="w-3.5 h-3.5 text-blue-400" />
-              <span className="text-[10px] tracking-widest uppercase text-blue-400 font-medium">Agendados (7 dias)</span>
-            </div>
-            <p className="text-3xl font-medium text-white">{agendados7Dias}</p>
-            <p className="mt-1 text-xs text-blue-400">proximos 7 dias</p>
+        {/* Card 4 — Saldo em Caixa */}
+        <div className="relative rounded-2xl bg-gradient-to-br from-teal-950 to-[#061C1A] border border-teal-900 p-5 overflow-hidden">
+          <Landmark className="absolute right-4 top-4 text-4xl text-teal-400 opacity-10" />
+          <div className="flex items-center gap-2 mb-3">
+            <Landmark className="w-3.5 h-3.5 text-teal-400" />
+            <span className="text-[10px] tracking-widest uppercase text-teal-400 font-medium">SALDO EM CAIXA</span>
           </div>
+          <p className="text-3xl font-medium text-white">{formatCurrency(saldoEmCaixa)}</p>
+          <p className="mt-1 text-xs text-teal-400">acumulado em {currentYear}</p>
+        </div>
         </div>
       )}
 
