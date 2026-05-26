@@ -233,7 +233,7 @@ export default function Atendimentos() {
     const { data, error } = await supabase
       .from('servicos')
       .select('id, nome, preco')
-      .order('nome', { ascending: true })
+      .order('preco', { ascending: false })
 
     if (!error) setServicos(data || [])
   }

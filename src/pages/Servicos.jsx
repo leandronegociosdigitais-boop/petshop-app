@@ -43,7 +43,7 @@ export default function Servicos() {
     const { data, error } = await supabase
       .from('servicos')
       .select('*')
-      .order('nome', { ascending: true })
+      .order('preco', { ascending: false })
 
     if (error) {
       showToast('Erro ao carregar servicos: ' + error.message, 'error')
