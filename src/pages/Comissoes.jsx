@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatCurrency, formatDateTime, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
-import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint, CalendarDays } from 'lucide-react'
+import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint, CalendarDays, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 const COMISSAO_RATE = 0.4
 
@@ -18,6 +18,20 @@ const BANCO_LABEL = {
   pagseguro: 'PagSeguro',
   pagseguro_juridico: 'PagSeguro Juridico',
   caixa_loja: 'Caixa Loja',
+}
+
+const STATUS_BADGE_COM = {
+  agendado: 'bg-blue-50 text-blue-700',
+  em_andamento: 'bg-amber-50 text-amber-700',
+  concluido: 'bg-emerald-50 text-emerald-700',
+  cancelado: 'bg-gray-50 text-gray-500',
+}
+
+const STATUS_LABEL_COM = {
+  agendado: 'Agendado',
+  em_andamento: 'Em Andamento',
+  concluido: 'Concluido',
+  cancelado: 'Cancelado',
 }
 
 const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -58,7 +72,6 @@ export default function Comissoes() {
     const { data, error } = await supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
-      .eq('status', 'concluido')
       .gte('data_hora', start + 'T00:00:00')
       .lte('data_hora', end + 'T23:59:59')
       .order('data_hora', { ascending: false })
@@ -393,6 +406,7 @@ return (
                         <th className="px-3 sm:px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Servico</th>
                         <th className="hidden md:table-cell px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Valor</th>
                         <th className="px-3 sm:px-6 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Comissao</th>
+                  <th className="hidden lg:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Status</th>
                         <th className="hidden lg:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Forma Pag.</th>
                         <th className="hidden xl:table-cell px-6 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Banco</th>
                       </tr>
@@ -408,6 +422,11 @@ return (
                             <td className="px-6 py-3 text-sm text-gray-700">{a.servico?.nome || '—'}</td>
                             <td className="hidden md:table-cell px-6 py-3 text-right text-sm font-semibold text-gray-900">{formatCurrency(valor)}</td>
                             <td className="px-6 py-3 text-right text-sm font-bold text-indigo-700">{formatCurrency(comissao)}</td>
+                  <td className="hidden lg:table-cell px-6 py-3">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_BADGE_COM[a.status] || 'bg-gray-100 text-gray-600'}`}>
+                      {STATUS_LABEL_COM[a.status] || a.status}
+                    </span>
+                  </td>
                             <td className="hidden lg:table-cell px-6 py-3">
                               <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
                                 {FORMA_PAGAMENTO_LABEL[a.forma_pagamento] || a.forma_pagamento || '—'}
