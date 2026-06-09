@@ -649,7 +649,7 @@ async function handleChangeStatus(atendimento, newStatus) {
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <Calendar size={28} className="text-indigo-600" />
           <h1 className="text-2xl font-bold text-gray-900">Atendimentos</h1>
           <div className="ml-4 flex items-center gap-1">
@@ -825,7 +825,7 @@ async function handleChangeStatus(atendimento, newStatus) {
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-100">
+          <table className="w-full divide-y divide-gray-100 table-fixed">
             <thead>
               <tr className="text-xs uppercase tracking-wide text-gray-500">
                 <th className="px-3 sm:px-4 py-2 text-left font-semibold">Pet / Cliente</th>
@@ -848,23 +848,23 @@ async function handleChangeStatus(atendimento, newStatus) {
 
                 return (
                   <tr key={atendimento.id} className="transition-colors hover:bg-gray-50">
-                    <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 py-2.5 max-w-[140px] sm:max-w-[180px]">
+                      <div className="flex items-center gap-2 min-w-0">
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                           <PawPrint size={14} />
                         </div>
-                        <div>
-                          <div className="font-medium text-gray-900">
+                        <div className="min-w-0">
+                          <div className="font-medium text-gray-900 truncate">
                             {atendimento.pet?.nome || "\u2014"}
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 truncate">
                             {atendimento.cliente?.nome || "\u2014"}
                           </div>
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-3 sm:px-4 py-2.5 text-sm text-gray-700">
+                    <td className="px-3 sm:px-4 py-2.5 text-sm text-gray-700 max-w-[120px] sm:max-w-[160px] truncate">
                       {atendimento.servico?.nome || "\u2014"}
                     </td>
 
@@ -922,7 +922,7 @@ async function handleChangeStatus(atendimento, newStatus) {
                       {formatCurrency(atendimento.valor)}
                     </td>
 
-                    <td className="px-3 sm:px-4 py-2.5 text-right">
+                    <td className="px-3 sm:px-4 py-2.5 text-right w-[120px] sm:w-auto">
                       <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
                         {(pagamentoStatus === "pendente" || pagamentoStatus === "vencido") && (
                           <button
