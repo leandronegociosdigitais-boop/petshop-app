@@ -41,10 +41,10 @@ const EMPTY_FORM = {
   forma_pagamento: 'pix',
   forma_pagamento_2: '',
   valor_2: '',
-  banco_2: '',
+  banco_2: 'caixa_loja',
   status_pagamento: 'pendente',
   data_vencimento: '',
-  banco: '',
+  banco: 'mercado_pago',
 }
 
 const STATUS_OPTIONS = [
@@ -261,10 +261,10 @@ export default function Atendimentos() {
       forma_pagamento: atendimento.forma_pagamento || 'dinheiro',
       forma_pagamento_2: atendimento.forma_pagamento_2 || '',
       valor_2: atendimento.valor_2 != null ? String(atendimento.valor_2) : '',
-      banco_2: atendimento.banco_2 || '',
+      banco_2: atendimento.banco_2 || 'caixa_loja',
       status_pagamento: atendimento.status_pagamento || 'pendente',
       data_vencimento: atendimento.data_vencimento ? toLocalDateValue(atendimento.data_vencimento) : '',
-      banco: atendimento.banco || '',
+      banco: atendimento.banco || 'mercado_pago',
     })
     setModalOpen(true)
   }
