@@ -297,7 +297,13 @@ export default function Atendimentos() {
         next.status_pagamento = 'pago'
       }
 
-      return next
+      // When forma_pagamento_2 is cleared, reset banco_2 and valor_2
+    if (field === 'forma_pagamento_2' && !value) {
+      next.banco_2 = ''
+      next.valor_2 = ''
+    }
+
+    return next
     })
   }
 
@@ -330,7 +336,9 @@ export default function Atendimentos() {
       valor: form.valor ? parseFloat(form.valor) : null,
       observacoes: form.observacoes.trim(),
       forma_pagamento: form.forma_pagamento,
-      ...(form.forma_pagamento_2 ? { forma_pagamento_2: form.forma_pagamento_2, valor_2: form.valor_2 ? parseFloat(form.valor_2) : null, banco_2: form.banco_2 || null } : {}),
+      forma_pagamento_2: form.forma_pagamento_2 || null,
+  valor_2: form.forma_pagamento_2 ? (form.valor_2 ? parseFloat(form.valor_2) : null) : null,
+  banco_2: form.forma_pagamento_2 ? (form.banco_2 || null) : null,
       status_pagamento: form.status_pagamento,
       data_vencimento: form.data_vencimento || null,
       banco: form.banco || null,
