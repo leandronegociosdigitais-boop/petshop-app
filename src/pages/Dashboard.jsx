@@ -237,45 +237,45 @@ export default function Dashboard() {
   }
 
   async function fetchFaturamentoMes() {
-  try {
-    const now = new Date()
-    const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
-    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', todayStr + 'T23:59:59')
-    if (!error) {
-      const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
-      setFaturamentoMes(total)
-    }
-  } catch (err) { console.error('fetchFaturamentoMes:', err) }
-}
+    try {
+      const now = new Date()
+      const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', todayStr + 'T23:59:59')
+      if (!error) {
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        setFaturamentoMes(total)
+      }
+    } catch (err) { console.error('fetchFaturamentoMes:', err) }
+  }
 
-async function fetchFaturamentoMesAnterior() {
-  try {
-    const now = new Date()
-    const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1
-    const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear()
-    const start = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-01`
-    const sameDayPrev = String(Math.min(now.getDate(), new Date(prevYear, prevMonth + 1, 0).getDate())).padStart(2, '0')
-    const end = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${sameDayPrev}`
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('valor')
-      .eq('status', 'concluido')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-    if (!error) {
-      const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
-      setFaturamentoMesAnterior(total)
-    }
-  } catch (err) { console.error('fetchFaturamentoMesAnterior:', err) }
-}
+  async function fetchFaturamentoMesAnterior() {
+    try {
+      const now = new Date()
+      const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1
+      const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear()
+      const start = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-01`
+      const sameDayPrev = String(Math.min(now.getDate(), new Date(prevYear, prevMonth + 1, 0).getDate())).padStart(2, '0')
+      const end = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${sameDayPrev}`
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('valor')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+      if (!error) {
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        setFaturamentoMesAnterior(total)
+      }
+    } catch (err) { console.error('fetchFaturamentoMesAnterior:', err) }
+  }
 
-async function fetchAtendimentosMes() {
+    async function fetchAtendimentosMes() {
     try {
       const { start, end } = getMonthRange()
       const { count, error } = await supabase
