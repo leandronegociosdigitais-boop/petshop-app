@@ -13,8 +13,16 @@ import Atendimentos from './pages/Atendimentos'
 import Financeiro from './pages/Financeiro'
 import Comissoes from './pages/Comissoes'
 import Relatorios from './pages/Relatorios'
+import Backup from './pages/Backup'
+
+// Importar funções de backup
+import { performAutomaticBackup } from './lib/backup'
 
 function App() {
+  // Executar backup automático quando a aplicação for carregada
+  // Isso garante que o backup seja feito mesmo se o usuário não acessar a página de backup
+  performAutomaticBackup()
+
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -37,6 +45,7 @@ function App() {
               <Route path="/financeiro" element={<Financeiro />} />
               <Route path="/comissoes" element={<Comissoes />} />
               <Route path="/relatorios" element={<Relatorios />} />
+              <Route path="/backup" element={<Backup />} />
             </Route>
           </Routes>
         </ThemeProvider>
