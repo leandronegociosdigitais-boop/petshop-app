@@ -836,14 +836,14 @@ async function handleChangeStatus(atendimento, newStatus) {
           <table className="w-full divide-y divide-gray-100 table-fixed">
             <thead>
               <tr className="text-xs uppercase tracking-wide text-gray-500">
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold">Pet / Cliente</th>
-                <th className="px-3 sm:px-4 py-2 text-left font-semibold">Servico</th>
-                <th className="hidden sm:table-cell px-4 py-2 text-left font-semibold">Hora</th>
-                <th className="hidden md:table-cell px-4 py-2 text-left font-semibold">Status</th>
-                <th className="hidden lg:table-cell px-4 py-2 text-left font-semibold">Pagamento</th>
-                <th className="hidden xl:table-cell px-4 py-2 text-left font-semibold">Banco</th>
-                <th className="hidden lg:table-cell px-4 py-2 text-right font-semibold">Valor</th>
-                <th className="px-3 sm:px-4 py-2 text-right font-semibold">Acoes</th>
+                <th className="px-2 py-2 text-left font-semibold">Pet / Cliente</th>
+                <th className="px-2 py-2 text-left font-semibold">Servico</th>
+                <th className="hidden sm:table-cell px-2 py-2 text-left font-semibold">Hora</th>
+                <th className="hidden md:table-cell px-2 py-2 text-left font-semibold">Status</th>
+                <th className="hidden lg:table-cell px-2 py-2 text-left font-semibold">Pagamento</th>
+                <th className="hidden xl:table-cell px-2 py-2 text-left font-semibold">Banco</th>
+                <th className="hidden lg:table-cell px-2 py-2 text-right font-semibold">Valor</th>
+                <th className="px-2 py-2 text-right font-semibold">Acoes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -856,7 +856,7 @@ async function handleChangeStatus(atendimento, newStatus) {
 
                 return (
                   <tr key={atendimento.id} className="transition-colors hover:bg-gray-50">
-                    <td className="px-4 py-2.5 max-w-[140px] sm:max-w-[180px]">
+                    <td className="px-2 py-2 max-w-[120px] sm:max-w-[150px]">
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                           <PawPrint size={14} />
@@ -872,20 +872,20 @@ async function handleChangeStatus(atendimento, newStatus) {
                       </div>
                     </td>
 
-                    <td className="px-3 sm:px-4 py-2.5 text-sm text-gray-700 max-w-[120px] sm:max-w-[160px] truncate">
+                    <td className="px-2 py-2 text-sm text-gray-700 max-w-[100px] sm:max-w-[130px] truncate">
                       {atendimento.servico?.nome || "\u2014"}
                     </td>
 
-                    <td className="hidden sm:table-cell px-4 py-2.5">
+                    <td className="hidden sm:table-cell px-2 py-2">
                       <div className="flex items-center gap-1 text-sm text-gray-700">
                         <Clock size={14} className="text-gray-400" />
                         <span>{formatTime(atendimento.data_hora)}</span>
                       </div>
                     </td>
 
-                    <td className="hidden md:table-cell px-4 py-2.5">
+                    <td className="hidden md:table-cell px-2 py-2">
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                        className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                           STATUS_BADGE[atendimento.status] || STATUS_BADGE.agendado
                         }`}
                       >
@@ -894,10 +894,10 @@ async function handleChangeStatus(atendimento, newStatus) {
                       </span>
                     </td>
 
-                    <td className="hidden lg:table-cell px-4 py-2.5">
+                    <td className="hidden lg:table-cell px-2 py-2">
                       <div className="flex flex-col gap-1">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                          className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                             PAGAMENTO_STATUS_BADGE[pagamentoStatus] || PAGAMENTO_STATUS_BADGE.pendente
                           }`}
                         >
@@ -907,7 +907,7 @@ async function handleChangeStatus(atendimento, newStatus) {
                           {PAGAMENTO_STATUS_LABEL[pagamentoStatus] || pagamentoStatus}
                         </span>
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                          className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                             FORMA_PAGAMENTO_BADGE[formaPagamento] || FORMA_PAGAMENTO_BADGE.loja
                           }`}
                         >
@@ -922,16 +922,16 @@ async function handleChangeStatus(atendimento, newStatus) {
                       </div>
                     </td>
 
-                    <td className="hidden xl:table-cell px-4 py-2.5 text-sm text-gray-600">
+                    <td className="hidden xl:table-cell px-2 py-2 text-sm text-gray-600">
                       {atendimento.banco ? (BANCO_LABEL[atendimento.banco] || atendimento.banco) : <span className="text-gray-400">{"\u2014"}</span>}
                     </td>
 
-                    <td className="hidden lg:table-cell px-4 py-2.5 text-right text-sm font-semibold text-indigo-700">
+                    <td className="hidden lg:table-cell px-2 py-2 text-right text-sm font-semibold text-indigo-700">
                       {formatCurrency(atendimento.valor)}
                     </td>
 
-                    <td className="px-3 sm:px-4 py-2.5 text-right w-[120px] sm:w-auto">
-                      <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
+                    <td className="px-2 py-2 text-right w-[110px] sm:w-auto">
+                      <div className="flex items-center justify-end gap-1 flex-nowrap">
                         {(pagamentoStatus === "pendente" || pagamentoStatus === "vencido") && (
                           <button
                             onClick={() => handleMarcarPago(atendimento)}
