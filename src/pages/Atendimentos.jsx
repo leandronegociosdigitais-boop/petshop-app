@@ -1162,7 +1162,7 @@ async function handleChangeStatus(atendimento, newStatus) {
                     onChange={(e) =>
                       handleFormChange('forma_pagamento', e.target.value)
                     }
-                    className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   >
                     {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
