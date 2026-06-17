@@ -895,7 +895,7 @@ async function handleChangeStatus(atendimento, newStatus) {
                     </td>
 
                     <td className="hidden lg:table-cell px-2 py-2">
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-1 text-left items-start">
                         <span
                           className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                             PAGAMENTO_STATUS_BADGE[pagamentoStatus] || PAGAMENTO_STATUS_BADGE.pendente
