@@ -422,7 +422,7 @@ export default function Relatorios() {
         const banco = r.banco || 'sem_banco'
         if (!meses[key].porBanco[banco]) meses[key].porBanco[banco] = 0
         meses[key].porBanco[banco] += valor
-      } else {
+      } else if (r.status_pagamento === 'pago') {
         meses[key].totalSaida += valor
       }
       meses[key].count += 1
