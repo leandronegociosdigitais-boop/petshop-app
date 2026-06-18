@@ -264,7 +264,7 @@ export default function Relatorios() {
 
   // Computed data
   const entradas = useMemo(() => financeiro.filter((r) => r.tipo === 'entrada'), [financeiro])
-  const saidas = useMemo(() => financeiro.filter((r) => r.tipo === 'saida'), [financeiro])
+  const saidas = useMemo(() => financeiro.filter((r) => r.tipo === 'saida' && r.status_pagamento === 'pago'), [financeiro])
   const totalEntradas = useMemo(() => entradas.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0), [entradas])
   const totalSaidas = useMemo(() => saidas.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0), [saidas])
   const lucro = totalEntradas - totalSaidas

@@ -205,18 +205,28 @@ export default function Financeiro() {
 
   async function fetchLembretes() {
     try {
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = String(now.getMonth() + 1).padStart(2, '0')
+      const start = `${year}-${month}-01`
+      const lastDay = new Date(year, now.getMonth() + 1, 0).getDate()
+      const end = `${year}-${month}-${String(lastDay).padStart(2, '0')}`
+
       const { data, error } = await supabase
         .from('financeiro')
         .select('*')
         .eq('tipo', 'saida')
         .eq('status_pagamento', 'pendente')
+        .gte('data_vencimento', start)
+        .lte('data_vencimento', end + 'T23:59:59')
         .order('data_vencimento', { ascending: true, nullsFirst: false })
 
       if (!error && data) {
         setLembretes(data)
+      } else {
+        setLembretes([])
       }
     } catch {
-      // Colunas data_vencimento/status_pagamento ainda nao existem no banco
       setLembretes([])
     }
   }
@@ -435,7 +445,7 @@ export default function Financeiro() {
       .filter((r) => r.tipo === 'entrada')
       .reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0)
     const saidas = filtered
-      .filter((r) => r.tipo === 'saida')
+      .filter((r) => r.tipo === 'saida' && r.status_pagamento === 'pago')
       .reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0)
     return { entradas, saidas, saldo: entradas - saidas }
   }, [filtered])
