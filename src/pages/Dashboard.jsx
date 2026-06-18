@@ -295,7 +295,7 @@ export default function Dashboard() {
       const end = `${year}-12-31`
       const [entradasRes, saidasRes] = await Promise.all([
         supabase.from('financeiro').select('valor').eq('tipo', 'entrada').gte('data', start).lte('data', end),
-        supabase.from('financeiro').select('valor').eq('tipo', 'saida').eq('status_pagamento', 'pago').gte('data', start).lte('data', end),
+        supabase.from('financeiro').select('valor').eq('tipo', 'saida').or('status_pagamento.eq.pago,status_pagamento.is.null').gte('data', start).lte('data', end),
       ])
       const totalEntradas = (entradasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)
       const totalSaidas = (saidasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)

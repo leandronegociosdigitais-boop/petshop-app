@@ -409,7 +409,7 @@ export default function Financeiro() {
       const valor = parseFloat(r.valor) || 0
       dias[key].items.push(r)
       if (r.tipo === 'entrada') dias[key].totalEntrada += valor
-      else if (r.status_pagamento === 'pago') dias[key].totalSaida += valor
+      else if (r.status_pagamento === 'pago' || !r.status_pagamento) dias[key].totalSaida += valor
     }
     return Object.values(dias).sort((a, b) => b.date.localeCompare(a.date))
   }, [filtered])
@@ -429,7 +429,7 @@ export default function Financeiro() {
         const banco = r.banco || 'sem_banco'
         if (!meses[key].porBanco[banco]) meses[key].porBanco[banco] = 0
         meses[key].porBanco[banco] += valor
-      } else if (r.status_pagamento === 'pago') {
+      } else if (r.status_pagamento === 'pago' || !r.status_pagamento) {
         meses[key].totalSaida += valor
       }
       meses[key].count += 1
@@ -442,7 +442,7 @@ export default function Financeiro() {
       .filter((r) => r.tipo === 'entrada')
       .reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0)
     const saidas = filtered
-      .filter((r) => r.tipo === 'saida' && r.status_pagamento === 'pago')
+      .filter((r) => r.tipo === 'saida' && (r.status_pagamento === 'pago' || !r.status_pagamento))
       .reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0)
     return { entradas, saidas, saldo: entradas - saidas }
   }, [filtered])

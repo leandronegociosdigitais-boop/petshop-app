@@ -264,7 +264,7 @@ export default function Relatorios() {
 
   // Computed data
   const entradas = useMemo(() => financeiro.filter((r) => r.tipo === 'entrada'), [financeiro])
-  const saidas = useMemo(() => financeiro.filter((r) => r.tipo === 'saida' && r.status_pagamento === 'pago'), [financeiro])
+  const saidas = useMemo(() => financeiro.filter((r) => r.tipo === 'saida' && (r.status_pagamento === 'pago' || !r.status_pagamento)), [financeiro])
   const totalEntradas = useMemo(() => entradas.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0), [entradas])
   const totalSaidas = useMemo(() => saidas.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0), [saidas])
   const lucro = totalEntradas - totalSaidas
@@ -422,7 +422,7 @@ export default function Relatorios() {
         const banco = r.banco || 'sem_banco'
         if (!meses[key].porBanco[banco]) meses[key].porBanco[banco] = 0
         meses[key].porBanco[banco] += valor
-      } else if (r.status_pagamento === 'pago') {
+      } else if (r.status_pagamento === 'pago' || !r.status_pagamento) {
         meses[key].totalSaida += valor
       }
       meses[key].count += 1
