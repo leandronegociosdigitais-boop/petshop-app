@@ -207,8 +207,11 @@ export default function Financeiro() {
     try {
       const now = new Date()
       const year = now.getFullYear()
-      const month = String(now.getMonth() + 1).padStart(2, '0')
+      const monthNum = now.getMonth() + 1
+      const month = String(monthNum).padStart(2, '0')
       const start = `${year}-${month}-01`
+      const lastDay = new Date(year, monthNum, 0).getDate()
+      const end = `${year}-${month}-${String(lastDay).padStart(2, '0')}`
 
       const { data, error } = await supabase
         .from('financeiro')
@@ -216,6 +219,7 @@ export default function Financeiro() {
         .eq('tipo', 'saida')
         .eq('status_pagamento', 'pendente')
         .gte('data_vencimento', start)
+        .lte('data_vencimento', end + 'T23:59:59')
         .order('data_vencimento', { ascending: true, nullsFirst: false })
 
       if (!error && data) {
@@ -234,7 +238,12 @@ export default function Financeiro() {
 
   function openCreateModal(tipo) {
     setEditingId(null)
-    setForm({ ...EMPTY_FORM, tipo, data: getToday() })
+    setForm({
+      ...EMPTY_FORM,
+      tipo,
+      data: getToday(),
+      status_pagamento: tipo === 'entrada' ? 'pago' : 'pendente'
+    })
     setModalOpen(true)
   }
 
