@@ -198,7 +198,27 @@ export default function Financeiro() {
     if (error) {
       showToast('Erro ao carregar registros financeiros: ' + error.message, 'error')
     } else {
-      setRegistros(data || [])
+      // --- Deduplicate logic -------------------------------------------
+      // Identify duplicates by tipo, descricao, valor e data (mesmo registro).
+      const records = data || []
+      const seen = new Map() // key -> first record id
+      const duplicates = [] // ids to remove
+      for (const rec of records) {
+        const key = `${rec.tipo}|${rec.descricao}|${rec.valor}|${rec.data}`
+        if (seen.has(key)) {
+          duplicates.push(rec.id)
+        } else {
+          seen.set(key, rec.id)
+        }
+      }
+      // Remove duplicates from DB (if any)
+      if (duplicates.length > 0) {
+        await supabase.from('financeiro').delete().in('id', duplicates)
+      }
+      // Keep only the first occurrence of each key
+      const unique = Array.from(seen.values()).map(id => records.find(r => r.id === id))
+      setRegistros(unique)
+      // -----------------------------------------------------------------
     }
     setLoading(false)
   }
