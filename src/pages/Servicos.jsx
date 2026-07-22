@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
-import { Plus, Pencil, Trash2, Scissors, Clock, DollarSign, ToggleLeft, ToggleRight, X } from 'lucide-react'
+import { formatCurrency } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Modal from '../components/Modal'
+import ConfirmDialog from '../components/ConfirmDialog'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import { Plus, Pencil, Trash2, Scissors, Clock, DollarSign, ToggleLeft, ToggleRight } from 'lucide-react'
 
 const EMPTY_FORM = {
   nome: '',
@@ -10,52 +17,79 @@ const EMPTY_FORM = {
   ativo: true,
 }
 
-function formatCurrency(value) {
-  if (value == null) return 'R$ 0,00'
-  const num = parseFloat(value)
-  if (isNaN(num)) return 'R$ 0,00'
-  return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+async function fetchServicos() {
+  const { data, error } = await supabase
+    .from('servicos')
+    .select('*')
+    .order('preco', { ascending: false })
+  if (error) throw new Error(error.message)
+  return data || []
 }
 
 export default function Servicos() {
-  const [servicos, setServicos] = useState([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
-  const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
+
+  const { data: servicos = [], isLoading, error: fetchError } = useQuery({
+    queryKey: ['servicos'],
+    queryFn: fetchServicos,
+  })
 
   useEffect(() => {
-    fetchServicos()
-  }, [])
+    if (fetchError) showToast('Erro ao carregar servicos: ' + fetchError.message, 'error')
+  }, [fetchError])
 
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toast])
+  const saveMutation = useMutation({
+    mutationFn: async (payload) => {
+      if (editingId) {
+        const { error } = await supabase.from('servicos').update(payload).eq('id', editingId)
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from('servicos').insert([payload])
+        if (error) throw error
+      }
+    },
+    onSuccess: () => {
+      showToast(editingId ? 'Servico atualizado com sucesso!' : 'Servico criado com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['servicos'] })
+      closeModal()
+    },
+    onError: () => showToast('Erro ao salvar servico.', 'error'),
+  })
 
-  async function fetchServicos() {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('servicos')
-      .select('*')
-      .order('preco', { ascending: false })
+  const toggleMutation = useMutation({
+    mutationFn: async (servico) => {
+      const novoAtivo = !servico.ativo
+      const { error } = await supabase.from('servicos').update({ ativo: novoAtivo }).eq('id', servico.id)
+      if (error) throw error
+      return novoAtivo
+    },
+    onSuccess: (novoAtivo) => {
+      showToast(novoAtivo ? 'Servico ativado!' : 'Servico desativado!')
+      queryClient.invalidateQueries({ queryKey: ['servicos'] })
+    },
+    onError: () => showToast('Erro ao atualizar status.', 'error'),
+  })
 
-    if (error) {
-      showToast('Erro ao carregar servicos: ' + error.message, 'error')
-    } else {
-      setServicos(data || [])
-    }
-    setLoading(false)
-  }
-
-  function showToast(message, type = 'success') {
-    setToast({ message, type })
-  }
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('servicos').delete().eq('id', deleteId)
+      if (error) throw error
+    },
+    onSuccess: () => {
+      showToast('Servico excluido com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['servicos'] })
+      setDeleteId(null)
+    },
+    onError: () => {
+      showToast('Erro ao excluir servico.', 'error')
+      setDeleteId(null)
+    },
+  })
 
   function openCreateModal() {
     setEditingId(null)
@@ -85,7 +119,7 @@ export default function Servicos() {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault()
     if (!form.nome.trim()) {
       showToast('Nome e obrigatorio.', 'error')
@@ -96,7 +130,6 @@ export default function Servicos() {
       return
     }
 
-    setSaving(true)
     const payload = {
       nome: form.nome.trim(),
       descricao: form.descricao.trim(),
@@ -104,74 +137,21 @@ export default function Servicos() {
       duracao_minutos: form.duracao_minutos ? parseInt(form.duracao_minutos, 10) : null,
       ativo: form.ativo,
     }
-
-    let error
-    if (editingId) {
-      ;({ error } = await supabase
-        .from('servicos')
-        .update(payload)
-        .eq('id', editingId))
-    } else {
-      ;({ error } = await supabase.from('servicos').insert([payload]))
-    }
-
-    if (error) {
-      showToast('Erro ao salvar servico.', 'error')
-    } else {
-      showToast(editingId ? 'Servico atualizado com sucesso!' : 'Servico criado com sucesso!')
-      closeModal()
-      fetchServicos()
-    }
-    setSaving(false)
+    saveMutation.mutate(payload)
   }
 
-  async function handleToggleAtivo(servico) {
-    const novoAtivo = !servico.ativo
-    const { error } = await supabase
-      .from('servicos')
-      .update({ ativo: novoAtivo })
-      .eq('id', servico.id)
-
-    if (error) {
-      showToast('Erro ao atualizar status.', 'error')
-    } else {
-      showToast(novoAtivo ? 'Servico ativado!' : 'Servico desativado!')
-      setServicos((prev) =>
-        prev.map((s) => (s.id === servico.id ? { ...s, ativo: novoAtivo } : s))
-      )
-    }
+  function handleToggleAtivo(servico) {
+    toggleMutation.mutate(servico)
   }
 
-  async function handleDelete() {
+  function handleDelete() {
     if (!deleteId) return
-    const { error } = await supabase.from('servicos').delete().eq('id', deleteId)
-
-    if (error) {
-      showToast('Erro ao excluir servico.', 'error')
-    } else {
-      showToast('Servico excluido com sucesso!')
-      fetchServicos()
-    }
-    setDeleteId(null)
+    deleteMutation.mutate()
   }
 
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div
-          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
-            toast.type === 'error'
-              ? 'bg-red-600 text-white'
-              : 'bg-emerald-600 text-white'
-          }`}
-        >
-          <span>{toast.message}</span>
-          <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80">
-            <X size={16} />
-          </button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -189,22 +169,12 @@ export default function Servicos() {
       </div>
 
       {/* Content */}
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
-        </div>
+      {isLoading ? (
+        <Spinner />
       ) : servicos.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-          <Scissors size={40} className="mx-auto text-gray-300" />
-          <p className="mt-3 text-gray-500">Nenhum servico cadastrado ainda.</p>
-          <button
-            onClick={openCreateModal}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
-          >
-            <Plus size={16} />
-            Cadastrar primeiro servico
-          </button>
-        </div>
+        <EmptyState icon={Scissors} message="Nenhum servico cadastrado ainda.">
+          <button onClick={openCreateModal} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"><Plus size={16} /> Cadastrar primeiro servico</button>
+        </EmptyState>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {servicos.map((servico) => (
@@ -298,27 +268,8 @@ export default function Servicos() {
         </div>
       )}
 
-      {/* Create/Edit Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={closeModal}
-          />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                {editingId ? 'Editar Servico' : 'Novo Servico'}
-              </h2>
-              <button
-                onClick={closeModal}
-                className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
+      <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Editar Servico' : 'Novo Servico'} icon={Scissors}>
+        <form onSubmit={handleSubmit} className="space-y-4">
               {/* Nome */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -417,64 +368,21 @@ export default function Servicos() {
 
               {/* Actions */}
               <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {saving ? (
-                    <span className="flex items-center gap-2">
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                      Salvando...
-                    </span>
-                  ) : editingId ? (
-                    'Salvar Alteracoes'
-                  ) : (
-                    'Criar Servico'
-                  )}
+                <button type="button" onClick={closeModal} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancelar</button>
+                <button type="submit" disabled={saveMutation.isPending} className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  {saveMutation.isPending ? (<span className="flex items-center gap-2"><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> Salvando...</span>) : editingId ? 'Salvar Alteracoes' : 'Criar Servico'}
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </Modal>
 
-      {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setDeleteId(null)}
-          />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-            <h2 className="text-lg font-semibold text-gray-900">Excluir servico</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Tem certeza que deseja excluir este servico? Esta acao nao pode ser desfeita.
-            </p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button
-                onClick={() => setDeleteId(null)}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDelete}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Excluir servico"
+        message="Tem certeza que deseja excluir este servico? Esta acao nao pode ser desfeita."
+      />
     </div>
   )
 }

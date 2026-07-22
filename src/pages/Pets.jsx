@@ -1,21 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatDateTime } from '../lib/dates'
+import { formatDateTime, formatCurrency } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Modal from '../components/Modal'
+import ConfirmDialog from '../components/ConfirmDialog'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import { STATUS_BADGE, STATUS_LABEL } from '../lib/constants'
 import { Plus, Pencil, Trash2, Search, X, PawPrint, Dog, Cat, Calendar, Clock, ChevronRight, User } from 'lucide-react'
-
-const STATUS_BADGE = {
-  agendado: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  em_andamento: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  concluido: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  cancelado: 'bg-gray-50 text-gray-500 ring-gray-500/20',
-}
-
-const STATUS_LABEL = {
-  agendado: 'Agendado',
-  em_andamento: 'Em Andamento',
-  concluido: 'Concluido',
-  cancelado: 'Cancelado',
-}
 
 const EMPTY_FORM = {
   nome: '',
@@ -47,13 +39,6 @@ const ESPECIE_ICON = {
   Outro: PawPrint,
 }
 
-function formatCurrency(value) {
-  if (value == null) return 'R$ 0,00'
-  const num = parseFloat(value)
-  if (isNaN(num)) return 'R$ 0,00'
-  return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
 export default function Pets() {
   const [pets, setPets] = useState([])
   const [clientes, setClientes] = useState([])
@@ -64,7 +49,7 @@ export default function Pets() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
 
   // History drawer state
   const [historyPet, setHistoryPet] = useState(null)
@@ -72,10 +57,6 @@ export default function Pets() {
   const [historyLoading, setHistoryLoading] = useState(false)
 
   useEffect(() => { fetchPets(); fetchClientes() }, [])
-
-  useEffect(() => {
-    if (toast) { const timer = setTimeout(() => setToast(null), 3000); return () => clearTimeout(timer) }
-  }, [toast])
 
   async function fetchPets() {
     setLoading(true)
@@ -91,8 +72,6 @@ export default function Pets() {
     const { data, error } = await supabase.from('clientes').select('id, nome, codigo').order('nome', { ascending: true })
     if (!error) setClientes(data || [])
   }
-
-  function showToast(message, type = 'success') { setToast({ message, type }) }
 
   function openCreateModal() { setEditingId(null); setForm(EMPTY_FORM); setModalOpen(true) }
 
@@ -198,12 +177,7 @@ export default function Pets() {
 
   return (
     <div className="space-y-6">
-      {toast && (
-        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
-          <span>{toast.message}</span>
-          <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2"><PawPrint size={28} className="text-indigo-600" /><h1 className="text-2xl font-bold text-gray-900">Pets</h1></div>
@@ -218,13 +192,11 @@ export default function Pets() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" /></div>
+        <Spinner />
       ) : filtered.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-          <PawPrint size={40} className="mx-auto text-gray-300" />
-          <p className="mt-3 text-gray-500">{search ? 'Nenhum pet encontrado para a busca.' : 'Nenhum pet cadastrado ainda.'}</p>
-          {!search && <button onClick={openCreateModal} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"><Plus size={16} /> Cadastrar primeiro pet</button>}
-        </div>
+        <EmptyState icon={PawPrint} message={search ? 'Nenhum pet encontrado para a busca.' : 'Nenhum pet cadastrado ainda.'}>
+          {!search && <button onClick={openCreateModal} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"><Plus size={16} /> Cadastrar primeiro pet</button>}
+        </EmptyState>
       ) : (
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
@@ -371,16 +343,8 @@ export default function Pets() {
         </div>
       )}
 
-      {/* Create/Edit Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">{editingId ? 'Editar Pet' : 'Novo Pet'}</h2>
-              <button onClick={closeModal} className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"><X size={20} /></button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Editar Pet' : 'Novo Pet'} icon={PawPrint}>
+        <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">Nome <span className="text-red-500">*</span></label>
                 <input type="text" required value={form.nome} onChange={(e) => handleFormChange('nome', e.target.value)}
@@ -447,24 +411,15 @@ export default function Pets() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </Modal>
 
-      {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDeleteId(null)} />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-            <h2 className="text-lg font-semibold text-gray-900">Excluir pet</h2>
-            <p className="mt-2 text-sm text-gray-600">Tem certeza que deseja excluir este pet? Esta acao nao pode ser desfeita.</p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button onClick={() => setDeleteId(null)} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancelar</button>
-              <button onClick={handleDelete} className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors">Excluir</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Excluir pet"
+        message="Tem certeza que deseja excluir este pet? Esta acao nao pode ser desfeita."
+      />
     </div>
   )
 }

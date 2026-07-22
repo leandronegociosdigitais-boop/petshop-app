@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
-import { getLocalDateISO } from '../lib/dates'
+import { getLocalDateISO, formatCurrency } from '../lib/dates'
+import {
+  FORMA_PAGAMENTO_LABEL, DOT_COLORS, RANKING_COLORS,
+  MONTH_LABELS, MONTH_NAMES_FULL, WEEKDAYS,
+} from '../lib/constants'
 import {
   TrendingUp,
   Scissors,
@@ -21,45 +25,6 @@ import {
   Legend,
   Cell,
 } from 'recharts'
-
-
-
-const FORMA_PAGAMENTO_LABEL = {
-  pix: 'Pix',
-  cartao_debito: 'Debito',
-  cartao_credito: 'Credito',
-  dinheiro: 'Dinheiro',
-  permuta: 'Permuta',
-}
-
-const DOT_COLORS = {
-  pix: '#A78BFA',
-  cartao_credito: '#34D399',
-  cartao_debito: '#60A5FA',
-  dinheiro: '#FCD34D',
-  permuta: '#F87171',
-}
-
-const RANKING_COLORS = ['text-yellow-400', 'text-gray-400', 'text-amber-500', 'text-gray-600', 'text-gray-600']
-
-const MONTH_LABELS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-
-const MONTH_NAMES_FULL = [
-  'janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho',
-  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'debembro',
-]
-
-const WEEKDAYS = [
-  'Domingo', 'Segunda-feira', 'Terca-feira', 'Quarta-feira',
-  'Quinta-feira', 'Sexta-feira', 'Sabado',
-]
-
-function formatCurrency(value) {
-  if (value == null) return 'R$ 0,00'
-  const num = parseFloat(value)
-  if (isNaN(num)) return 'R$ 0,00'
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num)
-}
 
 function formatTickK(v) {
   if (v >= 1000) return `${(v / 1000).toFixed(0)}k`
@@ -193,7 +158,6 @@ export default function Dashboard() {
   const [faturamentoMes, setFaturamentoMes] = useState(0)
   const [faturamentoMesAnterior, setFaturamentoMesAnterior] = useState(0)
   const [atendimentosMes, setAtendimentosMes] = useState(0)
-  const [ticketMedio, setTicketMedio] = useState(0)
   const [saldoEmCaixa, setSaldoEmCaixa] = useState(0)
   const [dadosMensais, setDadosMensais] = useState([])
   const [servicosMaisVendidos, setServicosMaisVendidos] = useState([])
@@ -203,20 +167,16 @@ export default function Dashboard() {
 
   async function loadAllData() {
     setRefreshing(true)
-    try {
-      await Promise.allSettled([
-        fetchAtendimentosHoje(),
-        fetchFaturamentoMes(),
-        fetchFaturamentoMesAnterior(),
-        fetchAtendimentosMes(),
-        fetchSaldoEmCaixa(),
-        fetchDadosMensais(),
-        fetchServicosMaisVendidos(),
-                fetchFormasPagamento(),
-      ])
-    } catch (err) {
-      console.error('Erro ao carregar dados:', err)
-    }
+    await Promise.allSettled([
+      fetchAtendimentosHoje(),
+      fetchFaturamentoMes(),
+      fetchFaturamentoMesAnterior(),
+      fetchAtendimentosMes(),
+      fetchSaldoEmCaixa(),
+      fetchDadosMensais(),
+      fetchServicosMaisVendidos(),
+      fetchFormasPagamento(),
+    ])
     setLoading(false)
     setRefreshing(false)
   }
@@ -365,20 +325,6 @@ export default function Dashboard() {
 
       setServicosMaisVendidos(sorted)
     } catch (err) { console.error('fetchServicosMaisVendidos:', err) }
-  }
-
-  async function fetchProximosAtendimentos() {
-    try {
-      const now = new Date()
-      const nowStr = now.toISOString()
-      const { data, error } = await supabase
-        .from('atendimentos')
-        .select('*, pet:pet_id(nome, raca), cliente:cliente_id(nome), servico:servico_id(nome)')
-        .gte('data_hora', nowStr)
-        .order('data_hora', { ascending: true })
-        .limit(5)
-      if (!error) setProximosAtendimentos(data || [])
-    } catch (err) { console.error('fetchProximosAtendimentos:', err) }
   }
 
   async function fetchFormasPagamento() {
@@ -558,6 +504,16 @@ export default function Dashboard() {
           <p className="text-xs text-gray-500 mb-4">Comparativo mensal do ano</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={dadosMensais} margin={{ top: 16, right: 5, left: -10, bottom: 0 }}>
+              <defs>
+                <linearGradient id="gradReceita" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#34D399" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#34D399" stopOpacity={0.3} />
+                </linearGradient>
+                <linearGradient id="gradLucro" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#6366F1" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0.3} />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" vertical={false} />
               <XAxis dataKey="mes" tick={{ fontSize: 11, fill: '#4B5563' }} />
               <YAxis tick={{ fontSize: 11, fill: '#4B5563' }} tickFormatter={formatTickK} />
@@ -566,8 +522,8 @@ export default function Dashboard() {
                 iconType="square"
                 wrapperStyle={{ fontSize: 12, color: '#9CA3AF', paddingTop: 12 }}
               />
-              <Bar dataKey="receita" name="Receitas" fill="#34D399" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
-              <Bar dataKey="lucro" name="Lucro Liquido" fill="#6366F1" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
+              <Bar dataKey="receita" name="Receitas" fill="url(#gradReceita)" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
+              <Bar dataKey="lucro" name="Lucro Liquido" fill="url(#gradLucro)" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
             </BarChart>
           </ResponsiveContainer>
         </div>

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "scanned_at": "2026-07-14T20:42:21.019Z",
+  "files": [
+    {
+      "path": "README.md",
+      "title": "React + Vite",
+      "summary": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules. Currently, two official plugins are available: - [@vitejs/plugin-react](https://github.com/vitejs...",
+      "lines": 17,
+      "mtime": 1778101195969.3982
+    }
+  ]
+}

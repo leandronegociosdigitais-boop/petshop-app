@@ -1,47 +1,14 @@
-import { useState, useEffect, useMemo } from 'react'
+﻿import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatCurrency, formatDateTime, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import {
+  COMISSAO_RATE, FORMA_PAGAMENTO_LABEL, BANCO_LABEL,
+  STATUS_BADGE_SIMPLE as STATUS_BADGE_COM, STATUS_LABEL as STATUS_LABEL_COM, DIAS_SEMANA, MESES,
+} from '../lib/constants'
 import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint, CalendarDays, Clock, CheckCircle, XCircle } from 'lucide-react'
-
-const COMISSAO_RATE = 0.4
-
-const FORMA_PAGAMENTO_LABEL = {
-  dinheiro: 'Dinheiro',
-  cartao_credito: 'Cartao de Credito',
-  cartao_debito: 'Cartao de Debito',
-  pix: 'Pix',
-  permuta: 'Permuta',
-}
-
-const BANCO_LABEL = {
-  mercado_pago: 'Mercado Pago',
-  pagseguro: 'PagSeguro',
-  pagseguro_juridico: 'PagSeguro Juridico',
-  caixa_loja: 'Caixa Loja',
-}
-
-const STATUS_BADGE_COM = {
-  agendado: 'bg-blue-50 text-blue-700',
-  em_andamento: 'bg-amber-50 text-amber-700',
-  concluido: 'bg-emerald-50 text-emerald-700',
-  cancelado: 'bg-gray-50 text-gray-500',
-}
-
-const STATUS_LABEL_COM = {
-  agendado: 'Agendado',
-  em_andamento: 'Em Andamento',
-  concluido: 'Concluido',
-  cancelado: 'Cancelado',
-}
-
-const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
-
-const MESES = [
-  { value: 1, label: 'Janeiro' }, { value: 2, label: 'Fevereiro' }, { value: 3, label: 'Marco' },
-  { value: 4, label: 'Abril' }, { value: 5, label: 'Maio' }, { value: 6, label: 'Junho' },
-  { value: 7, label: 'Julho' }, { value: 8, label: 'Agosto' }, { value: 9, label: 'Setembro' },
-  { value: 10, label: 'Outubro' }, { value: 11, label: 'Novembro' }, { value: 12, label: 'Dezembro' },
-]
 
 function getMonthRange(month, year) {
   const start = `${year}-${String(month).padStart(2, '0')}-01`
@@ -54,7 +21,7 @@ export default function Comissoes() {
   const [atendimentos, setAtendimentos] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
 
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
@@ -62,24 +29,19 @@ export default function Comissoes() {
 
   useEffect(() => { fetchAtendimentos() }, [selectedMonth, selectedYear])
 
-  useEffect(() => {
-    if (toast) { const timer = setTimeout(() => setToast(null), 3000); return () => clearTimeout(timer) }
-  }, [toast])
-
   async function fetchAtendimentos() {
     setLoading(true)
     const { start, end } = getMonthRange(selectedMonth, selectedYear)
     const { data, error } = await supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
+      .eq('status', 'concluido')
       .gte('data_hora', start + 'T00:00:00')
       .lte('data_hora', end + 'T23:59:59')
       .order('data_hora', { ascending: false })
     if (error) { showToast('Erro ao carregar comissoes: ' + error.message, 'error') } else { setAtendimentos(data || []) }
     setLoading(false)
   }
-
-  function showToast(message, type = 'success') { setToast({ message, type }) }
 
   const monthRange = useMemo(() => getMonthRange(selectedMonth, selectedYear), [selectedMonth, selectedYear])
 
@@ -99,11 +61,11 @@ export default function Comissoes() {
   }, [atendimentos, monthRange, search])
 
   const summaryMes = useMemo(() => {
-    return filtered.reduce((sum, a) => sum + (parseFloat(a.valor) || 0) * COMISSAO_RATE, 0)
+    return filtered.reduce((sum, a) => sum + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)) * COMISSAO_RATE, 0)
   }, [filtered])
 
   const summaryServicosMes = useMemo(() => {
-    return filtered.reduce((sum, a) => sum + (parseFloat(a.valor) || 0), 0)
+    return filtered.reduce((sum, a) => sum + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)), 0)
   }, [filtered])
 
   const porDia = useMemo(() => {
@@ -112,7 +74,7 @@ export default function Comissoes() {
       const key = a.data_hora ? extractDateKey(a.data_hora) : ''
       if (!key) continue
       if (!dias[key]) dias[key] = { date: key, items: [], total: 0, comissao: 0, pets: new Set() }
-      const valor = parseFloat(a.valor) || 0
+      const valor = ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0))
       dias[key].items.push(a)
       dias[key].total += valor
       dias[key].comissao += valor * COMISSAO_RATE
@@ -142,7 +104,7 @@ export default function Comissoes() {
       if (!semanas[key]) {
         semanas[key] = { key, year, week, items: [], total: 0, comissao: 0, pets: new Set(), dates: new Set() }
       }
-      const valor = parseFloat(a.valor) || 0
+      const valor = ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0))
       semanas[key].items.push(a)
       semanas[key].total += valor
       semanas[key].comissao += valor * COMISSAO_RATE
@@ -185,12 +147,7 @@ export default function Comissoes() {
 
   return (
     <div className="space-y-6">
-      {toast && (
-        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
-          <span>{toast.message}</span>
-          <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       <div className="flex items-center gap-2">
         <Percent size={28} className="text-indigo-600" />
@@ -260,17 +217,13 @@ Hoje
 
       {/* Content */}
       {loading ? (
-        <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" /></div>
+        <Spinner />
       ) : filtered.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-          <Percent size={40} className="mx-auto text-gray-300" />
-          <p className="mt-3 text-gray-500">Sem comissoes em {monthLabel} {selectedYear}.</p>
+        <EmptyState icon={Percent} message={`Sem comissoes em ${monthLabel} ${selectedYear}.`}>
           {!isCurrentMonth && (
-            <button onClick={goToToday} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors">
-              Voltar para mes atual
-            </button>
+            <button onClick={goToToday} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors">Voltar para mes atual</button>
           )}
-        </div>
+        </EmptyState>
       ) : (
         <div className="space-y-4">
 {/* Comissoes por Semana */}
@@ -413,13 +366,13 @@ return (
                     </thead>
                     <tbody className="divide-y divide-gray-50">
                       {dia.items.map((a) => {
-                        const valor = parseFloat(a.valor) || 0
+                        const valor = ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0))
                         const comissao = valor * COMISSAO_RATE
                         return (
                           <tr key={a.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-6 py-3 text-sm font-medium text-gray-900">{a.pet?.nome || '—'}</td>
-                            <td className="hidden sm:table-cell px-6 py-3 text-sm text-gray-700">{a.cliente?.nome || '—'}</td>
-                            <td className="px-6 py-3 text-sm text-gray-700">{a.servico?.nome || '—'}</td>
+                            <td className="px-6 py-3 text-sm font-medium text-gray-900">{a.pet?.nome || 'â€”'}</td>
+                            <td className="hidden sm:table-cell px-6 py-3 text-sm text-gray-700">{a.cliente?.nome || 'â€”'}</td>
+                            <td className="px-6 py-3 text-sm text-gray-700">{a.servico?.nome || 'â€”'}</td>
                             <td className="hidden md:table-cell px-6 py-3 text-right text-sm font-semibold text-gray-900">{formatCurrency(valor)}</td>
                             <td className="px-6 py-3 text-right text-sm font-bold text-indigo-700">{formatCurrency(comissao)}</td>
                   <td className="hidden lg:table-cell px-6 py-3">
@@ -429,11 +382,11 @@ return (
                   </td>
                             <td className="hidden lg:table-cell px-6 py-3">
                               <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                                {FORMA_PAGAMENTO_LABEL[a.forma_pagamento] || a.forma_pagamento || '—'}
+                                {FORMA_PAGAMENTO_LABEL[a.forma_pagamento] || a.forma_pagamento || 'â€”'}
                               </span>
                             </td>
                             <td className="hidden xl:table-cell px-6 py-3 text-sm text-gray-600">
-                              {a.banco ? (BANCO_LABEL[a.banco] || a.banco) : <span className="text-gray-400">—</span>}
+                              {a.banco ? (BANCO_LABEL[a.banco] || a.banco) : <span className="text-gray-400">â€”</span>}
                             </td>
                           </tr>
                         )
@@ -463,3 +416,5 @@ return (
     </div>
   )
 }
+
+

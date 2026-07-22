@@ -1,6 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+﻿import { useState, useEffect, useMemo, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatDateOnly, formatCurrency, extractDateKey, getDayOfWeek } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import {
+  COMISSAO_RATE, MESES, FORMA_PAGAMENTO_LABEL, STATUS_BADGE,
+  DIAS_SEMANA, BANCO_LABEL, BANCO_COLORS, FORMA_PAGAMENTO_COLORS,
+} from '../lib/constants'
 import {
   FileText,
   ChevronDown,
@@ -19,68 +26,12 @@ import {
   X,
 } from 'lucide-react'
 
-const COMISSAO_RATE = 0.4
-
-const MESES = [
-  { value: 1, label: 'Janeiro' },
-  { value: 2, label: 'Fevereiro' },
-  { value: 3, label: 'Marco' },
-  { value: 4, label: 'Abril' },
-  { value: 5, label: 'Maio' },
-  { value: 6, label: 'Junho' },
-  { value: 7, label: 'Julho' },
-  { value: 8, label: 'Agosto' },
-  { value: 9, label: 'Setembro' },
-  { value: 10, label: 'Outubro' },
-  { value: 11, label: 'Novembro' },
-  { value: 12, label: 'Dezembro' },
-]
-
-const FORMA_PAGAMENTO_LABEL = {
-  dinheiro: 'Dinheiro',
-  cartao_credito: 'Cartao de Credito',
-  cartao_debito: 'Cartao de Debito',
-  pix: 'Pix',
-  permuta: 'Permuta',
-}
-
-const STATUS_BADGE = {
-  agendado: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  em_andamento: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  concluido: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  cancelado: 'bg-gray-50 text-gray-500 ring-gray-500/20',
-}
-
 const GRUPO_COLORS = {
   Fixo: 'bg-blue-50 text-blue-700 ring-blue-600/20',
   Variavel: 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
   Operacional: 'bg-cyan-50 text-cyan-700 ring-cyan-600/20',
   Investimento: 'bg-violet-50 text-violet-700 ring-violet-600/20',
   Pessoal: 'bg-pink-50 text-pink-700 ring-pink-600/20',
-}
-
-const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
-
-const BANCO_LABEL = {
-  mercado_pago: 'Mercado Pago',
-  pagseguro: 'PagSeguro',
-  pagseguro_juridico: 'PagSeguro Juridico',
-  caixa_loja: 'Caixa Loja',
-}
-
-const BANCO_COLORS = {
-  mercado_pago: 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  pagseguro: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  pagseguro_juridico: 'bg-teal-50 text-teal-700 ring-teal-600/20',
-  caixa_loja: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-}
-
-const FORMA_PAGAMENTO_COLORS = {
-  dinheiro: 'bg-green-50 text-green-700 ring-green-600/20',
-  cartao_credito: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  cartao_debito: 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  pix: 'bg-violet-50 text-violet-700 ring-violet-600/20',
-  permuta: 'bg-purple-50 text-purple-700 ring-purple-600/20',
 }
 
 function getMonthLabel(month) {
@@ -107,23 +58,6 @@ function CollapsibleSection({ title, icon: Icon, defaultOpen = true, children, c
   )
 }
 
-function Spinner() {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
-    </div>
-  )
-}
-
-function EmptyState({ icon: Icon, message }) {
-  return (
-    <div className="py-12 text-center">
-      <Icon size={36} className="mx-auto text-gray-300" />
-      <p className="mt-3 text-sm text-gray-500">{message}</p>
-    </div>
-  )
-}
-
 export default function Relatorios() {
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
@@ -132,7 +66,7 @@ export default function Relatorios() {
   const [otherMonthsStart, setOtherMonthsStart] = useState('')
   const [otherMonthsEnd, setOtherMonthsEnd] = useState('')
   const [search, setSearch] = useState('')
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
 
   const [atendimentos, setAtendimentos] = useState([])
   const [financeiro, setFinanceiro] = useState([])
@@ -142,17 +76,6 @@ export default function Relatorios() {
   const [loadingHistorico, setLoadingHistorico] = useState(true)
   const [historicoFin, setHistoricoFin] = useState([])
   const [loadingHistoricoFin, setLoadingHistoricoFin] = useState(false)
-
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toast])
-
-  function showToast(message, type = 'success') {
-    setToast({ message, type })
-  }
 
   function getMonthRange() {
     const start = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
@@ -174,13 +97,25 @@ export default function Relatorios() {
     const { data, error } = await supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
+      .eq('status', 'concluido')
       .gte('data_hora', range.start)
       .lte('data_hora', range.end + 'T23:59:59')
       .order('data_hora', { ascending: false })
     if (error) {
       showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
     } else {
-      setAtendimentos(data || [])
+      // Deduplicate by id, tipo, descricao, valor, data
+      const records = data || []
+      const seen = new Set()
+      const uniques = []
+      for (const rec of records) {
+        const key = `${rec.id}|${rec.tipo}|${rec.descricao}|${rec.valor}|${rec.data}`
+        if (!seen.has(key)) {
+          seen.add(key)
+          uniques.push(rec)
+        }
+      }
+      setAtendimentos(uniques)
     }
     setLoadingAtendimentos(false)
   }, [selectedMonth, selectedYear, includeOtherMonths, otherMonthsStart, otherMonthsEnd])
@@ -197,45 +132,68 @@ export default function Relatorios() {
     if (error) {
       showToast('Erro ao carregar dados financeiros: ' + error.message, 'error')
     } else {
-      setFinanceiro(data || [])
+      // Deduplicate by tipo,descricao,valor,data to avoid duplicate entries in reports
+      const records = data || []
+      const seen = new Map()
+      const uniques = []
+      for (const rec of records) {
+        const key = `${rec.tipo}|${rec.descricao}|${rec.valor}|${rec.data}`
+        if (!seen.has(key)) {
+          seen.set(key, true)
+          uniques.push(rec)
+        }
+      }
+      setFinanceiro(uniques)
     }
     setLoadingFinanceiro(false)
   }, [selectedMonth, selectedYear])
 
   const fetchHistorico = useCallback(async () => {
     setLoadingHistorico(true)
-    const now = new Date()
-    const startYear = now.getFullYear() - 1
-    const start = `${startYear}-01-01`
-    const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-    const { data, error } = await supabase
-      .from('atendimentos')
-      .select('id, data_hora, valor, forma_pagamento, banco, status')
-      .gte('data_hora', start)
-      .lte('data_hora', end + 'T23:59:59')
-      .order('data_hora', { ascending: false })
-    if (!error) {
-      setHistorico(data || [])
+    try {
+      const now = new Date()
+      const startYear = now.getFullYear() - 1
+      const start = `${startYear}-01-01`
+      const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      const { data, error } = await supabase
+        .from('atendimentos')
+        .select('id, data_hora, valor, forma_pagamento, banco, status')
+        .eq('status', 'concluido')
+        .gte('data_hora', start)
+        .lte('data_hora', end + 'T23:59:59')
+        .order('data_hora', { ascending: false })
+      if (!error) {
+        setHistorico(data || [])
+      } else {
+        console.error('fetchHistorico error:', error)
+      }
+    } catch (err) {
+      console.error('fetchHistorico exception:', err)
     }
     setLoadingHistorico(false)
   }, [])
 
   const fetchHistoricoFinanceiro = useCallback(async () => {
     setLoadingHistoricoFin(true)
-    const now = new Date()
-    const startYear = now.getFullYear() - 2
-    const start = `${startYear}-01-01`
-    const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-    const { data, error } = await supabase
-      .from('financeiro')
-      .select('*')
-      .gte('data', start)
-      .lte('data', end)
-      .order('data', { ascending: false })
-    if (error) {
-      console.error('fetchHistoricoFinanceiro error:', error)
+    try {
+      const now = new Date()
+      const startYear = now.getFullYear() - 2
+      const start = `${startYear}-01-01`
+      const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      const { data, error } = await supabase
+        .from('financeiro')
+        .select('*')
+        .gte('data', start)
+        .lte('data', end)
+        .order('data', { ascending: false })
+      if (!error) {
+        setHistoricoFin(data || [])
+      } else {
+        console.error('fetchHistoricoFinanceiro error:', error)
+      }
+    } catch (err) {
+      console.error('fetchHistoricoFinanceiro exception:', err)
     }
-    setHistoricoFin(data || [])
     setLoadingHistoricoFin(false)
   }, [])
 
@@ -244,7 +202,7 @@ export default function Relatorios() {
     fetchFinanceiro()
     fetchHistorico()
     fetchHistoricoFinanceiro()
-  }, [fetchAtendimentos, fetchFinanceiro, fetchHistorico, fetchHistoricoFinanceiro])
+  }, [selectedMonth, selectedYear, includeOtherMonths, otherMonthsStart, otherMonthsEnd])
 
   function goToPrevMonth() {
     if (selectedMonth === 1) { setSelectedMonth(12); setSelectedYear((y) => y - 1) }
@@ -269,11 +227,15 @@ export default function Relatorios() {
   const totalSaidas = useMemo(() => saidas.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0), [saidas])
   const lucro = totalEntradas - totalSaidas
 
-  const totalComissoes = useMemo(
-    () => atendimentos.reduce((sum, a) => sum + (parseFloat(a.valor) || 0) * COMISSAO_RATE, 0),
+  const totalServicos = useMemo(
+    () => atendimentos.reduce((sum, a) => sum + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)), 0),
     [atendimentos]
   )
-
+  const qtdAtendimentos = useMemo(() => atendimentos.length, [atendimentos])
+  const totalComissoes = useMemo(
+    () => atendimentos.reduce((sum, a) => sum + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)) * COMISSAO_RATE, 0),
+    [atendimentos]
+  )
   const uniqueClientes = useMemo(() => {
     const ids = new Set()
     for (const a of atendimentos) { if (a.cliente_id) ids.add(a.cliente_id) }
@@ -300,7 +262,7 @@ export default function Relatorios() {
       const id = a.cliente_id || 'sem_id'
       const nome = a.cliente?.nome || 'Cliente nao informado'
       if (!clientes[id]) clientes[id] = { nome, count: 0, total: 0 }
-      const valor = parseFloat(a.valor) || 0
+      const valor = ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0))
       clientes[id].count += 1
       clientes[id].total += valor
     }
@@ -358,7 +320,7 @@ export default function Relatorios() {
       const key = extractDateKey(a.data_hora)
       if (!key) continue
       if (!dias[key]) dias[key] = { date: key, items: [], total: 0 }
-      const valor = parseFloat(a.valor) || 0
+      const valor = ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0))
       dias[key].items.push(a)
       dias[key].total += valor
     }
@@ -447,13 +409,7 @@ export default function Relatorios() {
 
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'}`}>
-          <span>{toast.message}</span>
-          <button onClick={() => setToast(null)} className="ml-2 hover:opacity-80"><X size={16} /></button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -512,10 +468,10 @@ export default function Relatorios() {
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4 sm:p-6 sm:grid-cols-2 lg:grid-cols-5">
             <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
-              <p className="text-sm font-medium text-emerald-700">Total Entradas</p>
+              <p className="text-sm font-medium text-emerald-700">Servicos Realizados</p>
               <div className="mt-2 flex flex-col gap-2">
-                <p className="text-xl font-bold truncate text-emerald-700">{formatCurrency(totalEntradas)}</p>
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600"><TrendingUp size={16} /></div>
+                <p className="text-xl font-bold truncate text-emerald-700">{formatCurrency(totalServicos)}</p>
+                <p className="text-xs text-emerald-600">{qtdAtendimentos} atendimento(s)</p>
               </div>
             </div>
             <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
@@ -644,7 +600,7 @@ export default function Relatorios() {
                     <tr className="bg-gray-50">
                       <td className="px-4 py-2 text-sm font-bold text-gray-900">Total</td>
                       <td className="px-4 py-2 text-center text-sm font-bold text-gray-900">{filteredAtendimentos.length}</td>
-                      <td className="px-4 py-2 text-right text-sm font-bold text-gray-900">{formatCurrency(filteredAtendimentos.reduce((s, a) => s + (parseFloat(a.valor) || 0), 0))}</td>
+                      <td className="px-4 py-2 text-right text-sm font-bold text-gray-900">{formatCurrency(filteredAtendimentos.reduce((s, a) => s + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)), 0))}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -684,22 +640,22 @@ export default function Relatorios() {
                                 <div className="flex items-center gap-2">
                                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><PawPrint size={12} /></div>
                                   <div>
-                                    <div className="text-sm font-medium text-gray-900 truncate">{a.pet?.nome || '—'}</div>
+                                    <div className="text-sm font-medium text-gray-900 truncate">{a.pet?.nome || 'â€”'}</div>
                                     {a.pet?.especie && <div className="text-xs text-gray-500">{a.pet.especie}</div>}
                                   </div>
                                 </div>
                               </td>
-                              <td className="hidden sm:table-cell px-4 py-2.5 text-sm text-gray-700">{a.cliente?.nome || '—'}</td>
-                              <td className="px-4 py-2.5 text-sm text-gray-700">{a.servico?.nome || '—'}</td>
+                              <td className="hidden sm:table-cell px-4 py-2.5 text-sm text-gray-700">{a.cliente?.nome || 'â€”'}</td>
+                              <td className="px-4 py-2.5 text-sm text-gray-700">{a.servico?.nome || 'â€”'}</td>
                               <td className="hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold text-gray-900">{formatCurrency(a.valor)}</td>
                               <td className="hidden lg:table-cell px-4 py-2.5">
                                 <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-500/20">
-                                  {FORMA_PAGAMENTO_LABEL[a.forma_pagamento] || a.forma_pagamento || '—'}
+                                  {FORMA_PAGAMENTO_LABEL[a.forma_pagamento] || a.forma_pagamento || 'â€”'}
                                 </span>
                               </td>
                               <td className="px-4 py-2.5">
                                 <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${STATUS_BADGE[a.status] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>
-                                  {a.status || '—'}
+                                  {a.status || 'â€”'}
                                 </span>
                               </td>
                             </tr>
@@ -776,11 +732,11 @@ export default function Relatorios() {
                         {dia.items.map((r) => (
                           <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                             <td className="px-4 py-2.5">
-                              <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">{r.categoria || '—'}</span>
+                              <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">{r.categoria || 'â€”'}</span>
                             </td>
-                            <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
+                            <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || 'â€”'}</td>
                             <td className="hidden sm:table-cell px-4 py-2.5">
-                              <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || '—'}</span>
+                              <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || 'â€”'}</span>
                             </td>
                             <td className="px-4 py-2.5 text-right text-sm font-semibold text-emerald-700">+ {formatCurrency(r.valor)}</td>
                           </tr>
@@ -826,10 +782,10 @@ export default function Relatorios() {
                       {saidasByGrupo[grupo].items.map((r) => (
                         <tr key={r.id} className="transition-colors hover:bg-gray-50">
                           <td className="px-3 sm:px-6 py-3 text-sm text-gray-700">{formatDateOnly(r.data)}</td>
-                          <td className="px-3 sm:px-6 py-3 text-sm text-gray-600">{r.categoria || '—'}</td>
-                          <td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
+                          <td className="px-3 sm:px-6 py-3 text-sm text-gray-600">{r.categoria || 'â€”'}</td>
+                          <td className="px-3 sm:px-6 py-3 text-sm font-medium text-gray-900">{r.descricao || 'â€”'}</td>
                           <td className="hidden sm:table-cell px-6 py-3">
-                            <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || '—'}</span>
+                            <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || 'â€”'}</span>
                           </td>
                           <td className="px-3 sm:px-6 py-3 text-right text-sm font-semibold text-red-700">- {formatCurrency(r.valor)}</td>
                         </tr>
@@ -880,7 +836,7 @@ export default function Relatorios() {
                   <tr className="bg-gray-50">
                     <td className="px-4 py-2 text-sm font-bold text-gray-900">Total ({clientesDetalhado.length} clientes)</td>
                     <td className="px-4 py-2 text-center text-sm font-bold text-gray-900">{filteredAtendimentos.length}</td>
-                    <td className="px-4 py-2 text-right text-sm font-bold text-gray-900">{formatCurrency(filteredAtendimentos.reduce((s, a) => s + (parseFloat(a.valor) || 0), 0))}</td>
+                    <td className="px-4 py-2 text-right text-sm font-bold text-gray-900">{formatCurrency(filteredAtendimentos.reduce((s, a) => s + ((parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0)), 0))}</td>
                   </tr>
                 </tbody>
               </table>
@@ -963,9 +919,9 @@ export default function Relatorios() {
                       {data.items.map((r) => (
                         <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-4 py-2.5 text-sm text-gray-700">{formatDateOnly(r.data)}</td>
-                          <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
+                          <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || 'â€”'}</td>
                           <td className="hidden sm:table-cell px-4 py-2.5">
-                            <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || '—'}</span>
+                            <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-500/20">{FORMA_PAGAMENTO_LABEL[r.forma_pagamento] || r.forma_pagamento || 'â€”'}</span>
                           </td>
                           <td className="px-4 py-2.5 text-right text-sm font-semibold text-emerald-700">{formatCurrency(r.valor)}</td>
                         </tr>
@@ -1040,11 +996,11 @@ export default function Relatorios() {
                       {data.items.map((r) => (
                         <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-4 py-2.5 text-sm text-gray-700">{formatDateOnly(r.data)}</td>
-                          <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || '—'}</td>
+                          <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{r.descricao || 'â€”'}</td>
                           <td className="hidden sm:table-cell px-4 py-2.5">
                             {r.banco ? (
                               <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${BANCO_COLORS[r.banco] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>{BANCO_LABEL[r.banco] || r.banco}</span>
-                            ) : <span className="text-xs text-gray-400">—</span>}
+                            ) : <span className="text-xs text-gray-400">â€”</span>}
                           </td>
                           <td className="px-4 py-2.5 text-right text-sm font-semibold text-emerald-700">{formatCurrency(r.valor)}</td>
                         </tr>
@@ -1145,3 +1101,5 @@ export default function Relatorios() {
     </div>
   )
 }
+
+

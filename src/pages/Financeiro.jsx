@@ -1,6 +1,17 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { supabase } from '../lib/supabase'
-import { getLocalDateISO, formatDate, extractDateKey, getDayOfWeek, formatCurrency as formatCurrencyUtil } from '../lib/dates'
+import { getLocalDateISO, formatDate, extractDateKey, getDayOfWeek, formatCurrency } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Modal from '../components/Modal'
+import ConfirmDialog from '../components/ConfirmDialog'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import {
+  FORMA_PAGAMENTO_LABEL, FORMA_PAGAMENTO_OPTIONS, FORMA_PAGAMENTO_COLORS,
+  BANCO_LABEL, BANCO_COLORS, BANCO_OPTIONS_FINANCEIRO as BANCO_OPTIONS,
+  MESES, DIAS_SEMANA, PAGAMENTO_STATUS_COLORS_FIN,
+  CATEGORIAS_ENTRADA, CATEGORIAS_SAIDA_POR_GRUPO, GRUPOS_SAIDA, GRUPO_COLORS_SAIDA as GRUPO_COLORS,
+} from '../lib/constants'
 import {
   Plus,
   Pencil,
@@ -35,98 +46,6 @@ const EMPTY_FORM = {
   data_vencimento: '',
 }
 
-const CATEGORIAS_ENTRADA = ['Servicos', 'Produtos', 'Outros']
-
-const CATEGORIAS_SAIDA_POR_GRUPO = {
-  'Servicos': ['Banho', 'Tosa', 'Banho e Tosa', 'Hidratacao', 'Tosa Higienica'],
-  'Despesas Fixas': ['Energia Eletrica', 'Internet', 'Aluguel'],
-  'Custo de Consumo': ['Shampoo Neutro', 'Pre-lavagem', 'Lacos', 'Algodao', 'Perfume', 'Hidratante', 'Afiacao de Laminas'],
-  'Custo de Descartaveis': ['Limpeza', 'Copo Descartavel', 'Papel Higienico', 'Agua'],
-  'Comissoes': ['Comissao Emidio'],
-  'Despesas Variaveis': ['Medicamento'],
-  'Taxas de Cartao': ['PagSeguro', 'Mercado Pago'],
-  'Manutencao': ['Equipamento', 'Predial'],
-}
-
-const GRUPOS_SAIDA = ['Servicos', 'Despesas Fixas', 'Custo de Consumo', 'Custo de Descartaveis', 'Comissoes', 'Despesas Variaveis', 'Taxas de Cartao', 'Manutencao']
-
-const FORMAS_PAGAMENTO = [
-  { value: 'dinheiro', label: 'Dinheiro' },
-  { value: 'cartao_credito', label: 'Cartao de Credito' },
-  { value: 'cartao_debito', label: 'Cartao de Debito' },
-  { value: 'pix', label: 'Pix' },
-  { value: 'permuta', label: 'Permuta' },
-]
-
-const BANCO_OPTIONS = [
-  { value: '', label: 'Nenhum' },
-  { value: 'mercado_pago_juridico', label: 'Mercado Pago Juridico' },
-  { value: 'pagseguro', label: 'PagSeguro' },
-  { value: 'pagseguro_juridico', label: 'PagSeguro Juridico' },
-  { value: 'caixa_loja', label: 'Caixa da Loja' },
-  { value: 'permuta', label: 'Permuta' },
-]
-
-const STATUS_PAGAMENTO_FIN_COLORS = {
-  pago: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
-  pendente: 'bg-amber-100 text-amber-700 border border-amber-200',
-}
-
-const FORMA_PAGAMENTO_COLORS = {
-  dinheiro: 'bg-green-50 text-green-700 ring-green-600/20',
-  cartao_credito: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  cartao_debito: 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  pix: 'bg-violet-50 text-violet-700 ring-violet-600/20',
-  permuta: 'bg-purple-50 text-purple-700 ring-purple-600/20',
-}
-
-const MESES = [
-  { value: 1, label: 'Janeiro' },
-  { value: 2, label: 'Fevereiro' },
-  { value: 3, label: 'Marco' },
-  { value: 4, label: 'Abril' },
-  { value: 5, label: 'Maio' },
-  { value: 6, label: 'Junho' },
-  { value: 7, label: 'Julho' },
-  { value: 8, label: 'Agosto' },
-  { value: 9, label: 'Setembro' },
-  { value: 10, label: 'Outubro' },
-  { value: 11, label: 'Novembro' },
-  { value: 12, label: 'Dezembro' },
-]
-
-const BANCO_LABEL = {
-  mercado_pago: 'Mercado Pago',
-  pagseguro: 'PagSeguro',
-  pagseguro_juridico: 'PagSeguro Juridico',
-  caixa_loja: 'Caixa Loja',
-}
-
-const BANCO_COLORS = {
-  mercado_pago: 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  pagseguro: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  pagseguro_juridico: 'bg-teal-50 text-teal-700 ring-teal-600/20',
-  caixa_loja: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-}
-
-const GRUPO_COLORS = {
-  'Servicos': 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  'Despesas Fixas': 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  'Custo de Consumo': 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
-  'Custo de Descartaveis': 'bg-cyan-50 text-cyan-700 ring-cyan-600/20',
-  'Comissoes': 'bg-purple-50 text-purple-700 ring-purple-600/20',
-  'Despesas Variaveis': 'bg-orange-50 text-orange-700 ring-orange-600/20',
-  'Taxas de Cartao': 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  'Manutencao': 'bg-rose-50 text-rose-700 ring-rose-600/20',
-}
-
-const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
-
-function getMonthLabel(month) {
-  const found = MESES.find((m) => m.value === month)
-  return found ? found.label : ''
-}
-
 const TABS = [
   { value: 'todos', label: 'Todos' },
   { value: 'entrada', label: 'Entradas' },
@@ -134,15 +53,8 @@ const TABS = [
   { value: 'mes_a_mes', label: 'Mes a Mes' },
 ]
 
-const formatCurrency = formatCurrencyUtil
-
 function getToday() {
   return getLocalDateISO()
-}
-
-function getFormaPagamentoLabel(value) {
-  const found = FORMAS_PAGAMENTO.find((f) => f.value === value)
-  return found ? found.label : value
 }
 
 const availableYears = (() => { const c = new Date().getFullYear(); const y = []; for (let i = c - 3; i <= c + 1; i++) y.push(i); return y })()
@@ -163,25 +75,16 @@ export default function Financeiro() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
-  const [lembretes, setLembretes] = useState([])
+  // Ref para rolar até a seção de pendências
+  const notificationRef = useRef(null)
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     fetchRegistros()
   }, [selectedMonth, selectedYear])
-
-  useEffect(() => {
-    fetchLembretes()
-  }, [])
-
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toast])
 
   async function fetchRegistros() {
     setLoading(true)
@@ -225,12 +128,11 @@ export default function Financeiro() {
 
   async function fetchLembretes() {
     try {
-      const now = new Date()
-      const year = now.getFullYear()
-      const monthNum = now.getMonth() + 1
-      const month = String(monthNum).padStart(2, '0')
+      // Use the month/year selected in the UI (selectedMonth/selectedYear)
+      const year = selectedYear
+      const month = String(selectedMonth).padStart(2, '0')
       const start = `${year}-${month}-01`
-      const lastDay = new Date(year, monthNum, 0).getDate()
+      const lastDay = new Date(year, selectedMonth, 0).getDate()
       const end = `${year}-${month}-${String(lastDay).padStart(2, '0')}`
 
       const { data, error } = await supabase
@@ -250,10 +152,6 @@ export default function Financeiro() {
     } catch {
       setLembretes([])
     }
-  }
-
-  function showToast(message, type = 'success') {
-    setToast({ message, type })
   }
 
   function openCreateModal(tipo) {
@@ -413,6 +311,8 @@ export default function Financeiro() {
 
   const filtered = useMemo(() => {
     return registros.filter((r) => {
+      // Excluir pendentes (boletos) da lista principal
+      if (r.tipo === 'saida' && r.status_pagamento === 'pendente') return false
       if (activeTab !== 'todos' && activeTab !== 'mes_a_mes' && r.tipo !== activeTab) return false
       if (filterCategoria && r.categoria !== filterCategoria) return false
       if (filterGrupo && r.grupo !== filterGrupo) return false
@@ -476,7 +376,30 @@ export default function Financeiro() {
     return { entradas, saidas, saldo: entradas - saidas }
   }, [filtered])
 
-  const tabCounts = useMemo(() => {
+  // Pendentes (boletos) do mês atual — não aparecem na lista principal
+const pendentes = useMemo(() => {
+  return registros.filter((r) => r.tipo === 'saida' && r.status_pagamento === 'pendente')
+}, [registros])
+
+// Handler para "Baixar" (marcar como pago)
+async function handleBaixar(id) {
+  const { error } = await supabase
+    .from('financeiro')
+    .update({ status_pagamento: 'pago' })
+    .eq('id', id)
+
+  if (error) {
+    showToast('Erro ao baixar fatura: ' + error.message, 'error')
+    return
+  }
+  // Atualiza estado local de forma otimista
+  setRegistros((prev) =>
+    prev.map((r) => (r.id === id ? { ...r, status_pagamento: 'pago' } : r))
+  )
+  showToast('Fatura baixada com sucesso')
+}
+
+const tabCounts = useMemo(() => {
     const counts = { todos: registros.length }
     for (const r of registros) {
       counts[r.tipo] = (counts[r.tipo] || 0) + 1
@@ -498,24 +421,7 @@ export default function Financeiro() {
 
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div
-          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
-            toast.type === 'error'
-              ? 'bg-red-600 text-white'
-              : 'bg-emerald-600 text-white'
-          }`}
-        >
-          <span>{toast.message}</span>
-          <button
-            onClick={() => setToast(null)}
-            className="ml-2 hover:opacity-80"
-          >
-            <X size={16} />
-          </button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -619,68 +525,34 @@ export default function Financeiro() {
         </div>
       </div>
 
-      {/* Lembretes de Pagamento */}
-    {lembretes.length > 0 && (
-      <div className="overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 shadow-sm">
-        <div className="flex items-center gap-2 border-b border-amber-200 px-4 py-3 bg-amber-100/60">
-          <BellRing size={18} className="text-amber-600 animate-pulse" />
-          <h2 className="text-sm font-bold text-amber-800">Lembretes de Pagamento</h2>
-          <span className="inline-flex items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">{lembretes.length}</span>
-        </div>
-        <div className="divide-y divide-amber-100">
-          {lembretes.map((lembrete) => {
-            const today = getLocalDateISO()
-            const venc = lembrete.data_vencimento || lembrete.data
-            const isVencido = venc < today
-            const isHoje = venc === today
-            const diasAte = Math.ceil((new Date(venc + 'T00:00:00') - new Date(today + 'T00:00:00')) / (1000 * 60 * 60 * 24))
-            const urgency = isVencido
-              ? 'border-l-4 border-l-red-500 bg-red-50/60'
-              : isHoje
-              ? 'border-l-4 border-l-amber-500 bg-amber-50/60'
-              : diasAte <= 3
-              ? 'border-l-4 border-l-orange-400 bg-orange-50/40'
-              : 'border-l-4 border-l-amber-300'
-            const urgencyLabel = isVencido
-              ? { text: `Vencido ha ${Math.abs(diasAte)} dia${Math.abs(diasAte) > 1 ? 's' : ''}`, bg: 'bg-red-100 text-red-700' }
-              : isHoje
-              ? { text: 'Vence hoje!', bg: 'bg-amber-100 text-amber-700' }
-              : diasAte <= 3
-              ? { text: `Vence em ${diasAte} dia${diasAte > 1 ? 's' : ''}`, bg: 'bg-orange-100 text-orange-700' }
-              : { text: `Vence em ${diasAte} dias`, bg: 'bg-amber-50 text-amber-600' }
-            return (
-              <div key={lembrete.id} className={`flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${urgency}`}>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-900">{lembrete.descricao}</span>
-                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${urgencyLabel.bg}`}>
-                      <Clock size={10} />
-                      {urgencyLabel.text}
-                    </span>
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500">
-                    <span>Categoria: {lembrete.categoria}</span>
-                    {lembrete.grupo && <span>Grupo: {lembrete.grupo}</span>}
-                    <span>Vencimento: {formatDate(venc)}</span>
-                  </div>
+      {/* Notificacao de boletos pendentes */}
+      <div ref={notificationRef}>
+        {pendentes.length === 0 ? (
+          <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+            <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-700">Nenhuma fatura pendente neste mês</span>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {pendentes.map((r) => (
+              <div key={r.id} className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-sm">
+                <div>
+                  <p className="font-medium text-gray-900">{r.descricao}</p>
+                  <p className="mt-0.5 text-sm text-gray-600">
+                    Vencimento: {r.data} — R$ {parseFloat(r.valor).toFixed(2)}
+                  </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-base font-bold text-red-600">-{formatCurrency(lembrete.valor)}</span>
-                  <button
-                    onClick={() => marcarPago(lembrete.id)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
-                    title="Marcar como pago"
-                  >
-                    <CheckCircle2 size={14} />
-                    Pago
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleBaixar(r.id)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
+                >
+                  Baixar
+                </button>
               </div>
-            )
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-    )}
 
     {/* Search + Filters + Tabs */}
       <div className="space-y-4">
@@ -720,7 +592,7 @@ export default function Financeiro() {
                 <label className="mb-1 block text-sm font-medium text-gray-700">Forma Pagamento</label>
                 <select value={filterFormaPagamento} onChange={(e) => setFilterFormaPagamento(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                   <option value="">Todas</option>
-                  {FORMAS_PAGAMENTO.map((fp) => (<option key={fp.value} value={fp.value}>{fp.label}</option>))}
+                  {FORMA_PAGAMENTO_OPTIONS.map((fp) => (<option key={fp.value} value={fp.value}>{fp.label}</option>))}
                 </select>
               </div>
               <div>
@@ -779,16 +651,11 @@ export default function Financeiro() {
 
       {/* Content */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
-        </div>
+        <Spinner />
       ) : activeTab === 'mes_a_mes' ? (
         <div className="space-y-3">
           {porMes.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-              <BarChart3 size={40} className="mx-auto text-gray-300" />
-              <p className="mt-3 text-gray-500">Nenhum dado disponivel.</p>
-            </div>
+            <EmptyState icon={BarChart3} message="Nenhum dado disponivel." />
           ) : (
             <>
               <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -806,7 +673,7 @@ export default function Financeiro() {
                     <tbody className="divide-y divide-gray-50">
                       {porMes.map((m) => {
                         const [y, mo] = m.month.split('-')
-                        const label = getMonthLabel(parseInt(mo)) + ' ' + y
+                        const label = (MESES.find(m => m.value === parseInt(mo))?.label || mo) + ' ' + y
                         const saldo = m.totalEntrada - m.totalSaida
                         return (
                           <tr key={m.month} className="hover:bg-gray-50 transition-colors">
@@ -824,7 +691,7 @@ export default function Financeiro() {
               </div>
               {porMes.map((m) => {
                 const [y, mo] = m.month.split('-')
-                const label = getMonthLabel(parseInt(mo)) + ' ' + y
+                const label = (MESES.find(m => m.value === parseInt(mo))?.label || mo) + ' ' + y
                 const saldo = m.totalEntrada - m.totalSaida
                 return (
                   <div key={m.month} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -846,7 +713,7 @@ export default function Financeiro() {
                           {Object.entries(m.porForma).sort(([,a],[,b]) => b - a).map(([forma, valor]) => (
                             <div key={forma} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
                               <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${FORMA_PAGAMENTO_COLORS[forma] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>
-                                {getFormaPagamentoLabel(forma)}
+                                {FORMA_PAGAMENTO_LABEL[forma] || forma}
                               </span>
                               <span className="text-sm font-semibold text-gray-900">{formatCurrency(valor)}</span>
                             </div>
@@ -874,26 +741,14 @@ export default function Financeiro() {
           )}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-          <DollarSign size={40} className="mx-auto text-gray-300" />
-          <p className="mt-3 text-gray-500">
-            {hasActiveFilters
-              ? 'Nenhum registro encontrado para os filtros aplicados.'
-              : 'Nenhum registro financeiro cadastrado ainda.'}
-          </p>
+        <EmptyState icon={DollarSign} message={hasActiveFilters ? 'Nenhum registro encontrado para os filtros aplicados.' : 'Nenhum registro financeiro cadastrado ainda.'}>
           {!hasActiveFilters && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <button onClick={() => openCreateModal('entrada')} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors">
-                <TrendingUp size={16} />
-                Primeira entrada
-              </button>
-              <button onClick={() => openCreateModal('saida')} className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-colors">
-                <TrendingDown size={16} />
-                Primeira saida
-              </button>
+            <div className="flex items-center justify-center gap-2">
+              <button onClick={() => openCreateModal('entrada')} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"><TrendingUp size={16} /> Primeira entrada</button>
+              <button onClick={() => openCreateModal('saida')} className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-colors"><TrendingDown size={16} /> Primeira saida</button>
             </div>
           )}
-        </div>
+        </EmptyState>
       ) : (
         <div className="space-y-3">
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -1009,22 +864,9 @@ export default function Financeiro() {
         </div>
       )}
 
-      {/* Create/Edit Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                {editingId ? 'Editar Registro' : form.tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saida'}
-              </h2>
-              <button onClick={closeModal} className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+      <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Editar Registro' : form.tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saida'} icon={form.tipo === 'entrada' ? TrendingUp : TrendingDown}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">Tipo <span className="text-red-500">*</span></label>
                 <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                   <button type="button" onClick={() => handleFormChange('tipo', 'entrada')} className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors ${form.tipo === 'entrada' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
@@ -1066,7 +908,7 @@ export default function Financeiro() {
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">Forma de Pagamento <span className="text-red-500">*</span></label>
                 <select value={form.forma_pagamento} onChange={(e) => handleFormChange('forma_pagamento', e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                  {FORMAS_PAGAMENTO.map((fp) => (<option key={fp.value} value={fp.value}>{fp.label}</option>))}
+                  {FORMA_PAGAMENTO_OPTIONS.map((fp) => (<option key={fp.value} value={fp.value}>{fp.label}</option>))}
                 </select>
               </div>
 
@@ -1114,48 +956,21 @@ export default function Financeiro() {
         )}
 
           <div className="flex items-center justify-end gap-3 pt-2">
-                <button type="button" onClick={closeModal} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                  Cancelar
-                </button>
+                <button type="button" onClick={closeModal} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Cancelar</button>
                 <button type="submit" disabled={saving} className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${form.tipo === 'entrada' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-red-600 hover:bg-red-700'}`}>
-                  {saving ? (
-                    <span className="flex items-center gap-2">
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                      Salvando...
-                    </span>
-                  ) : editingId ? 'Salvar Alteracoes' : form.tipo === 'entrada' ? 'Criar Entrada' : 'Criar Saida'}
+                  {saving ? (<span className="flex items-center gap-2"><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> Salvando...</span>) : editingId ? 'Salvar Alteracoes' : form.tipo === 'entrada' ? 'Criar Entrada' : 'Criar Saida'}
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </Modal>
 
-      {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDeleteId(null)} />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                <AlertCircle size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900">Excluir registro</h2>
-            </div>
-            <p className="mt-3 text-sm text-gray-600">
-              Tem certeza que deseja excluir este registro financeiro? Esta acao nao pode ser desfeita.
-            </p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button onClick={() => setDeleteId(null)} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                Cancelar
-              </button>
-              <button onClick={handleDelete} className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors">
-                Excluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Excluir registro"
+        message="Tem certeza que deseja excluir este registro financeiro? Esta acao nao pode ser desfeita."
+      />
     </div>
   )
 }

@@ -1,0 +1,3 @@
+{"event":"prompt_injection_skipped","runId":"ses_0bce4b7caffe3ocJnW6J69N94T","agentRole":"build","agentId":"build","rejectionReason":"disabled","metadata":{"reason":"disabled"},"timestamp":"2026-07-14T20:42:01.738Z"}
+{"event":"prompt_injection_skipped","runId":"ses_0bce4b7caffe3ocJnW6J69N94T","agentRole":"build","agentId":"build","rejectionReason":"disabled","metadata":{"reason":"disabled"},"timestamp":"2026-07-14T20:42:14.493Z"}
+{"event":"prompt_injection_skipped","runId":"ses_0bce4b7caffe3ocJnW6J69N94T","agentRole":"architect","agentId":"architect","rejectionReason":"disabled","metadata":{"reason":"disabled"},"timestamp":"2026-07-14T20:44:03.603Z"}

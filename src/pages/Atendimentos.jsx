@@ -1,6 +1,17 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatDateTime, formatTime, formatCurrency, isToday, toLocalDatetimeValue, toLocalDateValue, getLocalDateISO, extractDateKey } from '../lib/dates'
+import { useToast, Toast } from '../components/Toast'
+import Modal from '../components/Modal'
+import ConfirmDialog from '../components/ConfirmDialog'
+import Spinner from '../components/Spinner'
+import EmptyState from '../components/EmptyState'
+import {
+  STATUS_BADGE, STATUS_LABEL, STATUS_OPTIONS, FORMA_PAGAMENTO_LABEL,
+  FORMA_PAGAMENTO_OPTIONS, FORMA_PAGAMENTO_COLORS, BANCO_LABEL,
+  BANCO_OPTIONS_ATENDIMENTOS as BANCO_OPTIONS, PAGAMENTO_STATUS_BADGE,
+  PAGAMENTO_STATUS_LABEL, STATUS_PAGAMENTO_OPTIONS, MESES,
+} from '../lib/constants'
 import {
   Plus,
   Pencil,
@@ -20,16 +31,6 @@ import {
   PawPrint,
 } from 'lucide-react'
 
-const BANCO_OPTIONS = [
-  { value: '', label: 'Nenhum' },
-  { value: 'mercado_pago', label: 'Mercado Pago' },
-  { value: 'pagseguro', label: 'PagSeguro' },
-  { value: 'pagseguro_juridico', label: 'PagSeguro Juridico' },
-  { value: 'caixa_loja', label: 'Caixa Loja' },
-]
-
-const BANCO_LABEL = Object.fromEntries(BANCO_OPTIONS.map(b => [b.value, b.label]))
-
 const EMPTY_FORM = {
   cliente_id: '',
   pet_id: '',
@@ -47,74 +48,11 @@ const EMPTY_FORM = {
   banco: 'mercado_pago',
 }
 
-const STATUS_OPTIONS = [
-  { value: 'agendado', label: 'Agendado' },
-  { value: 'em_andamento', label: 'Em Andamento' },
-  { value: 'concluido', label: 'Concluido' },
-  { value: 'cancelado', label: 'Cancelado' },
-]
-
-const FORMA_PAGAMENTO_OPTIONS = [
-  { value: 'dinheiro', label: 'Dinheiro' },
-  { value: 'cartao_credito', label: 'Cartao de Credito' },
-  { value: 'cartao_debito', label: 'Cartao de Debito' },
-  { value: 'pix', label: 'Pix' },
-  { value: 'permuta', label: 'Permuta' },
-]
-
-const STATUS_PAGAMENTO_OPTIONS = [
-  { value: 'pago', label: 'Pago' },
-  { value: 'pendente', label: 'Pendente' },
-  { value: 'vencido', label: 'Vencido' },
-]
-
-const STATUS_BADGE = {
-  agendado: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  em_andamento: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  concluido: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  cancelado: 'bg-gray-50 text-gray-500 ring-gray-500/20',
-}
-
 const STATUS_ICON = {
   agendado: Calendar,
   em_andamento: Clock,
   concluido: CheckCircle,
   cancelado: XCircle,
-}
-
-const STATUS_LABEL = {
-  agendado: 'Agendado',
-  em_andamento: 'Em Andamento',
-  concluido: 'Concluido',
-  cancelado: 'Cancelado',
-}
-
-const PAGAMENTO_STATUS_BADGE = {
-  pago: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  pendente: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  vencido: 'bg-red-50 text-red-700 ring-red-600/20',
-}
-
-const PAGAMENTO_STATUS_LABEL = {
-  pago: 'Pago',
-  pendente: 'Pendente',
-  vencido: 'Vencido',
-}
-
-const FORMA_PAGAMENTO_LABEL = {
-  dinheiro: 'Dinheiro',
-  cartao_credito: 'Cartao de Credito',
-  cartao_debito: 'Cartao de Debito',
-  pix: 'Pix',
-  permuta: 'Permuta',
-}
-
-const FORMA_PAGAMENTO_BADGE = {
-  dinheiro: 'bg-green-50 text-green-700 ring-green-600/20',
-  cartao_credito: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  cartao_debito: 'bg-sky-50 text-sky-700 ring-sky-600/20',
-  pix: 'bg-violet-50 text-violet-700 ring-violet-600/20',
-  permuta: 'bg-purple-50 text-purple-700 ring-purple-600/20',
 }
 
 const NEXT_STATUS = {
@@ -128,21 +66,6 @@ const NEXT_STATUS_LABEL = {
   agendado: 'Iniciar',
   em_andamento: 'Concluir',
 }
-
-const MESES = [
-  { value: 1, label: 'Janeiro' },
-  { value: 2, label: 'Fevereiro' },
-  { value: 3, label: 'Marco' },
-  { value: 4, label: 'Abril' },
-  { value: 5, label: 'Maio' },
-  { value: 6, label: 'Junho' },
-  { value: 7, label: 'Julho' },
-  { value: 8, label: 'Agosto' },
-  { value: 9, label: 'Setembro' },
-  { value: 10, label: 'Outubro' },
-  { value: 11, label: 'Novembro' },
-  { value: 12, label: 'Dezembro' },
-]
 
 const availableYears = (() => { const c = new Date().getFullYear(); const y = []; for (let i = c - 3; i <= c + 1; i++) y.push(i); return y })()
 
@@ -168,7 +91,7 @@ export default function Atendimentos() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const [toast, setToast] = useState(null)
+  const { toast, showToast, closeToast } = useToast()
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
 
@@ -178,13 +101,6 @@ export default function Atendimentos() {
     fetchServicos()
     fetchPets()
   }, [selectedMonth, selectedYear])
-
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toast])
 
   const filteredPets = useMemo(() => {
     if (!form.cliente_id) return pets
@@ -206,7 +122,8 @@ export default function Atendimentos() {
     if (error) {
       showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
     } else {
-      setAtendimentos(data || [])
+      const unique = Array.from(new Map((data || []).map(item => [item.id, item])).values());
+      setAtendimentos(unique)
     }
     setLoading(false)
   }
@@ -236,10 +153,6 @@ export default function Atendimentos() {
       .order('preco', { ascending: false })
 
     if (!error) setServicos(data || [])
-  }
-
-  function showToast(message, type = 'success') {
-    setToast({ message, type })
   }
 
   function openCreateModal() {
@@ -636,24 +549,7 @@ async function handleChangeStatus(atendimento, newStatus) {
 
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div
-          className={`fixed top-4 right-4 z-50 max-w-[calc(100vw-2rem)] flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
-            toast.type === 'error'
-              ? 'bg-red-600 text-white'
-              : 'bg-emerald-600 text-white'
-          }`}
-        >
-          <span>{toast.message}</span>
-          <button
-            onClick={() => setToast(null)}
-            className="ml-2 hover:opacity-80"
-          >
-            <X size={16} />
-          </button>
-        </div>
-      )}
+      <Toast toast={toast} onClose={closeToast} />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -789,27 +685,20 @@ async function handleChangeStatus(atendimento, newStatus) {
 
       {/* Content */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
-        </div>
+        <Spinner />
       ) : filtered.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center">
-          <Calendar size={40} className="mx-auto text-gray-300" />
-          <p className="mt-3 text-gray-500">
-            {search || activeTab !== 'todos'
-              ? 'Nenhum atendimento encontrado para os filtros aplicados.'
-              : 'Nenhum atendimento cadastrado ainda.'}
-          </p>
+        <EmptyState icon={Calendar} message={
+          search || activeTab !== 'todos'
+            ? 'Nenhum atendimento encontrado para os filtros aplicados.'
+            : 'Nenhum atendimento cadastrado ainda.'
+        }>
           {!search && activeTab === 'todos' && (
-            <button
-              onClick={openCreateModal}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
-            >
+            <button onClick={openCreateModal} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors">
               <Plus size={16} />
               Agendar primeiro atendimento
             </button>
           )}
-        </div>
+        </EmptyState>
       ) : (
   <div className="space-y-4">
     {groupedByDay.map((day) => (
@@ -908,7 +797,7 @@ async function handleChangeStatus(atendimento, newStatus) {
                         </span>
                         <span
                           className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                            FORMA_PAGAMENTO_BADGE[formaPagamento] || FORMA_PAGAMENTO_BADGE.loja
+                            FORMA_PAGAMENTO_COLORS[formaPagamento] || 'bg-gray-50 text-gray-700 ring-gray-600/20'
                           }`}
                         >
                           <DollarSign size={10} />
@@ -995,26 +884,7 @@ async function handleChangeStatus(atendimento, newStatus) {
   </div>
 )}
 
-{/* Create/Edit Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={closeModal}
-          />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-4 sm:p-6 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                {editingId ? 'Editar Atendimento' : 'Novo Atendimento'}
-              </h2>
-              <button
-                onClick={closeModal}
-                className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
+<Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Editar Atendimento' : 'Novo Atendimento'} icon={Calendar}>
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Cliente */}
               <div>
@@ -1312,47 +1182,15 @@ async function handleChangeStatus(atendimento, newStatus) {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </Modal>
 
-      {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setDeleteId(null)}
-          />
-          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                <AlertCircle size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Excluir atendimento
-              </h2>
-            </div>
-            <p className="mt-3 text-sm text-gray-600">
-              Tem certeza que deseja excluir este atendimento? Esta acao nao pode
-              ser desfeita.
-            </p>
-            <div className="mt-5 flex items-center justify-end gap-3">
-              <button
-                onClick={() => setDeleteId(null)}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDelete}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Excluir atendimento"
+        message="Tem certeza que deseja excluir este atendimento? Esta acao nao pode ser desfeita."
+      />
     </div>
   )
 }

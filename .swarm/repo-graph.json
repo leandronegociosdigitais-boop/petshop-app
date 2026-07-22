@@ -1,0 +1,5167 @@
+{
+  "schema_version": "1.2.0",
+  "workspaceRoot": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app",
+  "nodes": {
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/_gen_janeiro.cjs": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\_gen_janeiro.cjs",
+      "moduleName": "_gen_janeiro.cjs",
+      "exports": [],
+      "imports": [
+        "fs"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-11T00:47:18.914Z",
+      "ontology": {
+        "roles": [
+          "data_module"
+        ],
+        "packageBoundary": "_gen_janeiro.cjs",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/.swarm/bundled-skills/codebase-review-swarm/scripts/init-review-run.py": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\.swarm\\bundled-skills\\codebase-review-swarm\\scripts\\init-review-run.py",
+      "moduleName": ".swarm/bundled-skills/codebase-review-swarm/scripts/init-review-run.py",
+      "exports": [
+        "run",
+        "git_root",
+        "validate_run_id",
+        "resolve_run_dir",
+        "is_swarm_ignored",
+        "main"
+      ],
+      "exportLines": {
+        "run": 38,
+        "git_root": 52,
+        "validate_run_id": 57,
+        "resolve_run_dir": 65,
+        "is_swarm_ignored": 77,
+        "main": 85
+      },
+      "exportRanges": {
+        "run": {
+          "startLine": 38,
+          "endLine": 49
+        },
+        "git_root": {
+          "startLine": 52,
+          "endLine": 54
+        },
+        "validate_run_id": {
+          "startLine": 57,
+          "endLine": 62
+        },
+        "resolve_run_dir": {
+          "startLine": 65,
+          "endLine": 74
+        },
+        "is_swarm_ignored": {
+          "startLine": 77,
+          "endLine": 82
+        },
+        "main": {
+          "startLine": 85,
+          "endLine": 130
+        }
+      },
+      "imports": [
+        "argparse",
+        "datetime",
+        "json",
+        "pathlib",
+        "re",
+        "subprocess",
+        "sys"
+      ],
+      "language": "python",
+      "mtime": "2026-07-14T20:05:08.686Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": ".swarm",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 89,
+            "evidence": "parser.add_argument(\"--review-type\", default=\"fresh\", choices=[\"fresh\", \"continuation\", \"update\"])"
+          }
+        ],
+        "security": [
+          {
+            "kind": "input_validation",
+            "line": 57,
+            "evidence": "def validate_run_id(raw: str) -> str:",
+            "confidence": "high"
+          },
+          {
+            "kind": "input_validation",
+            "line": 95,
+            "evidence": "run_id = validate_run_id(args.run_id or dt.datetime.utcnow().strftime(\"%Y%m%dT%H%M%SZ\"))",
+            "confidence": "high"
+          }
+        ],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/.swarm/bundled-skills/codebase-review-swarm/scripts/validate-skill-package.py": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\.swarm\\bundled-skills\\codebase-review-swarm\\scripts\\validate-skill-package.py",
+      "moduleName": ".swarm/bundled-skills/codebase-review-swarm/scripts/validate-skill-package.py",
+      "exports": [
+        "parse_frontmatter",
+        "main"
+      ],
+      "exportLines": {
+        "parse_frontmatter": 19,
+        "main": 37
+      },
+      "exportRanges": {
+        "parse_frontmatter": {
+          "startLine": 19,
+          "endLine": 34
+        },
+        "main": {
+          "startLine": 37,
+          "endLine": 58
+        }
+      },
+      "imports": [
+        "pathlib",
+        "re",
+        "sys"
+      ],
+      "language": "python",
+      "mtime": "2026-07-14T20:05:08.716Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": ".swarm",
+        "routes": [],
+        "dataOperations": [],
+        "security": [
+          {
+            "kind": "input_validation",
+            "line": 2,
+            "evidence": "\"\"\"Validate the local Agent Skill package structure without external dependencies.\"\"\"",
+            "confidence": "high"
+          }
+        ],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/eslint.config.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\eslint.config.js",
+      "moduleName": "eslint.config.js",
+      "exports": [],
+      "imports": [
+        "@eslint/js",
+        "globals",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-react-refresh",
+        "eslint/config"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-06T20:59:55.685Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "eslint.config.js",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/App.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "moduleName": "src/App.jsx",
+      "exports": [],
+      "imports": [
+        "react-router-dom",
+        "@tanstack/react-query",
+        "./lib/ThemeContext",
+        "./hooks/useAuth",
+        "./components/Layout",
+        "./components/ProtectedRoute",
+        "./components/ErrorBoundary",
+        "./components/AnimatedPage",
+        "./pages/Dashboard",
+        "./pages/Clientes",
+        "./pages/Pets",
+        "./pages/Servicos",
+        "./pages/Atendimentos",
+        "./pages/Financeiro",
+        "./pages/Comissoes",
+        "./pages/Relatorios",
+        "./pages/Backup",
+        "./lib/backup"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:53:04.001Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 2,
+            "evidence": "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/AnimatedPage.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\AnimatedPage.jsx",
+      "moduleName": "src/components/AnimatedPage.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 9
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 9,
+          "endLine": 21
+        }
+      },
+      "imports": [
+        "framer-motion"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:52:48.807Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/ConfirmDialog.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "moduleName": "src/components/ConfirmDialog.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 1
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 1,
+          "endLine": 18
+        }
+      },
+      "imports": [],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:38:39.984Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/EmptyState.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "moduleName": "src/components/EmptyState.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 3
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 3,
+          "endLine": 11
+        }
+      },
+      "imports": [
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:39:12.895Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/ErrorBoundary.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ErrorBoundary.jsx",
+      "moduleName": "src/components/ErrorBoundary.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 3
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 3,
+          "endLine": 35
+        }
+      },
+      "imports": [
+        "react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-18T18:44:51.267Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/Layout.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "moduleName": "src/components/Layout.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 41
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 41,
+          "endLine": 99
+        }
+      },
+      "imports": [
+        "react",
+        "react-router-dom",
+        "lucide-react",
+        "../lib/ThemeContext",
+        "../hooks/useAuth"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:37:45.851Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/Modal.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "moduleName": "src/components/Modal.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 3
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 3,
+          "endLine": 33
+        }
+      },
+      "imports": [
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:38:14.899Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/ProtectedRoute.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ProtectedRoute.jsx",
+      "moduleName": "src/components/ProtectedRoute.jsx",
+      "exports": [
+        "default"
+      ],
+      "exportLines": {
+        "default": 6
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 6,
+          "endLine": 24
+        }
+      },
+      "imports": [
+        "react-router-dom",
+        "../hooks/useAuth"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-23T19:32:12.350Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/Spinner.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "moduleName": "src/components/Spinner.jsx",
+      "exports": [
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 2
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 2,
+          "endLine": 2
+        }
+      },
+      "imports": [],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:38:44.613Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/components/Toast.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "moduleName": "src/components/Toast.jsx",
+      "exports": [
+        "useToast",
+        "timer",
+        "showToast",
+        "closeToast",
+        "Toast"
+      ],
+      "exportLines": {
+        "useToast": 6,
+        "timer": 11,
+        "showToast": 16,
+        "closeToast": 20,
+        "Toast": 27
+      },
+      "exportRanges": {
+        "useToast": {
+          "startLine": 6,
+          "endLine": 25
+        },
+        "timer": {
+          "startLine": 11,
+          "endLine": 11
+        },
+        "showToast": {
+          "startLine": 16,
+          "endLine": 18
+        },
+        "closeToast": {
+          "startLine": 20,
+          "endLine": 22
+        },
+        "Toast": {
+          "startLine": 27,
+          "endLine": 44
+        }
+      },
+      "imports": [
+        "react",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:03:54.840Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/components",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/hooks/useAuth.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "moduleName": "src/hooks/useAuth.jsx",
+      "exports": [
+        "AuthProvider",
+        "signIn",
+        "signOut",
+        "useAuth",
+        "ctx"
+      ],
+      "exportLines": {
+        "AuthProvider": 6,
+        "signIn": 24,
+        "signOut": 29,
+        "useAuth": 40,
+        "ctx": 41
+      },
+      "exportRanges": {
+        "AuthProvider": {
+          "startLine": 6,
+          "endLine": 38
+        },
+        "signIn": {
+          "startLine": 24,
+          "endLine": 27
+        },
+        "signOut": {
+          "startLine": 29,
+          "endLine": 31
+        },
+        "useAuth": {
+          "startLine": 40,
+          "endLine": 44
+        },
+        "ctx": {
+          "startLine": 41,
+          "endLine": 41
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-18T04:28:06.869Z",
+      "ontology": {
+        "roles": [
+          "hook",
+          "service_module"
+        ],
+        "packageBoundary": "src/hooks",
+        "routes": [],
+        "dataOperations": [],
+        "security": [
+          {
+            "kind": "authentication",
+            "line": 11,
+            "evidence": "supabase.auth.getSession().then(({ data: { session } }) => {",
+            "confidence": "high"
+          },
+          {
+            "kind": "authentication",
+            "line": 12,
+            "evidence": "setUser(session?.user ?? null)",
+            "confidence": "high"
+          },
+          {
+            "kind": "authentication",
+            "line": 16,
+            "evidence": "const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {",
+            "confidence": "high"
+          },
+          {
+            "kind": "authentication",
+            "line": 17,
+            "evidence": "setUser(session?.user ?? null)",
+            "confidence": "high"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 24,
+            "evidence": "async function signIn(email, password) {",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 25,
+            "evidence": "const { error } = await supabase.auth.signInWithPassword({ email, password })",
+            "confidence": "low"
+          }
+        ],
+        "conventions": [
+          {
+            "name": "hook_module",
+            "evidence": "module lives under src/hooks"
+          }
+        ],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/lib/backup.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "moduleName": "src/lib/backup.js",
+      "exports": [
+        "shouldPerformWeeklyBackup",
+        "today",
+        "isSaturday",
+        "lastBackup",
+        "lastBackupDate",
+        "lastBackupDay",
+        "lastBackupMonth",
+        "lastBackupYear",
+        "todayDay",
+        "todayMonth",
+        "todayYear",
+        "performAutomaticBackup",
+        "backup",
+        "backupString",
+        "blob",
+        "url",
+        "date",
+        "a",
+        "restoreFromBackup",
+        "text",
+        "backup",
+        "missingTables",
+        "hasBackupAvailable",
+        "formatDateBR"
+      ],
+      "exportLines": {
+        "shouldPerformWeeklyBackup": 17,
+        "today": 18,
+        "isSaturday": 19,
+        "lastBackup": 23,
+        "lastBackupDate": 26,
+        "lastBackupDay": 27,
+        "lastBackupMonth": 28,
+        "lastBackupYear": 29,
+        "todayDay": 31,
+        "todayMonth": 32,
+        "todayYear": 33,
+        "performAutomaticBackup": 44,
+        "backup": 129,
+        "backupString": 72,
+        "blob": 73,
+        "url": 74,
+        "date": 77,
+        "a": 78,
+        "restoreFromBackup": 126,
+        "text": 128,
+        "missingTables": 132,
+        "hasBackupAvailable": 194,
+        "formatDateBR": 205
+      },
+      "exportRanges": {
+        "shouldPerformWeeklyBackup": {
+          "startLine": 17,
+          "endLine": 39
+        },
+        "today": {
+          "startLine": 18,
+          "endLine": 18
+        },
+        "isSaturday": {
+          "startLine": 19,
+          "endLine": 19
+        },
+        "lastBackup": {
+          "startLine": 23,
+          "endLine": 23
+        },
+        "lastBackupDate": {
+          "startLine": 26,
+          "endLine": 26
+        },
+        "lastBackupDay": {
+          "startLine": 27,
+          "endLine": 27
+        },
+        "lastBackupMonth": {
+          "startLine": 28,
+          "endLine": 28
+        },
+        "lastBackupYear": {
+          "startLine": 29,
+          "endLine": 29
+        },
+        "todayDay": {
+          "startLine": 31,
+          "endLine": 31
+        },
+        "todayMonth": {
+          "startLine": 32,
+          "endLine": 32
+        },
+        "todayYear": {
+          "startLine": 33,
+          "endLine": 33
+        },
+        "performAutomaticBackup": {
+          "startLine": 44,
+          "endLine": 119
+        },
+        "backup": {
+          "startLine": 129,
+          "endLine": 129
+        },
+        "backupString": {
+          "startLine": 72,
+          "endLine": 72
+        },
+        "blob": {
+          "startLine": 73,
+          "endLine": 73
+        },
+        "url": {
+          "startLine": 74,
+          "endLine": 74
+        },
+        "date": {
+          "startLine": 77,
+          "endLine": 77
+        },
+        "a": {
+          "startLine": 78,
+          "endLine": 78
+        },
+        "restoreFromBackup": {
+          "startLine": 126,
+          "endLine": 188
+        },
+        "text": {
+          "startLine": 128,
+          "endLine": 128
+        },
+        "missingTables": {
+          "startLine": 132,
+          "endLine": 132
+        },
+        "hasBackupAvailable": {
+          "startLine": 194,
+          "endLine": 198
+        },
+        "formatDateBR": {
+          "startLine": 205,
+          "endLine": 214
+        }
+      },
+      "imports": [
+        "./supabase"
+      ],
+      "language": "javascript",
+      "mtime": "2026-06-18T01:41:07.895Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/lib",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 59,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 150,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 162,
+            "evidence": ".insert(backup[table])"
+          }
+        ],
+        "security": [
+          {
+            "kind": "input_validation",
+            "line": 129,
+            "evidence": "const backup = JSON.parse(text)",
+            "confidence": "high"
+          }
+        ],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 150
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/lib/constants.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "moduleName": "src/lib/constants.js",
+      "exports": [
+        "STATUS_LABEL",
+        "STATUS_BADGE",
+        "STATUS_BADGE_SIMPLE",
+        "STATUS_OPTIONS",
+        "FORMA_PAGAMENTO_LABEL",
+        "FORMA_PAGAMENTO_OPTIONS",
+        "FORMA_PAGAMENTO_COLORS",
+        "PAGAMENTO_STATUS_LABEL",
+        "PAGAMENTO_STATUS_BADGE",
+        "PAGAMENTO_STATUS_COLORS_FIN",
+        "STATUS_PAGAMENTO_OPTIONS",
+        "BANCO_LABEL",
+        "BANCO_COLORS",
+        "BANCO_OPTIONS_ATENDIMENTOS",
+        "BANCO_OPTIONS_FINANCEIRO",
+        "MESES",
+        "MONTH_LABELS",
+        "MONTH_NAMES_FULL",
+        "DIAS_SEMANA",
+        "WEEKDAYS",
+        "DOT_COLORS",
+        "RANKING_COLORS",
+        "CATEGORIAS_ENTRADA",
+        "CATEGORIAS_SAIDA_POR_GRUPO",
+        "GRUPOS_SAIDA",
+        "GRUPO_COLORS_SAIDA",
+        "COMISSAO_RATE"
+      ],
+      "exportLines": {
+        "STATUS_LABEL": 2,
+        "STATUS_BADGE": 9,
+        "STATUS_BADGE_SIMPLE": 16,
+        "STATUS_OPTIONS": 23,
+        "FORMA_PAGAMENTO_LABEL": 31,
+        "FORMA_PAGAMENTO_OPTIONS": 39,
+        "FORMA_PAGAMENTO_COLORS": 47,
+        "PAGAMENTO_STATUS_LABEL": 56,
+        "PAGAMENTO_STATUS_BADGE": 62,
+        "PAGAMENTO_STATUS_COLORS_FIN": 68,
+        "STATUS_PAGAMENTO_OPTIONS": 73,
+        "BANCO_LABEL": 80,
+        "BANCO_COLORS": 89,
+        "BANCO_OPTIONS_ATENDIMENTOS": 98,
+        "BANCO_OPTIONS_FINANCEIRO": 106,
+        "MESES": 116,
+        "MONTH_LABELS": 131,
+        "MONTH_NAMES_FULL": 133,
+        "DIAS_SEMANA": 138,
+        "WEEKDAYS": 140,
+        "DOT_COLORS": 146,
+        "RANKING_COLORS": 154,
+        "CATEGORIAS_ENTRADA": 157,
+        "CATEGORIAS_SAIDA_POR_GRUPO": 159,
+        "GRUPOS_SAIDA": 170,
+        "GRUPO_COLORS_SAIDA": 175,
+        "COMISSAO_RATE": 186
+      },
+      "exportRanges": {
+        "STATUS_LABEL": {
+          "startLine": 2,
+          "endLine": 7
+        },
+        "STATUS_BADGE": {
+          "startLine": 9,
+          "endLine": 14
+        },
+        "STATUS_BADGE_SIMPLE": {
+          "startLine": 16,
+          "endLine": 21
+        },
+        "STATUS_OPTIONS": {
+          "startLine": 23,
+          "endLine": 28
+        },
+        "FORMA_PAGAMENTO_LABEL": {
+          "startLine": 31,
+          "endLine": 37
+        },
+        "FORMA_PAGAMENTO_OPTIONS": {
+          "startLine": 39,
+          "endLine": 45
+        },
+        "FORMA_PAGAMENTO_COLORS": {
+          "startLine": 47,
+          "endLine": 53
+        },
+        "PAGAMENTO_STATUS_LABEL": {
+          "startLine": 56,
+          "endLine": 60
+        },
+        "PAGAMENTO_STATUS_BADGE": {
+          "startLine": 62,
+          "endLine": 66
+        },
+        "PAGAMENTO_STATUS_COLORS_FIN": {
+          "startLine": 68,
+          "endLine": 71
+        },
+        "STATUS_PAGAMENTO_OPTIONS": {
+          "startLine": 73,
+          "endLine": 77
+        },
+        "BANCO_LABEL": {
+          "startLine": 80,
+          "endLine": 87
+        },
+        "BANCO_COLORS": {
+          "startLine": 89,
+          "endLine": 96
+        },
+        "BANCO_OPTIONS_ATENDIMENTOS": {
+          "startLine": 98,
+          "endLine": 104
+        },
+        "BANCO_OPTIONS_FINANCEIRO": {
+          "startLine": 106,
+          "endLine": 113
+        },
+        "MESES": {
+          "startLine": 116,
+          "endLine": 129
+        },
+        "MONTH_LABELS": {
+          "startLine": 131,
+          "endLine": 131
+        },
+        "MONTH_NAMES_FULL": {
+          "startLine": 133,
+          "endLine": 136
+        },
+        "DIAS_SEMANA": {
+          "startLine": 138,
+          "endLine": 138
+        },
+        "WEEKDAYS": {
+          "startLine": 140,
+          "endLine": 143
+        },
+        "DOT_COLORS": {
+          "startLine": 146,
+          "endLine": 152
+        },
+        "RANKING_COLORS": {
+          "startLine": 154,
+          "endLine": 154
+        },
+        "CATEGORIAS_ENTRADA": {
+          "startLine": 157,
+          "endLine": 157
+        },
+        "CATEGORIAS_SAIDA_POR_GRUPO": {
+          "startLine": 159,
+          "endLine": 168
+        },
+        "GRUPOS_SAIDA": {
+          "startLine": 170,
+          "endLine": 173
+        },
+        "GRUPO_COLORS_SAIDA": {
+          "startLine": 175,
+          "endLine": 184
+        },
+        "COMISSAO_RATE": {
+          "startLine": 186,
+          "endLine": 186
+        }
+      },
+      "imports": [],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:31:21.861Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/lib",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/lib/dates.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "moduleName": "src/lib/dates.js",
+      "exports": [
+        "formatDate",
+        "d",
+        "day",
+        "month",
+        "year",
+        "formatDateTime",
+        "d",
+        "day",
+        "month",
+        "year",
+        "hours",
+        "minutes",
+        "formatTime",
+        "d",
+        "hours",
+        "minutes",
+        "getLocalDateISO",
+        "d",
+        "year",
+        "month",
+        "day",
+        "getDayOfWeek",
+        "d",
+        "toLocalDatetimeValue",
+        "d",
+        "offset",
+        "local",
+        "toLocalDateValue",
+        "d",
+        "isToday",
+        "d",
+        "today",
+        "extractDateKey",
+        "d",
+        "formatCurrency",
+        "num",
+        "formatDateOnly"
+      ],
+      "exportLines": {
+        "formatDate": 7,
+        "d": 83,
+        "day": 42,
+        "month": 41,
+        "year": 40,
+        "formatDateTime": 17,
+        "hours": 33,
+        "minutes": 34,
+        "formatTime": 29,
+        "getLocalDateISO": 38,
+        "getDayOfWeek": 46,
+        "toLocalDatetimeValue": 53,
+        "offset": 57,
+        "local": 58,
+        "toLocalDateValue": 62,
+        "isToday": 69,
+        "today": 72,
+        "extractDateKey": 80,
+        "formatCurrency": 89,
+        "num": 91,
+        "formatDateOnly": 96
+      },
+      "exportRanges": {
+        "formatDate": {
+          "startLine": 7,
+          "endLine": 15
+        },
+        "d": {
+          "startLine": 83,
+          "endLine": 83
+        },
+        "day": {
+          "startLine": 42,
+          "endLine": 42
+        },
+        "month": {
+          "startLine": 41,
+          "endLine": 41
+        },
+        "year": {
+          "startLine": 40,
+          "endLine": 40
+        },
+        "formatDateTime": {
+          "startLine": 17,
+          "endLine": 27
+        },
+        "hours": {
+          "startLine": 33,
+          "endLine": 33
+        },
+        "minutes": {
+          "startLine": 34,
+          "endLine": 34
+        },
+        "formatTime": {
+          "startLine": 29,
+          "endLine": 36
+        },
+        "getLocalDateISO": {
+          "startLine": 38,
+          "endLine": 44
+        },
+        "getDayOfWeek": {
+          "startLine": 46,
+          "endLine": 51
+        },
+        "toLocalDatetimeValue": {
+          "startLine": 53,
+          "endLine": 60
+        },
+        "offset": {
+          "startLine": 57,
+          "endLine": 57
+        },
+        "local": {
+          "startLine": 58,
+          "endLine": 58
+        },
+        "toLocalDateValue": {
+          "startLine": 62,
+          "endLine": 67
+        },
+        "isToday": {
+          "startLine": 69,
+          "endLine": 78
+        },
+        "today": {
+          "startLine": 72,
+          "endLine": 72
+        },
+        "extractDateKey": {
+          "startLine": 80,
+          "endLine": 87
+        },
+        "formatCurrency": {
+          "startLine": 89,
+          "endLine": 94
+        },
+        "num": {
+          "startLine": 91,
+          "endLine": 91
+        },
+        "formatDateOnly": {
+          "startLine": 96,
+          "endLine": 98
+        }
+      },
+      "imports": [],
+      "language": "javascript",
+      "mtime": "2026-05-09T14:08:18.950Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/lib",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/lib/supabase.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "moduleName": "src/lib/supabase.js",
+      "exports": [
+        "supabase"
+      ],
+      "exportLines": {
+        "supabase": 6
+      },
+      "exportRanges": {
+        "supabase": {
+          "startLine": 6,
+          "endLine": 6
+        }
+      },
+      "imports": [
+        "@supabase/supabase-js"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-23T18:12:12.076Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/lib",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/lib/ThemeContext.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\ThemeContext.jsx",
+      "moduleName": "src/lib/ThemeContext.jsx",
+      "exports": [
+        "ThemeProvider",
+        "toggleTheme",
+        "isGlass",
+        "useTheme",
+        "ctx"
+      ],
+      "exportLines": {
+        "ThemeProvider": 5,
+        "toggleTheme": 19,
+        "isGlass": 23,
+        "useTheme": 32,
+        "ctx": 33
+      },
+      "exportRanges": {
+        "ThemeProvider": {
+          "startLine": 5,
+          "endLine": 30
+        },
+        "toggleTheme": {
+          "startLine": 19,
+          "endLine": 21
+        },
+        "isGlass": {
+          "startLine": 23,
+          "endLine": 23
+        },
+        "useTheme": {
+          "startLine": 32,
+          "endLine": 36
+        },
+        "ctx": {
+          "startLine": 33,
+          "endLine": 33
+        }
+      },
+      "imports": [
+        "react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-10T22:44:28.326Z",
+      "ontology": {
+        "roles": [
+          "service_module"
+        ],
+        "packageBoundary": "src/lib",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/main.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\main.jsx",
+      "moduleName": "src/main.jsx",
+      "exports": [],
+      "imports": [
+        "react",
+        "react-dom/client",
+        "./index.css",
+        "./App.jsx"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-06T21:13:21.913Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Atendimentos.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "moduleName": "src/pages/Atendimentos.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 744
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 744,
+          "endLine": 744
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Modal",
+        "../components/ConfirmDialog",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:44:57.570Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 117,
+            "evidence": ".select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 134,
+            "evidence": ".select('id, nome')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 143,
+            "evidence": ".select('id, nome, cliente_id, especie')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 152,
+            "evidence": ".select('id, nome, preco')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 264,
+            "evidence": ".update(payload)"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 267,
+            "evidence": ";({ error } = await supabase.from('atendimentos').insert([payload]))"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 286,
+            "evidence": ".select('id')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 293,
+            "evidence": ".update({"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 307,
+            "evidence": ".select('id')"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 314,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 322,
+            "evidence": ".select('id')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 342,
+            "evidence": ".select('id')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 355,
+            "evidence": ".select('*, pet:pet_id(id, nome), cliente:cliente_id(id, nome), servico:servico_id(id, nome)')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 407,
+            "evidence": "await supabase.from('financeiro').insert(entries)"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 421,
+            "evidence": ".update(updates)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 443,
+            "evidence": ".select('id')"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 450,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 460,
+            "evidence": ".update({ status_pagamento: 'pago' })"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 479,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 488,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 570,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 578,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 579,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 587,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 894,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 906,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 914,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 932,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 940,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 952,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 981,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 993,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1030,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1042,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1044,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1054,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1055,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1067,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1079,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1090,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1106,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 1117,
+            "evidence": "</select>"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 264
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Backup.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "moduleName": "src/pages/Backup.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 100
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 100,
+          "endLine": 100
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "lucide-react",
+        "../lib/backup"
+      ],
+      "language": "javascript",
+      "mtime": "2026-06-15T18:05:00.671Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 47,
+            "evidence": "const { count, error } = await supabase"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 49,
+            "evidence": ".select('*', { count: 'exact', head: true })"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 50,
+            "evidence": "if (!error) result[t.name] = count || 0"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 66,
+            "evidence": ".select('*')"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Clientes.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "moduleName": "src/pages/Clientes.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 134
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 134,
+          "endLine": 134
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Modal",
+        "../components/ConfirmDialog",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:39:31.395Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 40,
+            "evidence": "const { data, error } = await supabase.from('clientes').select('*').order('codigo', { ascending: true, nullsFirst: false })"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 46,
+            "evidence": "const { data } = await supabase.from('clientes').select('codigo').not('codigo', 'is', null).order('codigo', { ascending: false }).limit(1)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 81,
+            "evidence": "supabase.from('pets').select('*').eq('cliente_id', cliente.id).order('nome'),"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 83,
+            "evidence": ".select('*, pet:pet_id(id, nome, especie), servico:servico_id(id, nome, preco)')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 104,
+            "evidence": ";({ error } = await supabase.from('clientes').update(payload).eq('id', editingId))"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 108,
+            "evidence": ";({ error } = await supabase.from('clientes').insert([payload]))"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 117,
+            "evidence": "const { error } = await supabase.from('clientes').delete().eq('id', deleteId)"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 104
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Comissoes.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "moduleName": "src/pages/Comissoes.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 370
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 370,
+          "endLine": 370
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:58:22.192Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 37,
+            "evidence": ".select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 194,
+            "evidence": "<select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))}"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 197,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 198,
+            "evidence": "<select value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))}"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 201,
+            "evidence": "</select>"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Dashboard.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "moduleName": "src/pages/Dashboard.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 408
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 408,
+          "endLine": 408
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../lib/constants",
+        "lucide-react",
+        "recharts"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:45:36.440Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 190,
+            "evidence": "const { count, error } = await supabase"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 192,
+            "evidence": ".select('*', { count: 'exact', head: true })"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 195,
+            "evidence": "if (!error) setAtendimentosHojeCount(count || 0)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 206,
+            "evidence": ".select('valor')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 227,
+            "evidence": ".select('valor')"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 241,
+            "evidence": "const { count, error } = await supabase"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 243,
+            "evidence": ".select('*', { count: 'exact', head: true })"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 247,
+            "evidence": "if (!error) setAtendimentosMes(count || 0)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 257,
+            "evidence": "supabase.from('financeiro').select('valor').eq('tipo', 'entrada').gte('data', start).lte('data', end),"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 258,
+            "evidence": "supabase.from('financeiro').select('valor').eq('tipo', 'saida').or('status_pagamento.eq.pago,status_pagamento.is.null').gte('data', start).lte('data', end),"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 271,
+            "evidence": ".select('data_hora, valor')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 303,
+            "evidence": ".select('servico_id, servicos:servico_id(nome)')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 335,
+            "evidence": ".select('forma_pagamento, valor')"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Financeiro.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "moduleName": "src/pages/Financeiro.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 817
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 817,
+          "endLine": 817
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Modal",
+        "../components/ConfirmDialog",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:44:26.797Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 96,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 119,
+            "evidence": "await supabase.from('financeiro').delete().in('id', duplicates)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 140,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 242,
+            "evidence": ".update(payload)"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 245,
+            "evidence": ";({ error } = await supabase.from('financeiro').insert([payload]))"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 267,
+            "evidence": ".delete()"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 283,
+            "evidence": ".update({ status_pagamento: 'pago' })"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 351,
+            "evidence": "if (!meses[key]) meses[key] = { month: key, totalEntrada: 0, totalSaida: 0, count: 0, porForma: {}, porBanco: {} }"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 364,
+            "evidence": "meses[key].count += 1"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 388,
+            "evidence": ".update({ status_pagamento: 'pago' })"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 443,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 451,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 452,
+            "evidence": "<select"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 460,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 593,
+            "evidence": "<select value={filterFormaPagamento} onChange={(e) => setFilterFormaPagamento(e.target.value)} className=\"w-full rounded-lg border border-gray-300 px-3 py-2 tex"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 596,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 600,
+            "evidence": "<select value={filterGrupo} onChange={(e) => setFilterGrupo(e.target.value)} className=\"w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 603,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 607,
+            "evidence": "<select value={filterCategoria} onChange={(e) => setFilterCategoria(e.target.value)} className=\"w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 610,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 681,
+            "evidence": "<td className=\"px-4 py-2.5 text-center text-sm text-gray-600\">{m.count}</td>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 886,
+            "evidence": "<select value={form.grupo} onChange={(e) => handleFormChange('grupo', e.target.value)} className=\"w-full rounded-lg border border-gray-300 px-3 py-2 text-sm tex"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 889,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 895,
+            "evidence": "<select required value={form.categoria} onChange={(e) => handleFormChange('categoria', e.target.value)} className=\"w-full rounded-lg border border-gray-300 px-3"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 900,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 910,
+            "evidence": "<select value={form.forma_pagamento} onChange={(e) => handleFormChange('forma_pagamento', e.target.value)} className=\"w-full rounded-lg border border-gray-300 p"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 912,
+            "evidence": "</select>"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 119
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Login.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Login.jsx",
+      "moduleName": "src/pages/Login.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 15
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 15,
+          "endLine": 31
+        }
+      },
+      "imports": [
+        "react",
+        "react-router-dom",
+        "../hooks/useAuth",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-18T13:57:35.215Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [],
+        "security": [
+          {
+            "kind": "secret_handling",
+            "line": 10,
+            "evidence": "const [password, setPassword] = useState('')",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 20,
+            "evidence": "await signIn(email, password)",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 79,
+            "evidence": "<label htmlFor=\"password\" className=\"block text-sm font-medium text-slate-400 mb-1.5\">",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 85,
+            "evidence": "id=\"password\"",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 86,
+            "evidence": "type={showPassword ? 'text' : 'password'}",
+            "confidence": "low"
+          },
+          {
+            "kind": "secret_handling",
+            "line": 88,
+            "evidence": "value={password}",
+            "confidence": "low"
+          }
+        ],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Pets.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "moduleName": "src/pages/Pets.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 274
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 274,
+          "endLine": 274
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Modal",
+        "../components/ConfirmDialog",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:40:28.041Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 65,
+            "evidence": ".select('id, nome, especie, raca, idade, peso, observacoes, created_at, cliente:cliente_id (id, nome)')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 72,
+            "evidence": "const { data, error } = await supabase.from('clientes').select('id, nome, codigo').order('nome', { ascending: true })"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 126,
+            "evidence": ".select('*, servico:servico_id(id, nome, preco), cliente:cliente_id(id, nome)')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 149,
+            "evidence": ";({ error } = await supabase.from('pets').update(payload).eq('id', editingId))"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 151,
+            "evidence": ";({ error } = await supabase.from('pets').insert([payload]))"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 160,
+            "evidence": "const { error } = await supabase.from('pets').delete().eq('id', deleteId)"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 363,
+            "evidence": "<select required value={form.cliente_id} onChange={(e) => handleFormChange('cliente_id', e.target.value)}"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 367,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 371,
+            "evidence": "<select value={form.especie} onChange={(e) => handleFormChange('especie', e.target.value)}"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 374,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 381,
+            "evidence": "<select value={form.raca} onChange={(e) => handleFormChange('raca', e.target.value)}"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 385,
+            "evidence": "</select>"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 149
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Relatorios.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "moduleName": "src/pages/Relatorios.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 1053
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 1053,
+          "endLine": 1053
+        }
+      },
+      "imports": [
+        "react",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "../lib/constants",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:58:33.974Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 42,
+            "evidence": "function CollapsibleSection({ title, icon: Icon, defaultOpen = true, children, count }) {"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 50,
+            "evidence": "{count != null && ("
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 51,
+            "evidence": "<span className=\"inline-flex items-center justify-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-600\">{count}</span>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 99,
+            "evidence": ".select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 128,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 160,
+            "evidence": ".select('id, data_hora, valor, forma_pagamento, banco, status')"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 185,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 260,
+            "evidence": "if (!clientes[id]) clientes[id] = { nome, count: 0, total: 0 }"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 262,
+            "evidence": "clientes[id].count += 1"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 265,
+            "evidence": "return Object.values(clientes).sort((a, b) => b.count - a.count)"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 344,
+            "evidence": "if (!grupos[banco]) grupos[banco] = { items: [], total: 0, count: 0 }"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 348,
+            "evidence": "grupos[banco].count += 1"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 358,
+            "evidence": "if (!grupos[forma]) grupos[forma] = { items: [], total: 0, count: 0 }"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 362,
+            "evidence": "grupos[forma].count += 1"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 373,
+            "evidence": "if (!meses[key]) meses[key] = { month: key, totalEntrada: 0, totalSaida: 0, count: 0, porForma: {}, porBanco: {} }"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 386,
+            "evidence": "meses[key].count += 1"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 430,
+            "evidence": "<select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))} className=\"rounded-lg border border-gray-300 px-3 py-2 text-sm font-m"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 432,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 433,
+            "evidence": "<select value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))} className=\"rounded-lg border border-gray-300 px-3 py-2 text-sm font-med"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 435,
+            "evidence": "</select>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 565,
+            "evidence": "<CollapsibleSection title=\"Servicos do Mes\" icon={Calendar} defaultOpen={true} count={filteredAtendimentos.length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 671,
+            "evidence": "<CollapsibleSection title=\"Entradas do Mes\" icon={TrendingUp} defaultOpen={true} count={entradas.length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 751,
+            "evidence": "<CollapsibleSection title=\"Saidas do Mes\" icon={TrendingDown} defaultOpen={true} count={saidas.length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 803,
+            "evidence": "<CollapsibleSection title=\"Clientes Atendidos\" icon={Users} defaultOpen={true} count={clientesDetalhado.length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 828,
+            "evidence": "<td className=\"px-4 py-2.5 text-center text-sm text-gray-600\">{c.count}</td>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 858,
+            "evidence": "<CollapsibleSection title=\"Relatorio por Banco\" icon={Landmark} defaultOpen={false} count={Object.keys(porBanco).length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 880,
+            "evidence": "<td className=\"px-4 py-2.5 text-center text-sm text-gray-600\">{data.count}</td>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 900,
+            "evidence": "<span className=\"text-gray-500\">{data.count} entrada{data.count > 1 ? 's' : ''}</span>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 935,
+            "evidence": "<CollapsibleSection title=\"Relatorio por Forma de Pagamento\" icon={CreditCard} defaultOpen={false} count={Object.keys(porFormaPagamento).length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 957,
+            "evidence": "<td className=\"px-4 py-2.5 text-center text-sm text-gray-600\">{data.count}</td>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 977,
+            "evidence": "<span className=\"text-gray-500\">{data.count} entrada{data.count > 1 ? 's' : ''}</span>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 1014,
+            "evidence": "<CollapsibleSection title=\"Relatorio por Mes (Historico)\" icon={BarChart3} defaultOpen={false} count={porMes.length}>"
+          },
+          {
+            "operation": "read",
+            "access": "unknown",
+            "line": 1040,
+            "evidence": "<td className=\"px-4 py-2.5 text-center text-sm text-gray-600\">{m.count}</td>"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/src/pages/Servicos.jsx": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "moduleName": "src/pages/Servicos.jsx",
+      "exports": [
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default",
+        "default"
+      ],
+      "exportLines": {
+        "default": 147
+      },
+      "exportRanges": {
+        "default": {
+          "startLine": 147,
+          "endLine": 150
+        }
+      },
+      "imports": [
+        "react",
+        "@tanstack/react-query",
+        "../lib/supabase",
+        "../lib/dates",
+        "../components/Toast",
+        "../components/Modal",
+        "../components/ConfirmDialog",
+        "../components/Spinner",
+        "../components/EmptyState",
+        "lucide-react"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T20:54:20.750Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "src/pages",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 2,
+            "evidence": "import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'"
+          },
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 23,
+            "evidence": ".select('*')"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 49,
+            "evidence": "const { error } = await supabase.from('servicos').update(payload).eq('id', editingId)"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 52,
+            "evidence": "const { error } = await supabase.from('servicos').insert([payload])"
+          },
+          {
+            "operation": "write",
+            "access": "sql",
+            "line": 67,
+            "evidence": "const { error } = await supabase.from('servicos').update({ ativo: novoAtivo }).eq('id', servico.id)"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 80,
+            "evidence": "const { error } = await supabase.from('servicos').delete().eq('id', deleteId)"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": [
+          {
+            "code": "multiple_writes_without_detected_transaction",
+            "severity": "low",
+            "message": "Multiple write/delete operations were detected without a transaction fact.",
+            "line": 49
+          }
+        ]
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/test-notificacao.mjs": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\test-notificacao.mjs",
+      "moduleName": "test-notificacao.mjs",
+      "exports": [],
+      "imports": [
+        "playwright",
+        "@supabase/supabase-js"
+      ],
+      "language": "javascript",
+      "mtime": "2026-07-08T19:13:18.135Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "test-notificacao.mjs",
+        "routes": [],
+        "dataOperations": [
+          {
+            "operation": "read",
+            "access": "sql",
+            "line": 99,
+            "evidence": "const { data: db } = await supabase.from('financeiro').select('status_pagamento').eq('id', TEST_ID);"
+          },
+          {
+            "operation": "delete",
+            "access": "sql",
+            "line": 109,
+            "evidence": "await supabase.from('financeiro').delete().eq('id', TEST_ID);"
+          }
+        ],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    },
+    "C:/Users/Leandro/Desktop/Claude Cli/petshop-app/vite.config.js": {
+      "filePath": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\vite.config.js",
+      "moduleName": "vite.config.js",
+      "exports": [],
+      "imports": [
+        "vite",
+        "@vitejs/plugin-react",
+        "@tailwindcss/vite",
+        "vite-plugin-pwa"
+      ],
+      "language": "javascript",
+      "mtime": "2026-05-13T20:24:13.019Z",
+      "ontology": {
+        "roles": [
+          "source_module"
+        ],
+        "packageBoundary": "vite.config.js",
+        "routes": [],
+        "dataOperations": [],
+        "security": [],
+        "conventions": [],
+        "findings": []
+      }
+    }
+  },
+  "edges": [
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\AnimatedPage.jsx",
+      "importSpecifier": "./components/AnimatedPage",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ErrorBoundary.jsx",
+      "importSpecifier": "./components/ErrorBoundary",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "importSpecifier": "./components/Layout",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ProtectedRoute.jsx",
+      "importSpecifier": "./components/ProtectedRoute",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "importSpecifier": "./hooks/useAuth",
+      "importType": "named",
+      "importedSymbols": [
+        "AuthProvider"
+      ],
+      "usedSymbols": [
+        "AuthProvider"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "importSpecifier": "./lib/backup",
+      "importType": "named",
+      "importedSymbols": [
+        "performAutomaticBackup"
+      ],
+      "usedSymbols": [
+        "performAutomaticBackup"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\ThemeContext.jsx",
+      "importSpecifier": "./lib/ThemeContext",
+      "importType": "named",
+      "importedSymbols": [
+        "ThemeProvider"
+      ],
+      "usedSymbols": [
+        "ThemeProvider"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "importSpecifier": "./pages/Atendimentos",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "importSpecifier": "./pages/Backup",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "importSpecifier": "./pages/Clientes",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "importSpecifier": "./pages/Comissoes",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "importSpecifier": "./pages/Dashboard",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "importSpecifier": "./pages/Financeiro",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "importSpecifier": "./pages/Pets",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "importSpecifier": "./pages/Relatorios",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "importSpecifier": "./pages/Servicos",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "importSpecifier": "../hooks/useAuth",
+      "importType": "named",
+      "importedSymbols": [
+        "useAuth"
+      ],
+      "usedSymbols": [
+        "useAuth"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\ThemeContext.jsx",
+      "importSpecifier": "../lib/ThemeContext",
+      "importType": "named",
+      "importedSymbols": [
+        "useTheme"
+      ],
+      "usedSymbols": [
+        "useTheme"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ProtectedRoute.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "importSpecifier": "../hooks/useAuth",
+      "importType": "named",
+      "importedSymbols": [
+        "useAuth"
+      ],
+      "usedSymbols": [
+        "useAuth"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "./supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\main.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "importSpecifier": "./App.jsx",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\main.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\index.css",
+      "importSpecifier": "./index.css",
+      "importType": "sideeffect",
+      "importedSymbols": []
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "importSpecifier": "../components/ConfirmDialog",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "importSpecifier": "../components/Modal",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL",
+        "STATUS_OPTIONS",
+        "FORMA_PAGAMENTO_LABEL",
+        "FORMA_PAGAMENTO_OPTIONS",
+        "FORMA_PAGAMENTO_COLORS",
+        "BANCO_LABEL",
+        "BANCO_OPTIONS_ATENDIMENTOS",
+        "PAGAMENTO_STATUS_BADGE",
+        "PAGAMENTO_STATUS_LABEL",
+        "STATUS_PAGAMENTO_OPTIONS",
+        "MESES"
+      ],
+      "usedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL",
+        "STATUS_OPTIONS",
+        "FORMA_PAGAMENTO_LABEL",
+        "FORMA_PAGAMENTO_OPTIONS",
+        "FORMA_PAGAMENTO_COLORS",
+        "BANCO_LABEL",
+        "BANCO_OPTIONS_ATENDIMENTOS",
+        "PAGAMENTO_STATUS_BADGE",
+        "PAGAMENTO_STATUS_LABEL",
+        "STATUS_PAGAMENTO_OPTIONS",
+        "MESES"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatDate",
+        "formatDateTime",
+        "formatTime",
+        "formatCurrency",
+        "isToday",
+        "toLocalDatetimeValue",
+        "toLocalDateValue",
+        "getLocalDateISO",
+        "extractDateKey"
+      ],
+      "usedSymbols": [
+        "formatDate",
+        "formatTime",
+        "formatCurrency",
+        "isToday",
+        "toLocalDatetimeValue",
+        "toLocalDateValue",
+        "getLocalDateISO",
+        "extractDateKey"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "importSpecifier": "../lib/backup",
+      "importType": "named",
+      "importedSymbols": [
+        "performAutomaticBackup",
+        "restoreFromBackup",
+        "formatDateBR"
+      ],
+      "usedSymbols": [
+        "restoreFromBackup",
+        "formatDateBR"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "importSpecifier": "../components/ConfirmDialog",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "importSpecifier": "../components/Modal",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL"
+      ],
+      "usedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatDate",
+        "formatDateTime",
+        "formatCurrency"
+      ],
+      "usedSymbols": [
+        "formatDateTime",
+        "formatCurrency"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "COMISSAO_RATE",
+        "FORMA_PAGAMENTO_LABEL",
+        "BANCO_LABEL",
+        "STATUS_BADGE_SIMPLE",
+        "STATUS_LABEL",
+        "DIAS_SEMANA",
+        "MESES"
+      ],
+      "usedSymbols": [
+        "COMISSAO_RATE",
+        "FORMA_PAGAMENTO_LABEL",
+        "BANCO_LABEL",
+        "STATUS_BADGE_SIMPLE",
+        "STATUS_LABEL",
+        "DIAS_SEMANA",
+        "MESES"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatDate",
+        "formatCurrency",
+        "formatDateTime",
+        "getLocalDateISO",
+        "extractDateKey",
+        "getDayOfWeek"
+      ],
+      "usedSymbols": [
+        "formatDate",
+        "formatCurrency",
+        "getLocalDateISO",
+        "extractDateKey",
+        "getDayOfWeek"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "FORMA_PAGAMENTO_LABEL",
+        "DOT_COLORS",
+        "RANKING_COLORS",
+        "MONTH_LABELS",
+        "MONTH_NAMES_FULL",
+        "WEEKDAYS"
+      ],
+      "usedSymbols": [
+        "FORMA_PAGAMENTO_LABEL",
+        "DOT_COLORS",
+        "RANKING_COLORS",
+        "MONTH_LABELS",
+        "MONTH_NAMES_FULL",
+        "WEEKDAYS"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "getLocalDateISO",
+        "formatCurrency"
+      ],
+      "usedSymbols": [
+        "getLocalDateISO",
+        "formatCurrency"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "importSpecifier": "../components/ConfirmDialog",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "importSpecifier": "../components/Modal",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "FORMA_PAGAMENTO_LABEL",
+        "FORMA_PAGAMENTO_OPTIONS",
+        "FORMA_PAGAMENTO_COLORS",
+        "BANCO_LABEL",
+        "BANCO_COLORS",
+        "BANCO_OPTIONS_FINANCEIRO",
+        "MESES",
+        "DIAS_SEMANA",
+        "PAGAMENTO_STATUS_COLORS_FIN",
+        "CATEGORIAS_ENTRADA",
+        "CATEGORIAS_SAIDA_POR_GRUPO",
+        "GRUPOS_SAIDA",
+        "GRUPO_COLORS_SAIDA"
+      ],
+      "usedSymbols": [
+        "FORMA_PAGAMENTO_LABEL",
+        "FORMA_PAGAMENTO_OPTIONS",
+        "FORMA_PAGAMENTO_COLORS",
+        "BANCO_LABEL",
+        "BANCO_COLORS",
+        "MESES",
+        "DIAS_SEMANA",
+        "CATEGORIAS_ENTRADA",
+        "CATEGORIAS_SAIDA_POR_GRUPO",
+        "GRUPOS_SAIDA",
+        "GRUPO_COLORS_SAIDA"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "getLocalDateISO",
+        "formatDate",
+        "extractDateKey",
+        "getDayOfWeek",
+        "formatCurrency"
+      ],
+      "usedSymbols": [
+        "getLocalDateISO",
+        "formatDate",
+        "getDayOfWeek",
+        "formatCurrency"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Login.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "importSpecifier": "../hooks/useAuth",
+      "importType": "named",
+      "importedSymbols": [
+        "useAuth"
+      ],
+      "usedSymbols": [
+        "useAuth"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "importSpecifier": "../components/ConfirmDialog",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "importSpecifier": "../components/Modal",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL"
+      ],
+      "usedSymbols": [
+        "STATUS_BADGE",
+        "STATUS_LABEL"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatDateTime",
+        "formatCurrency"
+      ],
+      "usedSymbols": [
+        "formatDateTime",
+        "formatCurrency"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "importSpecifier": "../lib/constants",
+      "importType": "named",
+      "importedSymbols": [
+        "COMISSAO_RATE",
+        "MESES",
+        "FORMA_PAGAMENTO_LABEL",
+        "STATUS_BADGE",
+        "DIAS_SEMANA",
+        "BANCO_LABEL",
+        "BANCO_COLORS",
+        "FORMA_PAGAMENTO_COLORS"
+      ],
+      "usedSymbols": [
+        "COMISSAO_RATE",
+        "MESES",
+        "FORMA_PAGAMENTO_LABEL",
+        "STATUS_BADGE",
+        "DIAS_SEMANA",
+        "BANCO_LABEL",
+        "BANCO_COLORS",
+        "FORMA_PAGAMENTO_COLORS"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatDate",
+        "formatDateOnly",
+        "formatCurrency",
+        "extractDateKey",
+        "getDayOfWeek"
+      ],
+      "usedSymbols": [
+        "formatDate",
+        "formatDateOnly",
+        "formatCurrency",
+        "extractDateKey",
+        "getDayOfWeek"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "importSpecifier": "../components/ConfirmDialog",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "importSpecifier": "../components/EmptyState",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "importSpecifier": "../components/Modal",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "importSpecifier": "../components/Spinner",
+      "importType": "default",
+      "importedSymbols": [
+        "default"
+      ],
+      "usedSymbols": [
+        "default"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "importSpecifier": "../components/Toast",
+      "importType": "named",
+      "importedSymbols": [
+        "useToast",
+        "Toast"
+      ],
+      "usedSymbols": [
+        "useToast",
+        "Toast"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "importSpecifier": "../lib/dates",
+      "importType": "named",
+      "importedSymbols": [
+        "formatCurrency"
+      ],
+      "usedSymbols": [
+        "formatCurrency"
+      ]
+    },
+    {
+      "source": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "target": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "importSpecifier": "../lib/supabase",
+      "importType": "named",
+      "importedSymbols": [
+        "supabase"
+      ],
+      "usedSymbols": [
+        "supabase"
+      ]
+    }
+  ],
+  "metadata": {
+    "generatedAt": "2026-07-21T15:03:59.657Z",
+    "generator": "repo-graph",
+    "nodeCount": 33,
+    "edgeCount": 80
+  },
+  "symbolEdges": [
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "toSymbol": "performAutomaticBackup"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "toSymbol": "AuthProvider"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\ThemeContext.jsx",
+      "toSymbol": "ThemeProvider"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ProtectedRoute.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ErrorBoundary.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\AnimatedPage.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "fromSymbol": "App",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "fromSymbol": "Layout",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\ThemeContext.jsx",
+      "toSymbol": "useTheme"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Layout.jsx",
+      "fromSymbol": "Layout",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "toSymbol": "useAuth"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ProtectedRoute.jsx",
+      "fromSymbol": "ProtectedRoute",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "toSymbol": "useAuth"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "fromSymbol": "AuthProvider",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "fromSymbol": "performAutomaticBackup",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "fromSymbol": "restoreFromBackup",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\main.jsx",
+      "fromSymbol": "<module>",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\App.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "toLocalDatetimeValue"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "toLocalDateValue"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getLocalDateISO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "extractDateKey"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "isToday"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MESES"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatTime"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_BADGE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "PAGAMENTO_STATUS_BADGE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "PAGAMENTO_STATUS_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDate"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_OPTIONS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_OPTIONS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_OPTIONS_ATENDIMENTOS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_PAGAMENTO_OPTIONS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Atendimentos.jsx",
+      "fromSymbol": "Atendimentos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "fromSymbol": "Backup",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "fromSymbol": "Backup",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "toSymbol": "restoreFromBackup"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Backup.jsx",
+      "fromSymbol": "Backup",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\backup.js",
+      "toSymbol": "formatDateBR"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_BADGE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDateTime"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Clientes.jsx",
+      "fromSymbol": "Clientes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "extractDateKey"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "COMISSAO_RATE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getLocalDateISO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MESES"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDate"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "DIAS_SEMANA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getDayOfWeek"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_BADGE_SIMPLE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Comissoes.jsx",
+      "fromSymbol": "Comissoes",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "getDateDisplay",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "WEEKDAYS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "getDateDisplay",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MONTH_NAMES_FULL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "CustomTooltipMensal",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getLocalDateISO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MONTH_LABELS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "RANKING_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Dashboard.jsx",
+      "fromSymbol": "Dashboard",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "DOT_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "EMPTY_FORM",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getLocalDateISO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "getToday",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getLocalDateISO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "CATEGORIAS_ENTRADA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "CATEGORIAS_SAIDA_POR_GRUPO"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MESES"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_OPTIONS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "GRUPOS_SAIDA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "DIAS_SEMANA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getDayOfWeek"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDate"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "GRUPO_COLORS_SAIDA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Financeiro.jsx",
+      "fromSymbol": "Financeiro",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Login.jsx",
+      "fromSymbol": "Login",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\hooks\\useAuth.jsx",
+      "toSymbol": "useAuth"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_BADGE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDateTime"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Pets.jsx",
+      "fromSymbol": "Pets",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "getMonthLabel",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MESES"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "COMISSAO_RATE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "extractDateKey"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_LABEL"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "MESES"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "DIAS_SEMANA"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "getDayOfWeek"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDate"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "STATUS_BADGE"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatDateOnly"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "BANCO_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Relatorios.jsx",
+      "fromSymbol": "Relatorios",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\constants.js",
+      "toSymbol": "FORMA_PAGAMENTO_COLORS"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "fetchServicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "useToast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\supabase.js",
+      "toSymbol": "supabase"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Toast.jsx",
+      "toSymbol": "Toast"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Spinner.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\EmptyState.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\lib\\dates.js",
+      "toSymbol": "formatCurrency"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\Modal.jsx",
+      "toSymbol": "default"
+    },
+    {
+      "fromFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\pages\\Servicos.jsx",
+      "fromSymbol": "Servicos",
+      "toFile": "C:\\Users\\Leandro\\Desktop\\Claude Cli\\petshop-app\\src\\components\\ConfirmDialog.jsx",
+      "toSymbol": "default"
+    }
+  ],
+  "diagnostics": {
+    "extractionFailures": [],
+    "unresolvedImports": [],
+    "oversizedFiles": [],
+    "unsupportedFiles": [],
+    "binaryFiles": [],
+    "unreadableFiles": [],
+    "lowConfidenceEdgeCount": 0
+  }
+}
