@@ -825,7 +825,7 @@ const tabCounts = useMemo(() => {
                             </td>
                             <td className="px-4 py-2.5">
                               <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${FORMA_PAGAMENTO_COLORS[registro.forma_pagamento] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>
-                                {getFormaPagamentoLabel(registro.forma_pagamento)}
+                                {FORMA_PAGAMENTO_LABEL[registro.forma_pagamento] || registro.forma_pagamento}
                               </span>
                             </td>
                             <td className="hidden sm:table-cell px-4 py-2.5">
