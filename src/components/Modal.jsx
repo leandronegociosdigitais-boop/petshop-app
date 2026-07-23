@@ -9,7 +9,7 @@ export default function Modal({ open, onClose, title, icon: Icon, children }) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg mx-4 rounded-xl border border-gray-200 bg-white shadow-xl modal-content"
+        className="relative w-full max-w-lg mx-4 max-h-[90vh] flex flex-col rounded-xl border border-gray-200 bg-white shadow-xl modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
@@ -24,7 +24,7 @@ export default function Modal({ open, onClose, title, icon: Icon, children }) {
             <X size={20} />
           </button>
         </div>
-        <div className="px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-4">
           {children}
         </div>
       </div>
