@@ -35,7 +35,6 @@ export default function Comissoes() {
     const { data, error } = await supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
-      .eq('status', 'concluido')
       .gte('data_hora', start + 'T00:00:00')
       .lte('data_hora', end + 'T23:59:59')
       .order('data_hora', { ascending: false })
@@ -47,6 +46,7 @@ export default function Comissoes() {
 
   const filtered = useMemo(() => {
     return atendimentos.filter((a) => {
+      if (a.status === 'cancelado') return false
       const dateStr = a.data_hora ? extractDateKey(a.data_hora) : ''
       if (dateStr < monthRange.start || dateStr > monthRange.end) return false
       if (search.trim()) {
