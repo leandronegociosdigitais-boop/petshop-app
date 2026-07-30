@@ -129,8 +129,8 @@ function SkeletonList() {
 const CustomTooltipMensal = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: '#1F2937', border: '1px solid #374151', borderRadius: 8, fontSize: 12, padding: '8px 12px' }}>
-      <p style={{ color: '#9CA3AF', marginBottom: 4 }}>{label}</p>
+    <div style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 8, fontSize: 12, padding: '8px 12px' }}>
+      <p style={{ color: '#6B7280', marginBottom: 4 }}>{label}</p>
       {payload.map((p) => (
         <p key={p.dataKey} style={{ color: p.color, fontWeight: 600 }}>
           {p.dataKey === 'receita' ? 'Receitas' : 'Lucro Liquido'}: {formatCurrency(p.value)}
@@ -200,15 +200,16 @@ export default function Dashboard() {
     try {
       const now = new Date()
       const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
-      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+      const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay)}`
       const { data, error } = await supabase
         .from('atendimentos')
-        .select('valor')
-        .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', todayStr + 'T23:59:59')
+        .select('valor, valor_2')
+        .neq('status', 'cancelado')
+        .gte('data_hora', start + 'T00:00:00')
+        .lte('data_hora', end + 'T23:59:59')
       if (!error) {
-        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0), 0)
         setFaturamentoMes(total)
       }
     } catch (err) { console.error('fetchFaturamentoMes:', err) }
@@ -224,12 +225,12 @@ export default function Dashboard() {
       const end = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${sameDayPrev}`
       const { data, error } = await supabase
         .from('atendimentos')
-        .select('valor')
-        .eq('status', 'concluido')
+        .select('valor, valor_2')
+        .neq('status', 'cancelado')
         .gte('data_hora', start)
         .lte('data_hora', end + 'T23:59:59')
       if (!error) {
-        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0), 0)
+        const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0), 0)
         setFaturamentoMesAnterior(total)
       }
     } catch (err) { console.error('fetchFaturamentoMesAnterior:', err) }
@@ -268,7 +269,7 @@ export default function Dashboard() {
       const year = new Date().getFullYear()
       const { data, error } = await supabase
         .from('atendimentos')
-        .select('data_hora, valor')
+        .select('data_hora, valor, valor_2')
         .eq('status', 'concluido')
         .gte('data_hora', `${year}-01-01`)
         .lte('data_hora', `${year}-12-31T23:59:59`)
@@ -278,7 +279,7 @@ export default function Dashboard() {
       for (let m = 0; m < 12; m++) byMonth[m] = 0
       for (const r of data) {
         const monthIdx = new Date(r.data_hora).getMonth()
-        byMonth[monthIdx] += parseFloat(r.valor) || 0
+        byMonth[monthIdx] += (parseFloat(r.valor) || 0) + (parseFloat(r.valor_2) || 0)
       }
 
       const chart = []
@@ -620,3 +621,4 @@ export default function Dashboard() {
 
   )
 }
+
