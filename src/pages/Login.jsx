@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuthContext'
 import { Mail, Lock, PawPrint, Eye, EyeOff } from 'lucide-react'
 
@@ -121,6 +121,7 @@ export default function Login() {
               )}
             </button>
           </form>
+          <Link to="/recuperar-senha" className="mt-5 block text-center text-sm text-violet-400 hover:text-violet-300">Esqueci minha senha</Link>
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-600">

@@ -10,6 +10,8 @@ import ErrorBoundary from './components/ErrorBoundary'
 import Spinner from './components/Spinner'
 import AnimatedPage from './components/AnimatedPage'
 import Login from './pages/Login'
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
 import Pets from './pages/Pets'
@@ -61,6 +63,8 @@ function App() {
           <ThemeProvider>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/recuperar-senha" element={<Suspense fallback={<Spinner />}><ForgotPassword /></Suspense>} />
+              <Route path="/redefinir-senha" element={<Suspense fallback={<Spinner />}><ResetPassword /></Suspense>} />
               <Route
                 element={
                   <ProtectedRoute>
