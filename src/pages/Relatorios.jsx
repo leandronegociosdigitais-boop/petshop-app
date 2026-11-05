@@ -1,30 +1,16 @@
-﻿import { useState, useEffect, useMemo, useCallback } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useMemo, useCallback, useEffectEvent } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatDateOnly, formatCurrency, extractDateKey, getDayOfWeek } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Spinner from '../components/Spinner'
 import EmptyState from '../components/EmptyState'
 import {
   COMISSAO_RATE, MESES, FORMA_PAGAMENTO_LABEL, STATUS_BADGE,
   DIAS_SEMANA, BANCO_LABEL, BANCO_COLORS, FORMA_PAGAMENTO_COLORS,
 } from '../lib/constants'
-import {
-  FileText,
-  ChevronDown,
-  ChevronUp,
-  Calendar,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Users,
-  PawPrint,
-  Search,
-  Download,
-  Landmark,
-  CreditCard,
-  BarChart3,
-  X,
-} from 'lucide-react'
+import { FileText, ChevronDown, ChevronUp, Calendar, TrendingUp, TrendingDown, DollarSign, Users, PawPrint, Search, Download, Landmark, CreditCard, BarChart3 } from 'lucide-react'
 
 const GRUPO_COLORS = {
   Fixo: 'bg-blue-50 text-blue-700 ring-blue-600/20',
@@ -72,35 +58,33 @@ export default function Relatorios() {
   const [financeiro, setFinanceiro] = useState([])
   const [loadingAtendimentos, setLoadingAtendimentos] = useState(true)
   const [loadingFinanceiro, setLoadingFinanceiro] = useState(true)
-  const [historico, setHistorico] = useState([])
-  const [loadingHistorico, setLoadingHistorico] = useState(true)
   const [historicoFin, setHistoricoFin] = useState([])
   const [loadingHistoricoFin, setLoadingHistoricoFin] = useState(false)
 
-  function getMonthRange() {
+  const getMonthRange = useCallback(() => {
     const start = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
     const lastDay = new Date(selectedYear, selectedMonth, 0).getDate()
     const end = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
     return { start, end }
-  }
+  }, [selectedMonth, selectedYear])
 
-  function getServiceDateRange() {
+  const getServiceDateRange = useCallback(() => {
     if (includeOtherMonths && otherMonthsStart && otherMonthsEnd) {
       return { start: otherMonthsStart, end: otherMonthsEnd }
     }
     return getMonthRange()
-  }
+  }, [includeOtherMonths, otherMonthsStart, otherMonthsEnd, getMonthRange])
 
   const fetchAtendimentos = useCallback(async () => {
     setLoadingAtendimentos(true)
     const range = getServiceDateRange()
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
       .eq('status', 'concluido')
-      .gte('data_hora', range.start)
-      .lte('data_hora', range.end + 'T23:59:59')
-      .order('data_hora', { ascending: false })
+      .gte('data_hora', new Date(range.start + 'T00:00:00').toISOString())
+      .lte('data_hora', new Date(range.end + 'T23:59:59.999').toISOString())
+      .order('data_hora', { ascending: false }))
     if (error) {
       showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
     } else {
@@ -118,60 +102,24 @@ export default function Relatorios() {
       setAtendimentos(uniques)
     }
     setLoadingAtendimentos(false)
-  }, [selectedMonth, selectedYear, includeOtherMonths, otherMonthsStart, otherMonthsEnd])
+  }, [getServiceDateRange, showToast])
 
   const fetchFinanceiro = useCallback(async () => {
     setLoadingFinanceiro(true)
     const range = getMonthRange()
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('financeiro')
       .select('*')
       .gte('data', range.start)
       .lte('data', range.end)
-      .order('data', { ascending: false })
+      .order('data', { ascending: false }))
     if (error) {
       showToast('Erro ao carregar dados financeiros: ' + error.message, 'error')
     } else {
-      // Deduplicate by tipo,descricao,valor,data to avoid duplicate entries in reports
-      const records = data || []
-      const seen = new Map()
-      const uniques = []
-      for (const rec of records) {
-        const key = `${rec.tipo}|${rec.descricao}|${rec.valor}|${rec.data}`
-        if (!seen.has(key)) {
-          seen.set(key, true)
-          uniques.push(rec)
-        }
-      }
-      setFinanceiro(uniques)
+      setFinanceiro(data || [])
     }
     setLoadingFinanceiro(false)
-  }, [selectedMonth, selectedYear])
-
-  const fetchHistorico = useCallback(async () => {
-    setLoadingHistorico(true)
-    try {
-      const now = new Date()
-      const startYear = now.getFullYear() - 1
-      const start = `${startYear}-01-01`
-      const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-      const { data, error } = await supabase
-        .from('atendimentos')
-        .select('id, data_hora, valor, forma_pagamento, banco, status')
-        .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
-        .order('data_hora', { ascending: false })
-      if (!error) {
-        setHistorico(data || [])
-      } else {
-        console.error('fetchHistorico error:', error)
-      }
-    } catch (err) {
-      console.error('fetchHistorico exception:', err)
-    }
-    setLoadingHistorico(false)
-  }, [])
+  }, [getMonthRange, showToast])
 
   const fetchHistoricoFinanceiro = useCallback(async () => {
     setLoadingHistoricoFin(true)
@@ -180,12 +128,12 @@ export default function Relatorios() {
       const startYear = now.getFullYear() - 2
       const start = `${startYear}-01-01`
       const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('financeiro')
         .select('*')
         .gte('data', start)
         .lte('data', end)
-        .order('data', { ascending: false })
+        .order('data', { ascending: false }))
       if (!error) {
         setHistoricoFin(data || [])
       } else {
@@ -197,11 +145,14 @@ export default function Relatorios() {
     setLoadingHistoricoFin(false)
   }, [])
 
-  useEffect(() => {
+  const loadReports = useEffectEvent(() => {
     fetchAtendimentos()
     fetchFinanceiro()
-    fetchHistorico()
     fetchHistoricoFinanceiro()
+  })
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Start the remote requests and their loading indicators together.
+    loadReports()
   }, [selectedMonth, selectedYear, includeOtherMonths, otherMonthsStart, otherMonthsEnd])
 
   function goToPrevMonth() {
@@ -287,7 +238,6 @@ export default function Relatorios() {
     for (const s of saidas) {
       const grupo = s.grupo || 'Outros'
       const cat = s.categoria || 'Outros'
-      const sub = s.subcategoria || s.descricao || 'Outros'
       if (!grupos[grupo]) grupos[grupo] = { total: 0, categorias: {} }
       const valor = parseFloat(s.valor) || 0
       grupos[grupo].total += valor

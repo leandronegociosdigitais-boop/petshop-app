@@ -1,28 +1,4 @@
-import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
-
-const TOAST_DURATION = 3000
-
-export function useToast() {
-  const [toast, setToast] = useState(null)
-
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), TOAST_DURATION)
-      return () => clearTimeout(timer)
-    }
-  }, [toast])
-
-  function showToast(message, type = 'success') {
-    setToast({ message, type })
-  }
-
-  function closeToast() {
-    setToast(null)
-  }
-
-  return { toast, showToast, closeToast }
-}
 
 export function Toast({ toast, onClose }) {
   if (!toast) return null

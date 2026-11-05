@@ -1,4 +1,7 @@
 import { supabase } from './supabase'
+import { saveLocalBackup } from './backup-storage'
+import { isWeeklyBackupDue } from './backup-schedule'
+import { fetchAllRows } from './queries'
 
 const TABLES = [
   'clientes',
@@ -9,80 +12,48 @@ const TABLES = [
 ]
 
 const LAST_BACKUP_KEY = 'petshop-last-backup'
+let automaticBackupInFlight = false
+
+export async function collectBackup() {
+  const { data, error } = await supabase.rpc('export_petshop_backup')
+  if (error) throw new Error('Não foi possível exportar o backup: ' + error.message)
+  if (!data || TABLES.some(table => !Array.isArray(data[table]))) {
+    throw new Error('O banco retornou um backup incompleto.')
+  }
+  return data
+}
+
+export async function fetchAllTableRows(table) {
+  const { data, error } = await fetchAllRows(supabase.from(table).select('*'))
+  if (error) throw new Error(`Erro ao exportar ${table}: ${error.message}`)
+  return data
+}
 
 /**
- * Verifica se é sábado e se o backup já foi feito hoje
- * @returns {boolean} true se é sábado e o backup ainda não foi feito hoje
+ * Verifica se falta a cópia da semana iniciada no último sábado.
  */
-export function shouldPerformWeeklyBackup() {
-  const today = new Date()
-  const isSaturday = today.getDay() === 6 // 6 = sábado
-
-  if (!isSaturday) return false
-
-  const lastBackup = localStorage.getItem(LAST_BACKUP_KEY)
-  if (!lastBackup) return true
-
-  const lastBackupDate = new Date(lastBackup)
-  const lastBackupDay = lastBackupDate.getDate()
-  const lastBackupMonth = lastBackupDate.getMonth()
-  const lastBackupYear = lastBackupDate.getFullYear()
-
-  const todayDay = today.getDate()
-  const todayMonth = today.getMonth()
-  const todayYear = today.getFullYear()
-
-  // Se o backup foi feito hoje, não precisa fazer novamente
-  return !(lastBackupDay === todayDay &&
-           lastBackupMonth === todayMonth &&
-           lastBackupYear === todayYear)
+export function shouldPerformWeeklyBackup(userId) {
+  return isWeeklyBackupDue(localStorage.getItem(LAST_BACKUP_KEY + ':' + userId))
 }
 
 /**
  * Realiza o backup automático dos dados do Supabase
  */
-export async function performAutomaticBackup() {
-  // Só executa se for sábado e não tiver feito backup hoje
-  if (!shouldPerformWeeklyBackup()) return
+export async function performAutomaticBackup(userId) {
+  // Também recupera semanas em que a aplicação ficou fechada no sábado.
+  if (!userId) return
+  if (automaticBackupInFlight) return
+  automaticBackupInFlight = true
 
   try {
+    if (!shouldPerformWeeklyBackup(userId)) return
     // Mostra um alerta sutil para o usuário
     console.log('Executando backup automático semanal...')
 
-    const backup = {}
+    const backup = await collectBackup()
 
-    // Faz o backup de todas as tabelas
-    await Promise.all(
-      TABLES.map(async (table) => {
-        const { data, error } = await supabase
-          .from(table)
-          .select('*')
-          .order('created_at', { ascending: true })
-
-        if (!error) {
-          backup[table] = data || []
-        } else {
-          console.error(`Erro ao fazer backup da tabela ${table}:`, error)
-          backup[table] = []
-        }
-      })
-    )
-
-    // Cria o arquivo JSON
-    const backupString = JSON.stringify(backup, null, 2)
-    const blob = new Blob([backupString], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-
-    // Cria um link para download
-    const date = new Date().toISOString().slice(0, 10)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `petshop-backup-automatico-${date}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-
-    // Atualiza o timestamp do último backup
-    localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString())
+    await saveLocalBackup(userId, backup)
+    localStorage.setItem(LAST_BACKUP_KEY + ':' + userId, new Date().toISOString())
 
     console.log('Backup automático concluído com sucesso!')
 
@@ -90,20 +61,21 @@ export async function performAutomaticBackup() {
     if ('Notification' in window) {
       if (Notification.permission === 'granted') {
         new Notification('Backup Automático', {
-          body: 'Seu backup semanal foi concluído com sucesso!',
+          body: 'Cópia semanal salva neste navegador. Exporte também um arquivo na tela Backup.',
           icon: '/favicon.svg'
         })
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             new Notification('Backup Automático', {
-              body: 'Seu backup semanal foi concluído com sucesso!',
+              body: 'Cópia semanal salva neste navegador. Exporte também um arquivo na tela Backup.',
               icon: '/favicon.svg'
             })
           }
         })
       }
     }
+    return true
 
   } catch (error) {
     console.error('Erro ao executar backup automático:', error)
@@ -115,6 +87,9 @@ export async function performAutomaticBackup() {
         icon: '/favicon.svg'
       })
     }
+    return false
+  } finally {
+    automaticBackupInFlight = false
   }
 }
 
@@ -128,6 +103,10 @@ export async function restoreFromBackup(backupFile) {
     const text = await backupFile.text()
     const backup = JSON.parse(text)
 
+    if (!backup || typeof backup !== 'object' || Array.isArray(backup)) {
+      return { success: false, message: 'Backup inválido: formato JSON inesperado.' }
+    }
+
     // Verifica se o backup tem todas as tabelas necessárias
     const missingTables = TABLES.filter(table => !backup[table])
     if (missingTables.length > 0) {
@@ -137,41 +116,26 @@ export async function restoreFromBackup(backupFile) {
       }
     }
 
-    // Limpa as tabelas atuais (apenas para fins de teste)
-    // Em uma implementação real, você provavelmente quer fazer um merge
-    // ou verificar se já existem dados antes de apagar
+    const invalidTables = TABLES.filter(table => !Array.isArray(backup[table]))
+    if (invalidTables.length > 0) {
+      return {
+        success: false,
+        message: `Backup inválido. Dados inválidos nas tabelas: ${invalidTables.join(', ')}`
+      }
+    }
 
-    // Para cada tabela, insere os dados do backup
-    for (const table of TABLES) {
-      if (backup[table] && backup[table].length > 0) {
-        // Primeiro, exclui todos os registros da tabela atual
-        const { error: deleteError } = await supabase
-          .from(table)
-          .delete()
-
-        if (deleteError) {
-          return {
-            success: false,
-            message: `Erro ao limpar tabela ${table}: ${deleteError.message}`
-          }
-        }
-
-        // Depois, insere os dados do backup
-        const { error: insertError } = await supabase
-          .from(table)
-          .insert(backup[table])
-
-        if (insertError) {
-          return {
-            success: false,
-            message: `Erro ao inserir dados na tabela ${table}: ${insertError.message}`
-          }
-        }
+    const { error } = await supabase.rpc('restore_petshop_backup', { backup_data: backup })
+    if (error) {
+      const migrationMissing = error.code === 'PGRST202' || error.message?.includes('restore_petshop_backup')
+      return {
+        success: false,
+        message: migrationMissing
+          ? 'Restauração segura ainda não habilitada no banco. Aplique a migração do projeto Supabase e tente novamente.'
+          : `Restauração cancelada sem concluir a transação: ${error.message}`
       }
     }
 
     // Atualiza o timestamp do último backup
-    localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString())
 
     return {
       success: true,

@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatDate, formatDateTime, formatCurrency } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { formatDateTime, formatCurrency } from '../lib/dates'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Spinner from '../components/Spinner'
 import EmptyState from '../components/EmptyState'
 import { STATUS_BADGE, STATUS_LABEL } from '../lib/constants'
-import { Plus, Pencil, Trash2, Search, X, Phone, MapPin, MessageCircle, Hash, PawPrint, Calendar, Clock, DollarSign, ChevronRight, User, Users } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search, X, Phone, MapPin, MessageCircle, Hash, PawPrint, Calendar, Clock, ChevronRight, User, Users } from 'lucide-react'
 
 const EMPTY_FORM = {
   nome: '',
@@ -33,11 +35,12 @@ export default function Clientes() {
   const [historyAtendimentos, setHistoryAtendimentos] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
 
-  useEffect(() => { fetchClientes() }, [])
+  const loadPage = useEffectEvent(() => { fetchClientes() })
+  useEffect(() => { loadPage() }, [])
 
   async function fetchClientes() {
     setLoading(true)
-    const { data, error } = await supabase.from('clientes').select('*').order('codigo', { ascending: true, nullsFirst: false })
+    const { data, error } = await fetchAllRows(supabase.from('clientes').select('*').order('codigo', { ascending: true, nullsFirst: false }))
     if (error) { showToast('Erro ao carregar clientes: ' + error.message, 'error') } else { setClientes(data || []) }
     setLoading(false)
   }
@@ -78,11 +81,11 @@ export default function Clientes() {
     setHistoryCliente(cliente)
     setHistoryLoading(true)
     const [petsRes, atendRes] = await Promise.all([
-      supabase.from('pets').select('*').eq('cliente_id', cliente.id).order('nome'),
-      supabase.from('atendimentos')
+      fetchAllRows(supabase.from('pets').select('*').eq('cliente_id', cliente.id).order('nome')),
+      fetchAllRows(supabase.from('atendimentos')
         .select('*, pet:pet_id(id, nome, especie), servico:servico_id(id, nome, preco)')
         .eq('cliente_id', cliente.id)
-        .order('data_hora', { ascending: false }),
+        .order('data_hora', { ascending: false })),
     ])
     setHistoryPets(petsRes.data || [])
     setHistoryAtendimentos(atendRes.data || [])

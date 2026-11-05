@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import { formatCurrency } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Spinner from '../components/Spinner'
@@ -18,10 +20,10 @@ const EMPTY_FORM = {
 }
 
 async function fetchServicos() {
-  const { data, error } = await supabase
+  const { data, error } = await fetchAllRows(supabase
     .from('servicos')
     .select('*')
-    .order('preco', { ascending: false })
+    .order('preco', { ascending: false }))
   if (error) throw new Error(error.message)
   return data || []
 }
@@ -39,9 +41,10 @@ export default function Servicos() {
     queryFn: fetchServicos,
   })
 
-  useEffect(() => {
+  const loadPage = useEffectEvent(() => {
     if (fetchError) showToast('Erro ao carregar servicos: ' + fetchError.message, 'error')
-  }, [fetchError])
+  })
+  useEffect(() => { loadPage() }, [fetchError])
 
   const saveMutation = useMutation({
     mutationFn: async (payload) => {

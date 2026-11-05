@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { getLocalDateISO, formatCurrency } from '../lib/dates'
 import {
@@ -14,17 +15,7 @@ import {
   RefreshCw,
   Wallet,
 } from 'lucide-react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  Cell,
-} from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 
 function formatTickK(v) {
   if (v >= 1000) return `${(v / 1000).toFixed(0)}k`
@@ -59,33 +50,6 @@ function getMonthRange() {
   return { start: toStr(start), end: toStr(end) }
 }
 
-function getPrevMonthRange() {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  const end = new Date(now.getFullYear(), now.getMonth(), 0)
-  const toStr = (d) => {
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }
-  return { start: toStr(start), end: toStr(end) }
-}
-
-function getNext7DaysRange() {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const end = new Date(start)
-  end.setDate(end.getDate() + 8)
-  const toStr = (d) => {
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }
-  return { start: toStr(start), end: toStr(end) }
-}
-
 function SkeletonCard() {
   return (
     <div className="rounded-2xl bg-[#111827] border border-[#1F2937] p-5 animate-pulse">
@@ -102,7 +66,7 @@ function SkeletonChart() {
       <div className="h-4 w-48 bg-[#1F2937] rounded mb-6" />
       <div className="flex items-end gap-2 h-[220px]">
         {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="flex-1 bg-[#1F2937] rounded-t" style={{ height: `${20 + Math.random() * 80}%` }} />
+          <div key={i} className="flex-1 bg-[#1F2937] rounded-t" style={{ height: `${20 + ((i * 37) % 80)}%` }} />
         ))}
       </div>
       </div>
@@ -163,7 +127,8 @@ export default function Dashboard() {
   const [servicosMaisVendidos, setServicosMaisVendidos] = useState([])
     const [formasPagamento, setFormasPagamento] = useState([])
 
-  useEffect(() => { loadAllData() }, [])
+  const loadPage = useEffectEvent(() => { loadAllData() })
+  useEffect(() => { loadPage() }, [])
 
   async function loadAllData() {
     setRefreshing(true)
@@ -190,8 +155,8 @@ export default function Dashboard() {
       const { count, error } = await supabase
         .from('atendimentos')
         .select('*', { count: 'exact', head: true })
-        .gte('data_hora', today)
-        .lt('data_hora', tomorrowStr)
+        .gte('data_hora', new Date(today + 'T00:00:00').toISOString())
+        .lt('data_hora', new Date(tomorrowStr + 'T00:00:00').toISOString())
       if (!error) setAtendimentosHojeCount(count || 0)
     } catch (err) { console.error('fetchAtendimentosHoje:', err) }
   }
@@ -202,12 +167,12 @@ export default function Dashboard() {
       const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
       const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
       const end = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay)}`
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('atendimentos')
         .select('valor, valor_2')
-        .neq('status', 'cancelado')
-        .gte('data_hora', start + 'T00:00:00')
-        .lte('data_hora', end + 'T23:59:59')
+        .eq('status', 'concluido')
+        .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+        .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString()))
       if (!error) {
         const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0), 0)
         setFaturamentoMes(total)
@@ -223,12 +188,12 @@ export default function Dashboard() {
       const start = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-01`
       const sameDayPrev = String(Math.min(now.getDate(), new Date(prevYear, prevMonth + 1, 0).getDate())).padStart(2, '0')
       const end = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${sameDayPrev}`
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('atendimentos')
         .select('valor, valor_2')
-        .neq('status', 'cancelado')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
+        .eq('status', 'concluido')
+        .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+        .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString()))
       if (!error) {
         const total = (data || []).reduce((s, a) => s + (parseFloat(a.valor) || 0) + (parseFloat(a.valor_2) || 0), 0)
         setFaturamentoMesAnterior(total)
@@ -243,8 +208,8 @@ export default function Dashboard() {
         .from('atendimentos')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
+        .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+        .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString())
       if (!error) setAtendimentosMes(count || 0)
     } catch (err) { console.error('fetchAtendimentosMes:', err) }
   }
@@ -255,8 +220,8 @@ export default function Dashboard() {
       const start = `${year}-01-01`
       const end = `${year}-12-31`
       const [entradasRes, saidasRes] = await Promise.all([
-        supabase.from('financeiro').select('valor').eq('tipo', 'entrada').gte('data', start).lte('data', end),
-        supabase.from('financeiro').select('valor').eq('tipo', 'saida').or('status_pagamento.eq.pago,status_pagamento.is.null').gte('data', start).lte('data', end),
+        fetchAllRows(supabase.from('financeiro').select('valor').eq('tipo', 'entrada').gte('data', start).lte('data', end)),
+        fetchAllRows(supabase.from('financeiro').select('valor').eq('tipo', 'saida').or('status_pagamento.eq.pago,status_pagamento.is.null').gte('data', start).lte('data', end)),
       ])
       const totalEntradas = (entradasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)
       const totalSaidas = (saidasRes.data || []).reduce((s, r) => s + (parseFloat(r.valor) || 0), 0)
@@ -267,12 +232,12 @@ export default function Dashboard() {
   async function fetchDadosMensais() {
     try {
       const year = new Date().getFullYear()
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('atendimentos')
         .select('data_hora, valor, valor_2')
         .eq('status', 'concluido')
-        .gte('data_hora', `${year}-01-01`)
-        .lte('data_hora', `${year}-12-31T23:59:59`)
+        .gte('data_hora', new Date(`${year}-01-01T00:00:00`).toISOString())
+        .lte('data_hora', new Date(`${year}-12-31T23:59:59.999`).toISOString()))
       if (error || !data) return
 
       const byMonth = {}
@@ -299,12 +264,12 @@ export default function Dashboard() {
   async function fetchServicosMaisVendidos() {
     try {
       const { start, end } = getMonthRange()
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('atendimentos')
         .select('servico_id, servicos:servico_id(nome)')
         .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
+        .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+        .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString()))
       if (error || !data) return
 
       const byServico = {}
@@ -331,12 +296,12 @@ export default function Dashboard() {
   async function fetchFormasPagamento() {
     try {
       const { start, end } = getMonthRange()
-      const { data, error } = await supabase
+      const { data, error } = await fetchAllRows(supabase
         .from('atendimentos')
-        .select('forma_pagamento, valor')
+        .select('forma_pagamento, valor, forma_pagamento_2, valor_2')
         .eq('status', 'concluido')
-        .gte('data_hora', start)
-        .lte('data_hora', end + 'T23:59:59')
+        .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+        .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString()))
       if (error || !data) return
 
       const byForma = {}
@@ -346,6 +311,11 @@ export default function Dashboard() {
         const val = parseFloat(r.valor) || 0
         byForma[key] = (byForma[key] || 0) + val
         total += val
+        if (r.forma_pagamento_2) {
+          const secondValue = Number(r.valor_2) || 0
+          byForma[r.forma_pagamento_2] = (byForma[r.forma_pagamento_2] || 0) + secondValue
+          total += secondValue
+        }
       }
 
       const order = ['pix', 'cartao_debito', 'cartao_credito', 'dinheiro', 'permuta']

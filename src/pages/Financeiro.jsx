@@ -1,37 +1,15 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent, useMemo, useRef } from 'react'
 import { supabase } from '../lib/supabase'
-import { getLocalDateISO, formatDate, extractDateKey, getDayOfWeek, formatCurrency } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { getLocalDateISO, formatDate, getDayOfWeek, formatCurrency } from '../lib/dates'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Spinner from '../components/Spinner'
 import EmptyState from '../components/EmptyState'
-import {
-  FORMA_PAGAMENTO_LABEL, FORMA_PAGAMENTO_OPTIONS, FORMA_PAGAMENTO_COLORS,
-  BANCO_LABEL, BANCO_COLORS, BANCO_OPTIONS_FINANCEIRO as BANCO_OPTIONS,
-  MESES, DIAS_SEMANA, PAGAMENTO_STATUS_COLORS_FIN,
-  CATEGORIAS_ENTRADA, CATEGORIAS_SAIDA_POR_GRUPO, GRUPOS_SAIDA, GRUPO_COLORS_SAIDA as GRUPO_COLORS,
-} from '../lib/constants'
-import {
-  Plus,
-  Pencil,
-  Trash2,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Search,
-  X,
-  Filter,
-  AlertCircle,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  BarChart3,
-  Bell,
-  BellRing,
-  Clock,
-  CheckCircle2,
-} from 'lucide-react'
+import { FORMA_PAGAMENTO_LABEL, FORMA_PAGAMENTO_OPTIONS, FORMA_PAGAMENTO_COLORS, BANCO_LABEL, BANCO_COLORS, MESES, DIAS_SEMANA, CATEGORIAS_ENTRADA, CATEGORIAS_SAIDA_POR_GRUPO, GRUPOS_SAIDA, GRUPO_COLORS_SAIDA as GRUPO_COLORS } from '../lib/constants'
+import { Pencil, Trash2, TrendingUp, TrendingDown, DollarSign, Search, X, Filter, Calendar, ChevronLeft, ChevronRight, BarChart3, Bell, Clock, CheckCircle2 } from 'lucide-react'
 
 const EMPTY_FORM = {
   tipo: 'entrada',
@@ -80,78 +58,30 @@ export default function Financeiro() {
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
   // Ref para rolar até a seção de pendências
   const notificationRef = useRef(null)
-  const [transactions, setTransactions] = useState([])
 
-  useEffect(() => {
+  const loadPage = useEffectEvent(() => {
     fetchRegistros()
-  }, [selectedMonth, selectedYear])
+  })
+  useEffect(() => { loadPage() }, [selectedMonth, selectedYear])
 
   async function fetchRegistros() {
     setLoading(true)
     const lastDay = new Date(selectedYear, selectedMonth, 0).getDate()
     const start = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
     const end = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('financeiro')
       .select('*')
       .gte('data', start)
       .lte('data', end)
-      .order('data', { ascending: false })
+      .order('data', { ascending: false }))
 
     if (error) {
       showToast('Erro ao carregar registros financeiros: ' + error.message, 'error')
     } else {
-      // --- Deduplicate logic -------------------------------------------
-      // Identify duplicates by tipo, descricao, valor e data (mesmo registro).
-      const records = data || []
-      const seen = new Map() // key -> first record id
-      const duplicates = [] // ids to remove
-      for (const rec of records) {
-        const key = `${rec.tipo}|${rec.descricao}|${rec.valor}|${rec.data}`
-        if (seen.has(key)) {
-          duplicates.push(rec.id)
-        } else {
-          seen.set(key, rec.id)
-        }
-      }
-      // Remove duplicates from DB (if any)
-      if (duplicates.length > 0) {
-        await supabase.from('financeiro').delete().in('id', duplicates)
-      }
-      // Keep only the first occurrence of each key
-      const unique = Array.from(seen.values()).map(id => records.find(r => r.id === id))
-      setRegistros(unique)
-      // -----------------------------------------------------------------
+      setRegistros(data || [])
     }
     setLoading(false)
-  }
-
-  async function fetchLembretes() {
-    try {
-      // Use the month/year selected in the UI (selectedMonth/selectedYear)
-      const year = selectedYear
-      const month = String(selectedMonth).padStart(2, '0')
-      const start = `${year}-${month}-01`
-      const lastDay = new Date(year, selectedMonth, 0).getDate()
-      const end = `${year}-${month}-${String(lastDay).padStart(2, '0')}`
-
-      const { data, error } = await supabase
-        .from('financeiro')
-        .select('*')
-        .eq('tipo', 'saida')
-        .eq('status_pagamento', 'pendente')
-        .gte('data_vencimento', start)
-        .lte('data_vencimento', end + 'T23:59:59')
-        .order('data_vencimento', { ascending: true, nullsFirst: false })
-
-      if (!error && data) {
-        setLembretes(data)
-      } else {
-        setLembretes([])
-      }
-    } catch {
-      setLembretes([])
-    }
   }
 
   function openCreateModal(tipo) {
@@ -175,6 +105,7 @@ export default function Financeiro() {
       data: registro.data || getToday(),
       forma_pagamento: registro.forma_pagamento || 'dinheiro',
       grupo: registro.grupo || '',
+      banco: registro.banco || '',
       status_pagamento: registro.status_pagamento || 'pago',
       data_vencimento: registro.data_vencimento || '',
     })
@@ -228,6 +159,7 @@ export default function Financeiro() {
       valor: parseFloat(form.valor),
       data: form.data,
       forma_pagamento: form.forma_pagamento || 'dinheiro',
+      banco: form.banco || null,
       grupo: form.tipo === 'saida' ? (form.grupo || null) : null,
       status_pagamento: form.tipo === 'saida' ? (form.status_pagamento || 'pago') : 'pago',
       data_vencimento: form.tipo === 'saida' && form.status_pagamento === 'pendente' && form.data_vencimento
@@ -255,7 +187,6 @@ export default function Financeiro() {
       )
       closeModal()
       fetchRegistros()
-      fetchLembretes()
     }
     setSaving(false)
   }
@@ -272,23 +203,8 @@ export default function Financeiro() {
     } else {
       showToast('Registro excluido com sucesso!')
       fetchRegistros()
-      fetchLembretes()
     }
     setDeleteId(null)
-  }
-
-  async function marcarPago(id) {
-    const { error } = await supabase
-      .from('financeiro')
-      .update({ status_pagamento: 'pago' })
-      .eq('id', id)
-    if (error) {
-      showToast('Erro ao marcar como pago.', 'error')
-    } else {
-      showToast('Pagamento marcado como pago!')
-      fetchRegistros()
-      fetchLembretes()
-    }
   }
 
   function clearFilters() {

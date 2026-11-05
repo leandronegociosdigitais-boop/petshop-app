@@ -1,14 +1,15 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './lib/ThemeContext'
 import { AuthProvider } from './hooks/useAuth'
+import { useAuth } from './hooks/useAuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
 import Spinner from './components/Spinner'
 import AnimatedPage from './components/AnimatedPage'
-// import Login from './pages/Login' -- bypass auth
+import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
 import Pets from './pages/Pets'
@@ -32,18 +33,34 @@ const queryClient = new QueryClient({
   },
 })
 
+function AutomaticBackupRunner() {
+  const { user, loading } = useAuth()
+
+  useEffect(() => {
+    if (loading || !user) return
+    const run = () => { if (!document.hidden) void performAutomaticBackup(user.id) }
+    run()
+    const timer = setInterval(run, 60_000)
+    document.addEventListener('visibilitychange', run)
+    return () => {
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', run)
+    }
+  }, [loading, user])
+
+  return null
+}
+
 function App() {
-  // Executar backup automático quando a aplicação for carregada
-  // Isso garante que o backup seja feito mesmo se o usuário não acessar a página de backup
-  performAutomaticBackup()
 
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
+          <AutomaticBackupRunner />
           <ThemeProvider>
             <Routes>
-              <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/login" element={<Login />} />
               <Route
                 element={
                   <ProtectedRoute>

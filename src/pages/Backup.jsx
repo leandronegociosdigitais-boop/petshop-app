@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../hooks/useAuthContext'
+import { saveLocalBackup, readLocalBackup, downloadBackup } from '../lib/backup-storage'
+import { getLocalDateISO } from '../lib/dates'
 import { Database, Download, AlertTriangle, CheckCircle, Clock, RefreshCw, Upload, X } from 'lucide-react'
-import { performAutomaticBackup, restoreFromBackup, formatDateBR } from '../lib/backup'
+import { collectBackup, restoreFromBackup, formatDateBR } from '../lib/backup'
 
 const TABLES = [
   { name: 'clientes', label: 'Clientes' },
@@ -13,28 +16,30 @@ const TABLES = [
 
 const LAST_BACKUP_KEY = 'petshop-last-backup'
 
-function getLastBackup() {
-  const val = localStorage.getItem(LAST_BACKUP_KEY)
+function getLastBackup(userId) {
+  const val = localStorage.getItem(LAST_BACKUP_KEY + ':' + userId)
   if (!val) return null
   return new Date(val)
 }
 
-function setLastBackup() {
-  localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString())
+function setLastBackup(userId) {
+  localStorage.setItem(LAST_BACKUP_KEY + ':' + userId, new Date().toISOString())
 }
 
 export default function Backup() {
+  const { user } = useAuth()
   const [counts, setCounts] = useState({})
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
-  const [lastBackup, setLastBackupState] = useState(getLastBackup())
+  const [lastBackup, setLastBackupState] = useState(() => getLastBackup(user.id))
   const [restoring, setRestoring] = useState(false)
+  const [selectedBackup, setSelectedBackup] = useState(null)
   const [restoreError, setRestoreError] = useState(null)
   const [showRestoreModal, setShowRestoreModal] = useState(false)
 
   const isSaturday = new Date().getDay() === 6
-  const todayStr = new Date().toISOString().slice(0, 10)
-  const lastBackupToday = lastBackup && lastBackup.toISOString().slice(0, 10) === todayStr
+  const todayStr = getLocalDateISO()
+  const lastBackupToday = lastBackup && getLocalDateISO(lastBackup) === todayStr
   const showReminder = isSaturday && !lastBackupToday
 
   useEffect(() => { fetchCounts() }, [])
@@ -58,64 +63,55 @@ export default function Backup() {
   async function handleExport() {
     setExporting(true)
     try {
-      const backup = {}
-      await Promise.all(
-        TABLES.map(async (t) => {
-          const { data, error } = await supabase
-            .from(t.name)
-            .select('*')
-            .order('created_at', { ascending: true })
-          if (!error) backup[t.name] = data || []
-          else backup[t.name] = []
-        })
-      )
+      const backup = await collectBackup()
 
-      const blob = new Blob(
-        [JSON.stringify(backup, null, 2)],
-        { type: 'application/json' }
-      )
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      const date = new Date().toISOString().slice(0, 10)
-      a.href = url
-      a.download = `petshop-backup-${date}.json`
-      a.click()
-      URL.revokeObjectURL(url)
-
-      setLastBackup()
+      await saveLocalBackup(user.id, backup)
+      setLastBackup(user.id)
+      downloadBackup(backup, `petshop-backup-${getLocalDateISO()}.json`)
       setLastBackupState(new Date())
     } catch (err) {
       console.error('Erro ao exportar backup:', err)
+      alert(`Não foi possível concluir o backup: ${err.message}`)
+    } finally {
+      setExporting(false)
     }
-    setExporting(false)
   }
 
-  async function handleRestore(e) {
-    const file = e.target.files[0]
-    if (!file) return
+  async function downloadSavedBackup() {
+    try {
+      const saved = await readLocalBackup(user.id)
+      if (!saved) { alert('Nenhuma cópia local disponível. Use Exportar Backup.'); return }
+      downloadBackup(saved.data, `petshop-backup-${getLocalDateISO(new Date(saved.createdAt))}.json`)
+    } catch (error) { alert('Não foi possível abrir a cópia local: ' + error.message) }
+  }
+
+  function handleBackupSelection(e) {
+    setSelectedBackup(e.target.files?.[0] || null)
+    setRestoreError(null)
+  }
+
+  async function handleRestore() {
+    if (!selectedBackup) return
 
     setRestoring(true)
     setRestoreError(null)
 
-    const result = await restoreFromBackup(file)
+    try {
+      const result = await restoreFromBackup(selectedBackup)
 
-    if (result.success) {
-      // Atualiza o backup local
-      setLastBackup()
-      setLastBackupState(new Date())
-      // Atualiza os contadores
-      fetchCounts()
-      // Mostra mensagem de sucesso
-      alert(result.message)
-    } else {
-      setRestoreError(result.message)
-      alert('Erro ao restaurar backup: ' + result.message)
+      if (result.success) {
+        await fetchCounts()
+        alert(result.message)
+        setSelectedBackup(null)
+        setShowRestoreModal(false)
+      } else {
+        setRestoreError(result.message)
+      }
+    } catch (error) {
+      setRestoreError(error.message || 'Erro inesperado ao restaurar o backup.')
+    } finally {
+      setRestoring(false)
     }
-
-    setRestoring(false)
-    // Limpa o input
-    e.target.value = ''
-    setShowRestoreModal(false)
   }
 
   return (
@@ -157,9 +153,9 @@ export default function Backup() {
               <Clock className="w-5 h-5 text-gray-400" />
             )}
             <div>
-              <p className="text-sm font-medium text-gray-700">Ultimo backup</p>
+              <p className="text-sm font-medium text-gray-700">Última cópia neste navegador</p>
               <p className={`text-lg font-semibold ${lastBackupToday ? 'text-emerald-600' : 'text-gray-500'}`}>
-                {lastBackup ? formatDateBR(lastBackup) : 'Nenhum backup feito'}
+                {lastBackup ? formatDateBR(lastBackup) : 'Nenhuma cópia local registrada'}
               </p>
             </div>
           </div>
@@ -172,6 +168,7 @@ export default function Backup() {
               <Download size={16} className={exporting ? 'animate-bounce' : ''} />
               {exporting ? 'Exportando...' : 'Exportar Backup'}
             </button>
+            <button onClick={downloadSavedBackup} className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium">Baixar cópia local</button>
             <button
               onClick={() => setShowRestoreModal(true)}
               className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 transition-colors"
@@ -229,7 +226,7 @@ export default function Backup() {
           Guarde o arquivo em um local seguro. Recomendamos fazer backup todo sábado.
         </p>
         <p className="mt-2 text-sm text-blue-800">
-          <strong>Backup automático:</strong> A aplicação agora realiza backup automaticamente todo sábado!
+          <strong>Backup automático:</strong> A aplicação salva uma cópia neste navegador a partir de sábado, quando estiver aberta e conectada. Se estiver fechada, tenta na próxima abertura. Exporte o arquivo e guarde outra cópia: limpar os dados do navegador remove a cópia local.
         </p>
       </div>
 
@@ -261,29 +258,29 @@ export default function Backup() {
               <input
                 type="file"
                 accept=".json"
-                onChange={handleRestore}
+                onChange={handleBackupSelection}
                 disabled={restoring}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900"
               />
             </div>
 
             <p className="text-sm text-gray-500 mb-4">
-              ⚠️ ATENÇÃO: Restaurar um backup irá substituir todos os dados atuais da aplicação.
+              ⚠️ Restaurar substituirá os dados atuais. A operação começa somente depois de selecionar o arquivo e confirmar abaixo. A restauração exige a migração transacional instalada no Supabase; se ela não estiver instalada, nada será alterado.
             </p>
 
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setShowRestoreModal(false)}
+                onClick={() => { setShowRestoreModal(false); setSelectedBackup(null) }}
                 className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancelar
               </button>
               <button
-                onClick={() => setShowRestoreModal(false)}
-                className="rounded-lg bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 transition-colors disabled:opacity-50"
-                disabled={restoring}
+                onClick={handleRestore}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition-colors disabled:opacity-50"
+                disabled={restoring || !selectedBackup}
               >
-                {restoring ? 'Restaurando...' : 'Restaurar'}
+                {restoring ? 'Restaurando...' : 'Confirmar restauração'}
               </button>
             </div>
           </div>

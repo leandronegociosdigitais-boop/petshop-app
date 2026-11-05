@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { NavLink, useNavigate, Outlet } from 'react-router-dom'
 import { Home, Users, PawPrint, Scissors, Calendar, DollarSign, FileText, Percent, Menu, X, Sparkles, LayoutGrid, LogOut, Database } from 'lucide-react'
-import { useTheme } from '../lib/ThemeContext'
-import { useAuth } from '../hooks/useAuth'
+import { useTheme } from '../lib/useTheme'
+import { useAuth } from '../hooks/useAuthContext'
 
 const navItems = [
   { to: '/dashboard', icon: Home, label: 'Dashboard' },

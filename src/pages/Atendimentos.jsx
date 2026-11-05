@@ -1,7 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
+const DAY_NAMES = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado']
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatDate, formatDateTime, formatTime, formatCurrency, isToday, toLocalDatetimeValue, toLocalDateValue, getLocalDateISO, extractDateKey } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { mutateAtendimento } from '../lib/atendimentos'
+import { formatDate, formatTime, formatCurrency, isToday, toLocalDatetimeValue, toLocalDateValue, extractDateKey } from '../lib/dates'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Spinner from '../components/Spinner'
@@ -95,12 +99,13 @@ export default function Atendimentos() {
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
 
-  useEffect(() => {
+  const loadPage = useEffectEvent(() => {
     fetchAtendimentos()
     fetchClientes()
     fetchServicos()
     fetchPets()
-  }, [selectedMonth, selectedYear])
+  })
+  useEffect(() => { loadPage() }, [selectedMonth, selectedYear])
 
   const filteredPets = useMemo(() => {
     if (!form.cliente_id) return pets
@@ -112,12 +117,12 @@ export default function Atendimentos() {
     const lastDay = new Date(selectedYear, selectedMonth, 0).getDate()
     const start = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
     const end = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
-      .gte('data_hora', start + 'T00:00:00')
-      .lte('data_hora', end + 'T23:59:59')
-      .order('data_hora', { ascending: false })
+      .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+      .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString())
+      .order('data_hora', { ascending: false }))
 
     if (error) {
       showToast('Erro ao carregar atendimentos: ' + error.message, 'error')
@@ -129,28 +134,28 @@ export default function Atendimentos() {
   }
 
   async function fetchClientes() {
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('clientes')
       .select('id, nome')
-      .order('nome', { ascending: true })
+      .order('nome', { ascending: true }))
 
     if (!error) setClientes(data || [])
   }
 
   async function fetchPets() {
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('pets')
       .select('id, nome, cliente_id, especie')
-      .order('nome', { ascending: true })
+      .order('nome', { ascending: true }))
 
     if (!error) setPets(data || [])
   }
 
   async function fetchServicos() {
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('servicos')
       .select('id, nome, preco')
-      .order('preco', { ascending: false })
+      .order('preco', { ascending: false }))
 
     if (!error) setServicos(data || [])
   }
@@ -205,11 +210,6 @@ export default function Atendimentos() {
         }
       }
 
-      // When status changes to concluido, auto-set status_pagamento to pago
-      if (field === 'status' && value === 'concluido') {
-        next.status_pagamento = 'pago'
-      }
-
       // When forma_pagamento_2 is cleared, reset banco_2 and valor_2
     if (field === 'forma_pagamento_2' && !value) {
       next.banco_2 = ''
@@ -239,6 +239,11 @@ export default function Atendimentos() {
       return
     }
 
+    if (saving) return
+    if (![form.valor, form.valor_2].every(value => value === '' || (Number.isFinite(Number(value)) && Number(value) >= 0))) {
+      showToast('Informe valores válidos e não negativos.', 'error')
+      return
+    }
     setSaving(true)
     const payload = {
       cliente_id: form.cliente_id,
@@ -257,241 +262,52 @@ export default function Atendimentos() {
       banco: form.banco || null,
     }
 
-    let error
-    if (editingId) {
-      ;({ error } = await supabase
-        .from('atendimentos')
-        .update(payload)
-        .eq('id', editingId))
-    } else {
-      ;({ error } = await supabase.from('atendimentos').insert([payload]))
-    }
-
+    const { error } = await mutateAtendimento({ id: editingId, payload })
     if (error) {
-      showToast('Erro ao salvar atendimento.', 'error')
+      showToast('Erro ao salvar atendimento: ' + error.message, 'error')
     } else {
-      showToast(
-        editingId
-          ? 'Atendimento atualizado com sucesso!'
-          : 'Atendimento criado com sucesso!'
-      )
-
-      const valorNum = payload.valor ? parseFloat(payload.valor) : 0
-
-      if (editingId) {
-        // Editing existing atendimento
-        if (payload.status === 'concluido' && valorNum > 0) {
-          const { data: finEntry } = await supabase
-            .from('financeiro')
-            .select('id')
-            .eq('atendimento_id', editingId)
-            .limit(1)
-
-          if (finEntry && finEntry.length > 0) {
-            await supabase
-              .from('financeiro')
-              .update({
-                valor: valorNum,
-                forma_pagamento: payload.forma_pagamento,
-                data: getLocalDateISO(new Date(payload.data_hora)),
-              })
-              .eq('id', finEntry[0].id)
-          } else {
-            await createFinanceiroFromAtendimento(editingId, payload)
-          }
-        }
-
-        if (payload.status !== 'concluido') {
-          const { data: finEntry } = await supabase
-            .from('financeiro')
-            .select('id')
-            .eq('atendimento_id', editingId)
-            .limit(1)
-
-          if (finEntry && finEntry.length > 0) {
-            await supabase
-              .from('financeiro')
-              .delete()
-              .eq('id', finEntry[0].id)
-          }
-        }
-      } else if (payload.status === 'concluido' && valorNum > 0) {
-        // New atendimento created as concluido — needs financeiro entry
-        const { data: newAtend } = await supabase
-          .from('atendimentos')
-          .select('id')
-          .eq('cliente_id', payload.cliente_id)
-          .eq('data_hora', payload.data_hora)
-          .order('created_at', { ascending: false })
-          .limit(1)
-
-        if (newAtend && newAtend.length > 0) {
-          await createFinanceiroFromAtendimento(newAtend[0].id, payload)
-        }
-      }
-
+      showToast(editingId ? 'Atendimento atualizado com sucesso!' : 'Atendimento criado com sucesso!')
       closeModal()
-      fetchAtendimentos()
+      await fetchAtendimentos()
     }
     setSaving(false)
   }
 
-  async function createFinanceiroFromAtendimento(atendimentoId, payloadOrAtendimento) {
-  const { data: existing } = await supabase
-    .from('financeiro')
-    .select('id')
-    .eq('atendimento_id', atendimentoId)
-    .limit(1)
-
-  if (existing && existing.length > 0) return
-
-  let servicoNome = payloadOrAtendimento.servico?.nome
-  let petNome = payloadOrAtendimento.pet?.nome
-  let clienteNome = payloadOrAtendimento.cliente?.nome
-
-  if (!servicoNome || !petNome || !clienteNome) {
-    const { data: fullAtend } = await supabase
-      .from('atendimentos')
-      .select('*, pet:pet_id(id, nome), cliente:cliente_id(id, nome), servico:servico_id(id, nome)')
-      .eq('id', atendimentoId)
-      .limit(1)
-
-    if (fullAtend && fullAtend.length > 0) {
-      servicoNome = servicoNome || fullAtend[0].servico?.nome || 'Servico'
-      petNome = petNome || fullAtend[0].pet?.nome || ''
-      clienteNome = clienteNome || fullAtend[0].cliente?.nome || ''
+  async function handleChangeStatus(atendimento, newStatus) {
+    if (saving) return
+    setSaving(true)
+    const { error } = await mutateAtendimento({ id: atendimento.id, payload: { status: newStatus } })
+    if (error) showToast('Erro ao atualizar status: ' + error.message, 'error')
+    else {
+      showToast('Status atualizado. O pagamento foi preservado.')
+      await fetchAtendimentos()
     }
-  }
-
-  const valor = parseFloat(payloadOrAtendimento.valor) || 0
-  const valor2 = parseFloat(payloadOrAtendimento.valor_2) || 0
-  if (valor <= 0 && valor2 <= 0) return
-
-  const dataPag = payloadOrAtendimento.data_hora
-    ? getLocalDateISO(new Date(payloadOrAtendimento.data_hora))
-    : getLocalDateISO()
-
-  const baseDesc = (servicoNome || 'Servico') + ' - ' + petNome + ' (' + clienteNome + ')'
-
-  const entries = []
-
-  if (valor > 0) {
-    entries.push({
-      tipo: 'entrada',
-      categoria: 'Servicos',
-      descricao: baseDesc,
-      valor: valor,
-      data: dataPag,
-      forma_pagamento: payloadOrAtendimento.forma_pagamento || 'pix',
-      banco: payloadOrAtendimento.banco || null,
-      grupo: 'Servicos',
-      atendimento_id: atendimentoId,
-    })
-  }
-
-  if (valor2 > 0 && payloadOrAtendimento.forma_pagamento_2) {
-    entries.push({
-      tipo: 'entrada',
-      categoria: 'Servicos',
-      descricao: baseDesc + ' (2a forma)',
-      valor: valor2,
-      data: dataPag,
-      forma_pagamento: payloadOrAtendimento.forma_pagamento_2,
-      banco: payloadOrAtendimento.banco_2 || payloadOrAtendimento.banco || null,
-      grupo: 'Servicos',
-      atendimento_id: atendimentoId,
-    })
-  }
-
-  if (entries.length > 0) {
-    await supabase.from('financeiro').insert(entries)
-    showToast('Entrada financeira criada automaticamente!')
-  }
-}
-
-async function handleChangeStatus(atendimento, newStatus) {
-    const updates = { status: newStatus }
-
-    if (newStatus === 'concluido') {
-      updates.status_pagamento = 'pago'
-    }
-
-    const { error } = await supabase
-      .from('atendimentos')
-      .update(updates)
-      .eq('id', atendimento.id)
-
-    if (error) {
-      showToast('Erro ao atualizar status.', 'error')
-    } else {
-      showToast(`Status alterado para "${STATUS_LABEL[newStatus]}".`)
-      setAtendimentos((prev) =>
-        prev.map((a) =>
-          a.id === atendimento.id ? { ...a, ...updates } : a
-        )
-      )
-
-      // Auto-create financeiro entry when concluded (prevent duplicates)
-      if (newStatus === 'concluido') {
-        await createFinanceiroFromAtendimento(atendimento.id, atendimento)
-      }
-
-      // Remove financeiro entry when status changes away from concluido
-      if (atendimento.status === 'concluido' && newStatus !== 'concluido') {
-        const { data: finEntry } = await supabase
-          .from('financeiro')
-          .select('id')
-          .eq('atendimento_id', atendimento.id)
-          .limit(1)
-
-        if (finEntry && finEntry.length > 0) {
-          await supabase
-            .from('financeiro')
-            .delete()
-            .eq('id', finEntry[0].id)
-        }
-      }
-    }
+    setSaving(false)
   }
 
   async function handleMarcarPago(atendimento) {
-    const { error } = await supabase
-      .from('atendimentos')
-      .update({ status_pagamento: 'pago' })
-      .eq('id', atendimento.id)
-
-    if (error) {
-      showToast('Erro ao marcar pagamento.', 'error')
-    } else {
+    if (saving) return
+    setSaving(true)
+    const { error } = await mutateAtendimento({ id: atendimento.id, payload: { status_pagamento: 'pago' } })
+    if (error) showToast('Erro ao marcar pagamento: ' + error.message, 'error')
+    else {
       showToast('Pagamento marcado como pago!')
-      setAtendimentos((prev) =>
-        prev.map((a) =>
-          a.id === atendimento.id ? { ...a, status_pagamento: 'pago' } : a
-        )
-      )
+      await fetchAtendimentos()
     }
+    setSaving(false)
   }
 
   async function handleDelete() {
-    if (!deleteId) return
-    const { error } = await supabase
-      .from('atendimentos')
-      .delete()
-      .eq('id', deleteId)
-
-    if (error) {
-      showToast('Erro ao excluir atendimento.', 'error')
-    } else {
-      // Also remove linked financeiro entry
-      await supabase
-        .from('financeiro')
-        .delete()
-        .eq('atendimento_id', deleteId)
-
-      showToast('Atendimento excluido com sucesso!')
-      fetchAtendimentos()
+    if (!deleteId || saving) return
+    setSaving(true)
+    const { error } = await mutateAtendimento({ id: deleteId, remove: true })
+    if (error) showToast('Erro ao excluir atendimento: ' + error.message, 'error')
+    else {
+      showToast('Atendimento e lançamentos vinculados excluídos com sucesso!')
+      await fetchAtendimentos()
     }
     setDeleteId(null)
+    setSaving(false)
   }
 
   const filtered = atendimentos.filter((a) => {
@@ -523,7 +339,6 @@ async function handleChangeStatus(atendimento, newStatus) {
     return counts
   }, [atendimentos])
 
-  const DAY_NAMES = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado']
 
   const groupedByDay = useMemo(() => {
     const groups = []
@@ -889,7 +704,7 @@ async function handleChangeStatus(atendimento, newStatus) {
               {/* Cliente */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Cliente <span className="text-gray-400">(opcional)</span>
+                  Cliente <span className="text-red-500">*</span>
                 </label>
                 <select
                   required
@@ -909,7 +724,7 @@ async function handleChangeStatus(atendimento, newStatus) {
               {/* Pet (filtered by selected client) */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Pet <span className="text-gray-400">(opcional)</span>
+                  Pet <span className="text-red-500">*</span>
                 </label>
                 <select
                   required

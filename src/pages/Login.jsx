@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/useAuthContext'
 import { Mail, Lock, PawPrint, Eye, EyeOff } from 'lucide-react'
 
 export default function Login() {

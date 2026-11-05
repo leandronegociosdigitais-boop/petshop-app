@@ -1,14 +1,16 @@
-﻿import { useState, useEffect, useMemo } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatDate, formatCurrency, formatDateTime, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { formatDate, formatCurrency, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Spinner from '../components/Spinner'
 import EmptyState from '../components/EmptyState'
 import {
   COMISSAO_RATE, FORMA_PAGAMENTO_LABEL, BANCO_LABEL,
   STATUS_BADGE_SIMPLE as STATUS_BADGE_COM, STATUS_LABEL as STATUS_LABEL_COM, DIAS_SEMANA, MESES,
 } from '../lib/constants'
-import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, Landmark, PawPrint, CalendarDays, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { Percent, DollarSign, Calendar, Search, X, ChevronLeft, ChevronRight, PawPrint, CalendarDays } from 'lucide-react'
 
 function getMonthRange(month, year) {
   const start = `${year}-${String(month).padStart(2, '0')}-01`
@@ -27,26 +29,32 @@ export default function Comissoes() {
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(now.getFullYear())
 
-  useEffect(() => { fetchAtendimentos() }, [selectedMonth, selectedYear])
 
   async function fetchAtendimentos() {
     setLoading(true)
     const { start, end } = getMonthRange(selectedMonth, selectedYear)
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
-      .gte('data_hora', start + 'T00:00:00')
-      .lte('data_hora', end + 'T23:59:59')
-      .order('data_hora', { ascending: false })
+      .eq('status', 'concluido')
+      .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
+      .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString())
+      .order('data_hora', { ascending: false }))
     if (error) { showToast('Erro ao carregar comissoes: ' + error.message, 'error') } else { setAtendimentos(data || []) }
     setLoading(false)
   }
+
+  const loadPage = useEffectEvent(() => { fetchAtendimentos() })
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Start the remote request and its loading indicator together.
+    loadPage()
+  }, [selectedMonth, selectedYear])
 
   const monthRange = useMemo(() => getMonthRange(selectedMonth, selectedYear), [selectedMonth, selectedYear])
 
   const filtered = useMemo(() => {
     return atendimentos.filter((a) => {
-      if (a.status === 'cancelado') return false
+      if (a.status !== 'concluido') return false
       const dateStr = a.data_hora ? extractDateKey(a.data_hora) : ''
       if (dateStr < monthRange.start || dateStr > monthRange.end) return false
       if (search.trim()) {

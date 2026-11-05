@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { fetchAllRows } from '../lib/queries'
+import { useState, useEffect, useEffectEvent } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDateTime, formatCurrency } from '../lib/dates'
-import { useToast, Toast } from '../components/Toast'
+import { Toast } from '../components/Toast'
+import { useToast } from '../hooks/useToast'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Spinner from '../components/Spinner'
@@ -56,20 +58,21 @@ export default function Pets() {
   const [historyAtendimentos, setHistoryAtendimentos] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
 
-  useEffect(() => { fetchPets(); fetchClientes() }, [])
+  const loadPage = useEffectEvent(() => { fetchPets(); fetchClientes() })
+  useEffect(() => { loadPage() }, [])
 
   async function fetchPets() {
     setLoading(true)
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('pets')
       .select('id, nome, especie, raca, idade, peso, observacoes, created_at, cliente:cliente_id (id, nome)')
-      .order('nome', { ascending: true })
+      .order('nome', { ascending: true }))
     if (error) { showToast('Erro ao carregar pets: ' + error.message, 'error') } else { setPets(data || []) }
     setLoading(false)
   }
 
   async function fetchClientes() {
-    const { data, error } = await supabase.from('clientes').select('id, nome, codigo').order('nome', { ascending: true })
+    const { data, error } = await fetchAllRows(supabase.from('clientes').select('id, nome, codigo').order('nome', { ascending: true }))
     if (!error) setClientes(data || [])
   }
 
@@ -121,11 +124,12 @@ export default function Pets() {
   async function openHistory(pet) {
     setHistoryPet(pet)
     setHistoryLoading(true)
-    const { data, error } = await supabase
+    const { data, error } = await fetchAllRows(supabase
       .from('atendimentos')
       .select('*, servico:servico_id(id, nome, preco), cliente:cliente_id(id, nome)')
       .eq('pet_id', pet.id)
-      .order('data_hora', { ascending: false })
+      .order('data_hora', { ascending: false }))
+    if (error) showToast('Erro ao carregar histórico: ' + error.message, 'error')
     setHistoryAtendimentos(data || [])
     setHistoryLoading(false)
   }
