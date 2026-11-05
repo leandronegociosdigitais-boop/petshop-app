@@ -24,7 +24,7 @@ A migração define funções e gatilhos e mantém os registros existentes. A fu
 ## Verificações realizadas
 
 - Análise do aplicativo: sem erros nem avisos.
-- Sete testes automatizados: aprovados, incluindo limites de paginação, falha após uma página, registros iguais com IDs diferentes e recuperação da rotina semanal.
+- Nove testes automatizados: aprovados, incluindo limites de paginação, falha após uma página, registros iguais com IDs diferentes e recuperação da rotina semanal.
 - Compilação e geração do PWA: aprovadas. Permanece um aviso sobre o tamanho do pacote inicial.
 - Protótipo da sincronização no banco: aprovado com o papel authenticated, incluindo uma falha financeira injetada para confirmar o desfazimento da alteração do atendimento. Toda a transação de teste foi desfeita.
 - Acesso confirmado no navegador ao Supabase e ao GitHub da conta leandronegociosdigitais-boop.
@@ -39,10 +39,12 @@ Após a instalação, os testes passaram com o papel `authenticated`: serviço p
 
 A publicação da interface utiliza a integração automática entre a branch master do GitHub e a Vercel. O endereço de produção é https://petshop-app-beige.vercel.app. As variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY estão configuradas no ambiente Production da Vercel.
 
-Não foi feita uma restauração sobre dados reais nem um teste das telas com o login de um usuário do aplicativo. O login administrativo do Supabase é uma sessão diferente do login do PetShop.
+O proprietário redefiniu a senha e entrou no aplicativo. Foram conferidos dashboard, clientes, pets, serviços, atendimentos, financeiro, relatórios, comissões e backup, sem alterar registros reais. Os totais mensais conferiram entre as telas, e o download da cópia local incluiu os 2.603 registros exibidos no backup. Não foi feita restauração sobre dados reais.
 
 ## Cuidados de operação
 
 A cópia automática fica neste navegador e pode ser removida se seus dados forem limpos. Exporte um arquivo e mantenha outra cópia em local seguro. A rotina funciona com o aplicativo aberto e conectado; não é um agendamento executado em servidor.
 
 Não há conciliação automática retroativa: lançamentos antigos foram preservados. A nova sincronização é executada quando um atendimento é criado, editado ou excluído.
+
+O gráfico anual do dashboard identifica a receita de serviços e o valor após comissão; esse indicador usa a taxa de comissão configurada no projeto.

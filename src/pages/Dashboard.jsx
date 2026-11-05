@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { getLocalDateISO, formatCurrency } from '../lib/dates'
 import {
   FORMA_PAGAMENTO_LABEL, DOT_COLORS, RANKING_COLORS,
-  MONTH_LABELS, MONTH_NAMES_FULL, WEEKDAYS,
+  MONTH_LABELS, MONTH_NAMES_FULL, WEEKDAYS, COMISSAO_RATE,
 } from '../lib/constants'
 import {
   TrendingUp,
@@ -97,7 +97,7 @@ const CustomTooltipMensal = ({ active, payload, label }) => {
       <p style={{ color: '#6B7280', marginBottom: 4 }}>{label}</p>
       {payload.map((p) => (
         <p key={p.dataKey} style={{ color: p.color, fontWeight: 600 }}>
-          {p.dataKey === 'receita' ? 'Receitas' : 'Lucro Liquido'}: {formatCurrency(p.value)}
+          {p.dataKey === 'receita' ? 'Receita de serviços' : 'Após comissão'}: {formatCurrency(p.value)}
         </p>
       ))}
     </div>
@@ -250,11 +250,11 @@ export default function Dashboard() {
       const chart = []
       for (let m = 0; m < 12; m++) {
         const receita = byMonth[m]
-        const lucro = receita * 0.6
+        const aposComissao = receita * (1 - COMISSAO_RATE)
         chart.push({
           mes: MONTH_LABELS[m],
           receita: Math.round(receita),
-          lucro: Math.round(lucro),
+          aposComissao: Math.round(aposComissao),
         })
       }
       setDadosMensais(chart)
@@ -464,13 +464,13 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ━━━ SECTION 3 — GRAFICO RECEITAS VS LUCRO LIQUIDO ━━━ */}
+      {/* ━━━ SECTION 3 — RECEITA DE SERVICOS E VALOR APOS COMISSAO ━━━ */}
       {loading ? (
         <SkeletonChart />
       ) : (
         <div className="rounded-2xl bg-[#111827] border border-[#1F2937] p-5">
           <h2 className="text-xs uppercase tracking-wider text-gray-400">
-            Receitas vs Lucro Liquido — {currentYear}
+            Receita de serviços e valor após comissão — {currentYear}
           </h2>
           <p className="text-xs text-gray-500 mb-4">Comparativo mensal do ano</p>
           <ResponsiveContainer width="100%" height={220}>
@@ -480,7 +480,7 @@ export default function Dashboard() {
                   <stop offset="0%" stopColor="#34D399" stopOpacity={1} />
                   <stop offset="100%" stopColor="#34D399" stopOpacity={0.3} />
                 </linearGradient>
-                <linearGradient id="gradLucro" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="gradAposComissao" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#6366F1" stopOpacity={1} />
                   <stop offset="100%" stopColor="#6366F1" stopOpacity={0.3} />
                 </linearGradient>
@@ -494,7 +494,7 @@ export default function Dashboard() {
                 wrapperStyle={{ fontSize: 12, color: '#9CA3AF', paddingTop: 12 }}
               />
               <Bar dataKey="receita" name="Receitas" fill="url(#gradReceita)" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
-              <Bar dataKey="lucro" name="Lucro Liquido" fill="url(#gradLucro)" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
+              <Bar dataKey="aposComissao" name="Após comissão" fill="url(#gradAposComissao)" radius={[4, 4, 0, 0]} barSize={16} label={renderBarLabel} />
             </BarChart>
           </ResponsiveContainer>
         </div>
