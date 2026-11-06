@@ -1,4 +1,5 @@
 import { fetchAllRows } from '../lib/queries'
+import { COMMISSION_STATUSES, commissionableAppointments } from '../lib/comissoes'
 import { useState, useEffect, useEffectEvent, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { formatDate, formatCurrency, getLocalDateISO, extractDateKey, getDayOfWeek } from '../lib/dates'
@@ -36,7 +37,7 @@ export default function Comissoes() {
     const { data, error } = await fetchAllRows(supabase
       .from('atendimentos')
       .select('*, pet:pet_id(id, nome, especie), cliente:cliente_id(id, nome), servico:servico_id(id, nome, preco)')
-      .eq('status', 'concluido')
+      .in('status', COMMISSION_STATUSES)
       .gte('data_hora', new Date(start + 'T00:00:00').toISOString())
       .lte('data_hora', new Date(end + 'T23:59:59.999').toISOString())
       .order('data_hora', { ascending: false }))
@@ -53,8 +54,7 @@ export default function Comissoes() {
   const monthRange = useMemo(() => getMonthRange(selectedMonth, selectedYear), [selectedMonth, selectedYear])
 
   const filtered = useMemo(() => {
-    return atendimentos.filter((a) => {
-      if (a.status !== 'concluido') return false
+    return commissionableAppointments(atendimentos).filter((a) => {
       const dateStr = a.data_hora ? extractDateKey(a.data_hora) : ''
       if (dateStr < monthRange.start || dateStr > monthRange.end) return false
       if (search.trim()) {
@@ -162,6 +162,7 @@ export default function Comissoes() {
         <h1 className="text-2xl font-bold text-gray-900">Comissoes</h1>
         <span className="text-sm text-gray-500">(40% dos servicos)</span>
       </div>
+      <p className="text-sm text-gray-600">Inclui serviços em andamento e concluídos, mesmo sem baixa de pagamento. Agendados e cancelados não entram na comissão.</p>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
