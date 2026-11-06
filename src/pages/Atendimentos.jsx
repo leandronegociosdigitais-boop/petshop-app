@@ -514,11 +514,11 @@ export default function Atendimentos() {
         <Spinner />
       ) : filtered.length === 0 ? (
         <EmptyState icon={Calendar} message={
-          search || activeTab !== 'todos'
+          search || filterDate || paymentFilter || serviceFilter || activeTab !== 'todos'
             ? 'Nenhum atendimento encontrado para os filtros aplicados.'
             : 'Nenhum atendimento cadastrado ainda.'
         }>
-          {!search && activeTab === 'todos' && (
+          {!search && !filterDate && !paymentFilter && !serviceFilter && activeTab === 'todos' && (
             <button onClick={openCreateModal} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors">
               <Plus size={16} />
               Agendar primeiro atendimento
