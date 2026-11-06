@@ -166,7 +166,7 @@ export default function Clientes() {
       ) : (
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="mobile-records min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Codigo</th>
@@ -179,28 +179,28 @@ export default function Clientes() {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((cliente) => (
                   <tr key={cliente.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
+                    <td data-label="Código" className="px-6 py-4">
                       <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-700">
                         <Hash size={12} />{cliente.codigo || '—'}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label="Cliente" className="px-6 py-4">
                       <button onClick={() => openHistory(cliente)} className="font-medium text-gray-900 hover:text-indigo-600 transition-colors text-left flex items-center gap-1 group">
                         {cliente.nome}
                         <ChevronRight size={14} className="text-gray-300 group-hover:text-indigo-500 transition-colors" />
                       </button>
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label="Contato" className="px-6 py-4">
                       {cliente.telefone ? (
                         <div className="flex items-center gap-1.5 text-sm text-gray-700"><Phone size={14} className="text-gray-400" /> {cliente.telefone}</div>
                       ) : (<span className="text-sm text-gray-400">—</span>)}
                     </td>
-                    <td className="hidden md:table-cell px-6 py-4">
+                    <td data-label="Endereço" className="hidden md:table-cell px-6 py-4">
                       {cliente.endereco ? (
                         <div className="flex items-center gap-1.5 text-sm text-gray-700"><MapPin size={14} className="text-gray-400 shrink-0" /><span className="truncate max-w-[200px]">{cliente.endereco}</span></div>
                       ) : (<span className="text-sm text-gray-400">—</span>)}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td data-label="Ações" className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {cliente.telefone && (
                           <button onClick={() => openWhatsApp(cliente.telefone)} className="rounded-md p-2.5 text-green-500 hover:bg-green-50 hover:text-green-600 transition-colors" title="WhatsApp"><MessageCircle size={16} /></button>

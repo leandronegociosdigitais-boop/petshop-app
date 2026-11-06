@@ -545,7 +545,7 @@ const tabCounts = useMemo(() => {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2">
+        <div className="mobile-status-tabs flex flex-wrap gap-2">
           {TABS.map((tab) => (
             <button
               key={tab.value}
@@ -718,7 +718,7 @@ const tabCounts = useMemo(() => {
                   </div>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-100">
+                  <table className="mobile-records min-w-full divide-y divide-gray-100">
                     <thead>
                       <tr>
                         <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Tipo</th>
@@ -735,18 +735,18 @@ const tabCounts = useMemo(() => {
                         const isEntrada = registro.tipo === 'entrada'
                         return (
                           <tr key={registro.id} className={`even:bg-gray-50 hover:bg-blue-50 transition-colors ${isEntrada ? 'border-l-2 border-l-emerald-400' : 'border-l-2 border-l-red-400'}`}>
-                            <td className="px-4 py-2.5">
+                            <td data-label="Tipo" className="px-4 py-2.5">
                               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${isEntrada ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}`}>
                                 {isEntrada ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
                                 {isEntrada ? 'Entrada' : 'Saida'}
                               </span>
                             </td>
-                            <td className="px-4 py-2.5">
+                            <td data-label="Pagamento" className="px-4 py-2.5">
                               <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${FORMA_PAGAMENTO_COLORS[registro.forma_pagamento] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>
                                 {FORMA_PAGAMENTO_LABEL[registro.forma_pagamento] || registro.forma_pagamento}
                               </span>
                             </td>
-                            <td className="hidden sm:table-cell px-4 py-2.5">
+                            <td data-label="Grupo" className="hidden sm:table-cell px-4 py-2.5">
                               {registro.grupo ? (
                                 <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${GRUPO_COLORS[registro.grupo] || 'bg-gray-50 text-gray-700 ring-gray-600/20'}`}>
                                   {registro.grupo}
@@ -755,12 +755,12 @@ const tabCounts = useMemo(() => {
                                 <span className="text-xs text-gray-400">{'—'}</span>
                               )}
                             </td>
-                            <td className="px-4 py-2.5 text-sm text-gray-700">{registro.categoria || '—'}</td>
-                            <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{registro.descricao || '—'}{!isEntrada && registro.status_pagamento === 'pendente' && (<span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700"><Bell size={10} />Pendente</span>)}</td>
-                            <td className={`hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold ${isEntrada ? 'text-emerald-700' : 'text-red-600'}`}>
+                            <td data-label="Categoria" className="px-4 py-2.5 text-sm text-gray-700">{registro.categoria || '—'}</td>
+                            <td data-label="Descrição" className="px-4 py-2.5 text-sm font-medium text-gray-900">{registro.descricao || '—'}{!isEntrada && registro.status_pagamento === 'pendente' && (<span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700"><Bell size={10} />Pendente</span>)}</td>
+                            <td data-label="Valor" className={`hidden md:table-cell px-4 py-2.5 text-right text-sm font-semibold ${isEntrada ? 'text-emerald-700' : 'text-red-600'}`}>
                               {isEntrada ? '+' : '-'}{formatCurrency(registro.valor)}
                             </td>
-                            <td className="px-4 py-2.5 text-right">
+                            <td data-label="Ações" className="px-4 py-2.5 text-right">
                               <div className="flex items-center justify-end gap-2">
                                 <button onClick={() => openEditModal(registro)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar">
                                   <Pencil size={14} />

@@ -1,0 +1,55 @@
+/* The desktop layout is intentionally unchanged. */
+.mobile-bottom-nav { display: none; }
+
+@media (max-width: 1023px) {
+  .app-shell { min-height: 100dvh; }
+  .app-main { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); min-width: 0; }
+  .app-mobile-header { padding-top: env(safe-area-inset-top, 0px); height: calc(60px + env(safe-area-inset-top, 0px)); }
+  .app-shell > aside { height: 100dvh; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .app-shell:not(.mobile-menu-open) > aside { visibility: hidden; }
+  .app-shell > aside nav a { min-height: 46px; }
+  .app-mobile-header button, .app-shell > aside button { min-height: 44px; min-width: 44px; }
+  .mobile-bottom-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); position: fixed; inset: auto 0 0; z-index: 30; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid #e5e7eb; background: #fff; box-shadow: 0 -4px 20px #11182708; }
+  .mobile-bottom-nav a, .mobile-bottom-nav button { min-height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #64748b; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .mobile-bottom-nav .mobile-nav-active { color: #4f46e5; background: #eef2ff; }
+  .mobile-menu-open .mobile-bottom-nav { visibility: hidden; }
+  [data-theme="glass"] .mobile-bottom-nav { background: #f5f0ff; border-color: #ddd6fe; }
+  .app-shell :is(button, a, input, select, textarea) { touch-action: manipulation; }
+}
+
+@media (max-width: 639px) {
+  .app-main { padding-left: 12px; padding-right: 12px; }
+  .app-shell input:not([type="checkbox"]):not([type="radio"]), .app-shell select, .app-shell textarea { font-size: 16px; min-height: 44px; min-width: 0; max-width: 100%; }
+  .app-shell button { min-height: 44px; }
+  .app-main .grid > *, .app-main .flex > * { min-width: 0; }
+  .mobile-status-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; scrollbar-width: thin; }
+  .mobile-status-tabs button { flex-shrink: 0; white-space: nowrap; }
+  .app-main .overflow-x-auto { max-width: 100%; overscroll-behavior-x: contain; }
+  .app-main table:not(.mobile-records) :is(th, td) { padding-left: 12px; padding-right: 12px; }
+
+  /* Preserve the same records and handlers, presented as cards only on phones. */
+  .app-main .mobile-records { display: block; width: 100%; min-width: 0; table-layout: auto; }
+  .app-main .mobile-records thead { display: none; }
+  .app-main .mobile-records tbody { display: grid; gap: 12px; padding: 12px; border: 0; }
+  .app-main .mobile-records tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+  .app-main .mobile-records tbody td { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; width: auto; max-width: none; min-width: 0; padding: 0; border: 0; background: transparent; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+  .app-main .mobile-records td::before { content: attr(data-label); font-size: 11px; font-weight: 600; color: #64748b; }
+  .app-main .mobile-records td:first-child, .app-main .mobile-records td:last-child, .app-main .mobile-records td[data-label="Descrição"], .app-main .mobile-records td[data-label="Serviço"], .app-main .mobile-records td[data-label="Endereço"] { grid-column: 1 / -1; }
+  .app-main .mobile-records td:last-child { border-top: 1px solid #f1f5f9; padding-top: 10px; }
+  .app-main .mobile-records td:last-child > div { display: flex; width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+  .app-main .mobile-records td button { min-height: 44px; }
+  .app-main .mobile-records td:last-child button { min-width: 44px; }
+  .app-main .mobile-records .truncate { white-space: normal; overflow: visible; max-width: none; }
+  .app-main .mobile-records td:first-child button { min-height: auto; }
+  [data-theme="glass"] .app-main .mobile-records tbody tr { background: #ffffff73; border-color: var(--glass-border); }
+
+  .app-form-dialog { margin: 0; width: 100%; max-width: none; max-height: 100dvh; height: 100dvh; border-radius: 0; }
+  .app-form-dialog > div:first-child { padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px; flex-shrink: 0; }
+  .app-form-dialog > div:last-child { min-height: 0; overscroll-behavior-y: contain; padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .app-form-dialog input:not([type="checkbox"]):not([type="radio"]), .app-form-dialog select, .app-form-dialog textarea { font-size: 16px; min-height: 44px; }
+  .app-form-dialog form > .grid-cols-2 { grid-template-columns: 1fr; }
+  .app-form-dialog form > .flex:last-child { position: sticky; bottom: calc(-20px - env(safe-area-inset-bottom, 0px)); padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); background: white; z-index: 2; }
+  .app-form-dialog form > .flex:last-child button { flex: 1; justify-content: center; min-height: 46px; }
+  [data-theme="glass"] .app-form-dialog form > .flex:last-child { background: #f5f0ff; }
+  .app-shell .modal-backdrop { backdrop-filter: none; }
+}

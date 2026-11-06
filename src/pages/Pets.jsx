@@ -204,7 +204,7 @@ export default function Pets() {
       ) : (
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="mobile-records min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Pet</th>
@@ -221,7 +221,7 @@ export default function Pets() {
                   const IconComp = ESPECIE_ICON[pet.especie] || PawPrint
                   return (
                     <tr key={pet.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4">
+                      <td data-label="Pet" className="px-6 py-4">
                         <div className="flex items-center gap-2.5">
                           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"><IconComp size={18} /></div>
                           <div>
@@ -233,12 +233,12 @@ export default function Pets() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{pet.cliente?.nome || <span className="text-gray-400">—</span>}</td>
-                      <td className="hidden sm:table-cell px-6 py-4"><span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">{pet.especie}</span></td>
-                      <td className="hidden md:table-cell px-6 py-4 text-sm text-gray-700">{pet.raca || <span className="text-gray-400">—</span>}</td>
-                      <td className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.idade || <span className="text-gray-400">—</span>}</td>
-                      <td className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.peso != null ? `${pet.peso} kg` : <span className="text-gray-400">—</span>}</td>
-                      <td className="px-6 py-4 text-right">
+                      <td data-label="Responsável" className="px-6 py-4 text-sm text-gray-700">{pet.cliente?.nome || <span className="text-gray-400">—</span>}</td>
+                      <td data-label="Espécie" className="hidden sm:table-cell px-6 py-4"><span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">{pet.especie}</span></td>
+                      <td data-label="Raça" className="hidden md:table-cell px-6 py-4 text-sm text-gray-700">{pet.raca || <span className="text-gray-400">—</span>}</td>
+                      <td data-label="Idade" className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.idade || <span className="text-gray-400">—</span>}</td>
+                      <td data-label="Peso" className="hidden lg:table-cell px-6 py-4 text-sm text-gray-700">{pet.peso != null ? `${pet.peso} kg` : <span className="text-gray-400">—</span>}</td>
+                      <td data-label="Ações" className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button onClick={() => openHistory(pet)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Historico"><Calendar size={16} /></button>
                           <button onClick={() => openEditModal(pet)} className="rounded-md p-2.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors" title="Editar"><Pencil size={16} /></button>
