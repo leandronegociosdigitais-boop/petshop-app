@@ -26,10 +26,10 @@
   .mobile-status-tabs button { flex-shrink: 0; white-space: nowrap; }
   .mobile-appointment-heading { flex-wrap: wrap; }
   .mobile-appointment-heading > svg { flex-shrink: 0; }
-  .mobile-appointment-heading > div { margin-left: 0; width: 100%; margin-top: 6px; gap: 8px; }
-  .mobile-appointment-heading > div button { min-width: 44px; flex-shrink: 0; }
+  .mobile-appointment-heading > div { margin-left: 0; width: 100%; margin-top: 6px; gap: 4px; }
+  .app-main .mobile-appointment-heading > div button { min-width: 44px; flex-shrink: 0; }
   .mobile-appointment-heading > div select:first-of-type { flex: 1; }
-  .mobile-appointment-heading > div select:last-of-type { width: 80px; flex-shrink: 0; }
+  .mobile-appointment-heading > div select:last-of-type { width: 76px; flex-shrink: 0; }
   .app-main .overflow-x-auto { max-width: 100%; overscroll-behavior-x: contain; }
   .app-main table:not(.mobile-records) :is(th, td) { padding-left: 12px; padding-right: 12px; }
 
