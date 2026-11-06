@@ -548,7 +548,7 @@ export default function Atendimentos() {
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="mobile-records w-full divide-y divide-gray-100 table-fixed">
+          <table className="mobile-records w-full divide-y divide-gray-100 table-auto">
             <thead>
               <tr className="text-xs uppercase tracking-wide text-gray-500">
                 <th className="px-2 py-2 text-left font-semibold">Pet / Cliente</th>
@@ -558,7 +558,7 @@ export default function Atendimentos() {
                 <th className="hidden lg:table-cell px-2 py-2 text-left font-semibold">Pagamento</th>
                 <th className="hidden xl:table-cell px-2 py-2 text-left font-semibold">Banco</th>
                 <th className="hidden lg:table-cell px-2 py-2 text-right font-semibold">Valor</th>
-                <th className="px-2 py-2 text-right font-semibold">Acoes</th>
+                <th className="w-52 px-2 py-2 text-right font-semibold">Acoes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -641,12 +641,12 @@ export default function Atendimentos() {
                       {atendimento.banco ? (BANCO_LABEL[atendimento.banco] || atendimento.banco) : <span className="text-gray-400">{"\u2014"}</span>}
                     </td>
 
-                    <td data-label="Valor" className="hidden lg:table-cell px-2 py-2 text-right text-sm font-semibold text-indigo-700">
+                    <td data-label="Valor" className="hidden lg:table-cell whitespace-nowrap px-2 py-2 text-right text-sm font-semibold text-indigo-700">
                       {formatCurrency(atendimento.valor)}
                     </td>
 
-                    <td data-label="Ações" className="px-2 py-2 text-right w-[110px] sm:w-auto">
-                      <div className="flex items-center justify-end gap-1 flex-nowrap">
+                    <td data-label="Ações" className="w-52 px-2 py-2 text-right">
+                      <div className="ml-auto flex min-w-[180px] max-w-[240px] flex-wrap items-center justify-end gap-1">
                         {(pagamentoStatus === "pendente" || pagamentoStatus === "vencido") && (
                           <button
                             onClick={() => handleMarcarPago(atendimento)}
