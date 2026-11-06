@@ -1,7 +1,7 @@
 import { supabase } from './supabase'
 
 // Never fall back to multiple browser writes: the database trigger is required.
-export async function mutateAtendimento({ id, payload, remove = false }) {
+export async function mutateAtendimento({ id, payload, remove = false, expectedStatus }) {
   try {
     const { data: ready, error: readinessError } = await supabase.rpc('petshop_finance_sync_ready')
     if (readinessError || ready !== true) {
@@ -11,6 +11,7 @@ export async function mutateAtendimento({ id, payload, remove = false }) {
     if (remove) query = supabase.from('atendimentos').delete().eq('id', id)
     else if (id) query = supabase.from('atendimentos').update(payload).eq('id', id)
     else query = supabase.from('atendimentos').insert([payload])
+    if (id && expectedStatus) query = query.eq('status', expectedStatus)
     return await query.select('id').single()
   } catch (error) {
     return { data: null, error }

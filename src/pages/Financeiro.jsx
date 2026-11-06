@@ -1,3 +1,4 @@
+import { readDashboardLink } from '../lib/dashboard'
 import { fetchAllRows } from '../lib/queries'
 import { useState, useEffect, useEffectEvent, useMemo, useRef } from 'react'
 import { supabase } from '../lib/supabase'
@@ -38,9 +39,10 @@ function getToday() {
 const availableYears = (() => { const c = new Date().getFullYear(); const y = []; for (let i = c - 3; i <= c + 1; i++) y.push(i); return y })()
 
 export default function Financeiro() {
+  const [initialLink] = useState(() => readDashboardLink(window.location.search))
   const [registros, setRegistros] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(initialLink.query)
   const [activeTab, setActiveTab] = useState('todos')
   const [filterCategoria, setFilterCategoria] = useState('')
   const [filterGrupo, setFilterGrupo] = useState('')
@@ -48,14 +50,14 @@ export default function Financeiro() {
   const [dataInicio, setDataInicio] = useState('')
   const [dataFim, setDataFim] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(initialLink.create === 'saida')
   const [editingId, setEditingId] = useState(null)
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState(() => ({ ...EMPTY_FORM, data: initialLink.date || getToday(), tipo: initialLink.create === 'saida' ? 'saida' : 'entrada', status_pagamento: initialLink.create === 'saida' ? 'pendente' : 'pago' }))
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
   const { toast, showToast, closeToast } = useToast()
-  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
+  const [selectedMonth, setSelectedMonth] = useState(() => Number(initialLink.month.slice(5)))
+  const [selectedYear, setSelectedYear] = useState(() => Number(initialLink.month.slice(0, 4)))
   // Ref para rolar até a seção de pendências
   const notificationRef = useRef(null)
 
@@ -370,7 +372,7 @@ const tabCounts = useMemo(() => {
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
             className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
-            {availableYears.map((y) => (
+            {Array.from(new Set([...availableYears, selectedYear])).sort((a, b) => a - b).map((y) => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>
@@ -455,7 +457,7 @@ const tabCounts = useMemo(() => {
                 <div>
                   <p className="font-medium text-gray-900">{r.descricao}</p>
                   <p className="mt-0.5 text-sm text-gray-600">
-                    Vencimento: {r.data} — R$ {parseFloat(r.valor).toFixed(2)}
+                    Vencimento: {r.data_vencimento ? formatDate(r.data_vencimento) : 'Não informado'} — R$ {parseFloat(r.valor).toFixed(2)}
                   </p>
                 </div>
                 <button

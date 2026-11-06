@@ -1,3 +1,4 @@
+import { readDashboardLink, isUnpaid, appointmentAmount } from '../lib/dashboard'
 const DAY_NAMES = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado']
 import { fetchAllRows } from '../lib/queries'
 import { useState, useEffect, useEffectEvent, useMemo } from 'react'
@@ -82,22 +83,25 @@ const TABS = [
 ]
 
 export default function Atendimentos() {
+  const [initialLink] = useState(() => readDashboardLink(window.location.search))
+  const [paymentFilter, setPaymentFilter] = useState(initialLink.payment)
+  const [serviceFilter, setServiceFilter] = useState(initialLink.service)
   const [atendimentos, setAtendimentos] = useState([])
   const [clientes, setClientes] = useState([])
   const [pets, setPets] = useState([])
   const [servicos, setServicos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [activeTab, setActiveTab] = useState('todos')
-  const [filterDate, setFilterDate] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
+  const [search, setSearch] = useState(initialLink.query)
+  const [activeTab, setActiveTab] = useState(initialLink.status)
+  const [filterDate, setFilterDate] = useState(initialLink.date)
+  const [modalOpen, setModalOpen] = useState(initialLink.create === '1')
   const [editingId, setEditingId] = useState(null)
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState(() => ({ ...EMPTY_FORM, data_hora: initialLink.create === '1' && initialLink.date ? initialLink.date + 'T' + new Date().toTimeString().slice(0, 5) : '' }))
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
   const { toast, showToast, closeToast } = useToast()
-  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1)
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear())
+  const [selectedMonth, setSelectedMonth] = useState(() => Number(initialLink.month.slice(5)))
+  const [selectedYear, setSelectedYear] = useState(() => Number(initialLink.month.slice(0, 4)))
 
   const loadPage = useEffectEvent(() => {
     fetchAtendimentos()
@@ -311,6 +315,8 @@ export default function Atendimentos() {
   }
 
   const filtered = atendimentos.filter((a) => {
+    if (paymentFilter && (!isUnpaid(a) || appointmentAmount(a) <= 0)) return false
+    if (serviceFilter && a.servico_id !== serviceFilter) return false
     // Tab filter
     if (activeTab !== 'todos' && a.status !== activeTab) return false
 
@@ -396,7 +402,7 @@ export default function Atendimentos() {
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="rounded-lg border border-gray-300 px-2 py-1 text-sm font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
-              {availableYears.map((y) => (
+              {Array.from(new Set([...availableYears, selectedYear])).sort((a, b) => a - b).map((y) => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
@@ -420,6 +426,11 @@ export default function Atendimentos() {
           Novo Atendimento
         </button>
       </div>
+
+      {(paymentFilter || serviceFilter) && <div className="flex flex-wrap gap-2" aria-label="Filtros aplicados pelo dashboard">
+        {paymentFilter && <button type="button" onClick={() => setPaymentFilter('')} className="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700" aria-label="Limpar filtro de pagamentos pendentes">Pagamentos em aberto <X size={13} /></button>}
+        {serviceFilter && <button type="button" onClick={() => setServiceFilter('')} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs text-indigo-700" aria-label="Limpar filtro de serviço">{servicos.find(row => row.id === serviceFilter)?.nome || 'Serviço selecionado'} <X size={13} /></button>}
+      </div>}
 
       {/* Search + Date Filter + Tabs */}
       <div className="space-y-4">

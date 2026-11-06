@@ -12,7 +12,7 @@ import AnimatedPage from './components/AnimatedPage'
 import Login from './pages/Login'
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
-import Dashboard from './pages/Dashboard'
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 import Clientes from './pages/Clientes'
 import Pets from './pages/Pets'
 import Servicos from './pages/Servicos'
@@ -73,7 +73,7 @@ function App() {
                 }
               >
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<ErrorBoundary><AnimatedPage><Dashboard /></AnimatedPage></ErrorBoundary>} />
+                <Route path="/dashboard" element={<Suspense fallback={<Spinner />}><ErrorBoundary><AnimatedPage><Dashboard /></AnimatedPage></ErrorBoundary></Suspense>} />
                 <Route path="/clientes" element={<ErrorBoundary><AnimatedPage><Clientes /></AnimatedPage></ErrorBoundary>} />
                 <Route path="/pets" element={<ErrorBoundary><AnimatedPage><Pets /></AnimatedPage></ErrorBoundary>} />
                 <Route path="/servicos" element={<ErrorBoundary><AnimatedPage><Servicos /></AnimatedPage></ErrorBoundary>} />
