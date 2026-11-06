@@ -374,7 +374,7 @@ export default function Atendimentos() {
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="mobile-appointment-heading flex items-center gap-2 min-w-0">
           <Calendar size={28} className="text-indigo-600" />
           <h1 className="text-2xl font-bold text-gray-900">Atendimentos</h1>
           <div className="ml-4 flex items-center gap-1">
