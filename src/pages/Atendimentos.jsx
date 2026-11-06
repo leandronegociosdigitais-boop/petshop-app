@@ -848,17 +848,14 @@ export default function Atendimentos() {
                 Pagamento
               </label>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="relative">
-                  <CreditCard
-                    size={15}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  />
+                <div>
                   <select
                     value={form.forma_pagamento}
                     onChange={(e) =>
                       handleFormChange('forma_pagamento', e.target.value)
                     }
-                    className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    aria-label="Forma de pagamento"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   >
                     {FORMA_PAGAMENTO_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
