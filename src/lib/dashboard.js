@@ -54,6 +54,21 @@ export function financialLink(month, query = '') {
   return '/financeiro?' + params
 }
 
+export function buildMonthlyResults(finance, year, now = new Date()) {
+  const today = getLocalDateISO(now)
+  const months = Array.from({ length: 12 }, (_, index) => ({
+    key: `${year}-${String(index + 1).padStart(2, '0')}`,
+    label: new Date(2024, index, 1).toLocaleDateString('pt-BR', { month: 'short' }).replace('.', ''),
+    apurado: 0, despesas: 0,
+  })).filter(row => row.key <= today.slice(0, 7))
+  for (const row of finance) {
+    if (!isRealized(row) || !['entrada', 'saida'].includes(row.tipo) || !dayPattern.test(row.data || '') || row.data > today || row.data.slice(0, 4) !== String(year)) continue
+    const month = months[Number(row.data.slice(5, 7)) - 1]
+    if (month) month[row.tipo === 'entrada' ? 'apurado' : 'despesas'] += cents(row.valor)
+  }
+  return months.map(row => ({ ...row, apurado: row.apurado / 100, despesas: row.despesas / 100, liquido: (row.apurado - row.despesas) / 100 }))
+}
+
 export function buildDashboard(data, month, day, now = new Date()) {
   const today = getLocalDateISO(now)
   const period = monthRange(month)
@@ -121,5 +136,6 @@ export function buildDashboard(data, month, day, now = new Date()) {
     receiveTotal: sum(receivables, row => cents(appointmentAmount(row))), payTotal: sum(bills, row => cents(row.valor)),
     receivables: [...receivables].sort(byDue), bills: [...bills].sort(byDue), overdueReceivables, overdueBills, lateAppointments,
     agenda, agendaCounts, days, annual, services, payments,
+    monthlyResults: buildMonthlyResults(finance, Number(month.slice(0, 4)), now),
   }
 }

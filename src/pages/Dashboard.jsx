@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { AreaChart, Area, BarChart, Bar, ReferenceLine, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { ArrowDownLeft, ArrowUpRight, ArrowRight, CalendarDays, ChevronLeft, ChevronRight, Clock3, Plus, RefreshCw, Scissors, Wallet, CircleAlert, CheckCheck, PawPrint, Users, Receipt, CalendarCheck2 } from 'lucide-react'
 import { fetchDashboardData } from '../lib/dashboard-data'
 import { appointmentsLink, financialLink, buildDashboard, appointmentAmount, shiftDay, shiftMonth } from '../lib/dashboard'
@@ -106,6 +106,14 @@ export default function Dashboard() {
         </section>
 
         {(overdueCount > 0 || model.lateAppointments.length > 0) && <div className="dv-notice"><span className="dv-notice-icon"><CircleAlert size={19} /></span><div><strong>Alguns itens precisam da sua atenção</strong><p>{overdueCount > 0 ? `${overdueCount} pagamento${overdueCount !== 1 ? 's' : ''} com vencimento anterior a hoje` : 'Nenhum pagamento vencido'}{model.lateAppointments.length > 0 ? ` · ${model.lateAppointments.length} atendimento${model.lateAppointments.length !== 1 ? 's' : ''} de dias anteriores ainda em aberto` : ''}.</p></div><a href={overdueCount > 0 ? '#pendencias-dashboard' : appointmentsLink({ date: extractDateKey(model.lateAppointments[0].data_hora), status: model.lateAppointments[0].status })}>Revisar <ArrowRight size={15} /></a></div>}
+
+        <section className="dv-panel dv-cashflow" aria-labelledby="monthly-results-heading">
+          <div className="dv-panel-heading"><div><span className="dv-section-icon dv-cool"><Wallet size={19} /></span><div><h2 id="monthly-results-heading">Apurado e líquido por mês</h2><p>{year} · {year === now.getFullYear() ? 'mês atual até hoje' : 'comparativo anual'}</p></div></div></div>
+          <p style={{ padding: '0 20px', fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>Apurado = entradas recebidas. Líquido = entradas recebidas menos despesas pagas. Pendências ficam fora deste cálculo.</p>
+          <div className="dv-chart-legend"><span><i style={{ background: '#5865ef' }} />Total apurado</span><span><i style={{ background: '#24b6a4' }} />Total líquido</span></div>
+          {model.monthlyResults.some(row => row.apurado || row.despesas) ? <div className="dv-chart" role="img" aria-label={`Comparação mensal de entradas recebidas e resultado líquido em ${year}. Valores detalhados na tabela abaixo.`}><ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 1, height: 1 }}><BarChart data={model.monthlyResults} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}><CartesianGrid stroke="#eef0f6" vertical={false} strokeDasharray="4 5" /><XAxis dataKey="label" axisLine={false} tickLine={false} interval={0} tick={{ fill: '#8b93a6', fontSize: 10 }} /><YAxis tickFormatter={compactNumber} axisLine={false} tickLine={false} width={52} tick={{ fill: '#8b93a6', fontSize: 11 }} /><ReferenceLine y={0} stroke="#cbd5e1" /><Tooltip formatter={value => formatCurrency(value)} labelFormatter={value => `${value} / ${year}`} contentStyle={{ borderRadius: 12, border: '1px solid #eceef6', fontSize: 12 }} /><Bar dataKey="apurado" name="Total apurado" fill="#5865ef" radius={[3, 3, 0, 0]} isAnimationActive={false} /><Bar dataKey="liquido" name="Total líquido" fill="#24b6a4" radius={[3, 3, 0, 0]} isAnimationActive={false} /></BarChart></ResponsiveContainer></div> : <Empty icon={Wallet} title="Sem movimentos realizados neste ano" description="O comparativo aparecerá quando houver entradas recebidas ou despesas pagas." />}
+          <details style={{ padding: '8px 20px 20px', fontSize: 12 }}><summary style={{ cursor: 'pointer', color: '#5865ef' }}>Ver valores de cada mês</summary><div style={{ overflowX: 'auto', marginTop: 12 }}><table style={{ width: '100%', minWidth: 330, textAlign: 'right' }}><thead><tr><th style={{ textAlign: 'left' }}>Mês</th><th>Apurado</th><th>Despesas pagas</th><th>Líquido</th></tr></thead><tbody>{model.monthlyResults.map(row => <tr key={row.key}><th style={{ textAlign: 'left', padding: '8px 0' }}>{row.label}/{year}</th><td>{formatCurrency(row.apurado)}</td><td>{formatCurrency(row.despesas)}</td><td>{formatCurrency(row.liquido)}</td></tr>)}</tbody></table></div></details>
+        </section>
 
         <div className="dv-main-grid">
           <section className="dv-panel dv-agenda" aria-labelledby="agenda-heading">
