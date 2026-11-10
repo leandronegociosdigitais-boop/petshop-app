@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { AreaChart, Area, BarChart, Bar, ReferenceLine, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { LineChart, Line, BarChart, Bar, ReferenceLine, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { ArrowDownLeft, ArrowUpRight, ArrowRight, CalendarDays, ChevronLeft, ChevronRight, Clock3, Plus, RefreshCw, Scissors, Wallet, CircleAlert, CheckCheck, PawPrint, Users, Receipt, CalendarCheck2 } from 'lucide-react'
 import { fetchDashboardData } from '../lib/dashboard-data'
 import { appointmentsLink, financialLink, buildDashboard, appointmentAmount, shiftDay, shiftMonth } from '../lib/dashboard'
@@ -38,7 +38,6 @@ export default function Dashboard() {
   const [day, setDay] = useState(() => getLocalDateISO())
   const [agendaStatus, setAgendaStatus] = useState('todos')
   const [attentionTab, setAttentionTab] = useState('pagar')
-  const [chartScale, setChartScale] = useState('dia')
   const queryClient = useQueryClient()
   const { toast, showToast, closeToast } = useToast()
   const year = Number(month.slice(0, 4))
@@ -79,11 +78,7 @@ export default function Dashboard() {
   const agenda = model?.agenda.filter(row => agendaStatus === 'todos' || row.status === agendaStatus) || []
   const pendingRows = model ? attentionTab === 'pagar' ? model.bills : model.receivables : []
   const overdueCount = model ? model.overdueBills.length + model.overdueReceivables.length : 0
-  const chartData = model
-    ? chartScale === 'dia'
-      ? model.currentMonth ? model.days.filter(row => row.key <= today) : model.days
-      : model.annual.slice(0, year === now.getFullYear() ? now.getMonth() + 1 : 12)
-    : []
+
 
   return <>
     <Toast toast={toast} onClose={closeToast} />
@@ -143,9 +138,11 @@ export default function Dashboard() {
           </section>
         </div>
 
-        <section className="dv-panel dv-cashflow" aria-labelledby="cashflow-heading"><div className="dv-panel-heading"><div><span className="dv-section-icon dv-cool"><Wallet size={19} /></span><div><h2 id="cashflow-heading">Como está seu caixa?</h2><p>{chartScale === 'dia' ? monthLabel(month) : `Visão anual de ${year}`} · somente valores realizados</p></div></div><div className="dv-segment"><button type="button" className={chartScale === 'dia' ? 'is-active' : ''} aria-pressed={chartScale === 'dia'} onClick={() => setChartScale('dia')}>Por dia</button><button type="button" className={chartScale === 'mes' ? 'is-active' : ''} aria-pressed={chartScale === 'mes'} onClick={() => setChartScale('mes')}>Por mês</button></div></div>
-          <div className="dv-chart-legend"><span><i style={{ background: '#5865ef' }} />Entradas</span><span><i style={{ background: '#ef9b75' }} />Saídas pagas</span></div>
-          {chartData.some(row => row.entradas || row.saidas) ? <div className="dv-chart"><ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 1, height: 1 }}><AreaChart data={chartData} margin={{ top: 12, right: 16, left: 0, bottom: 0 }}><defs><linearGradient id="dv-income" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5865ef" stopOpacity={0.18} /><stop offset="100%" stopColor="#5865ef" stopOpacity={0.01} /></linearGradient><linearGradient id="dv-expense" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ef9b75" stopOpacity={0.15} /><stop offset="100%" stopColor="#ef9b75" stopOpacity={0} /></linearGradient></defs><CartesianGrid stroke="#eef0f6" vertical={false} strokeDasharray="4 5" /><XAxis dataKey="label" axisLine={false} tickLine={false} minTickGap={20} tick={{ fill: '#8b93a6', fontSize: 11 }} dy={10} /><YAxis tickFormatter={compactNumber} axisLine={false} tickLine={false} width={52} tick={{ fill: '#8b93a6', fontSize: 11 }} /><Tooltip formatter={value => formatCurrency(value)} labelFormatter={value => chartScale === 'dia' ? `Dia ${value}` : value} contentStyle={{ borderRadius: 12, border: '1px solid #eceef6', fontSize: 12 }} /><Area type="monotone" dataKey="entradas" name="Entradas" stroke="#5865ef" strokeWidth={2.5} fill="url(#dv-income)" /><Area type="monotone" dataKey="saidas" name="Saídas pagas" stroke="#ef9b75" strokeWidth={2} fill="url(#dv-expense)" /></AreaChart></ResponsiveContainer></div> : <Empty icon={Wallet} title="O caixa ainda não teve movimento" description="Entradas e despesas pagas aparecerão aqui quando forem registradas neste período." />}
+        <section className="dv-panel dv-cashflow" aria-labelledby="cashflow-heading">
+          <div className="dv-panel-heading"><div><span className="dv-section-icon dv-cool"><Scissors size={19} /></span><div><h2 id="cashflow-heading">Como estão suas vendas?</h2><p>Vendas acumuladas · serviços concluídos · mesmo período do mês anterior</p></div></div></div>
+          <div className="dv-chart-legend" style={{ flexWrap: 'wrap' }}><span><i style={{ background: '#5865ef' }} />{monthLabel(month)}: {formatCurrency(model.salesComparison.currentTotal)}</span><span><i style={{ background: '#24b6a4' }} />{monthLabel(model.salesComparison.previousMonth)}: {formatCurrency(model.salesComparison.previousTotal)}</span></div>
+          <p style={{ padding: '8px 20px 0', fontSize: 12, color: '#64748b' }}>Do dia 1 ao dia {model.salesComparison.cutoff || '—'} em {monthLabel(month)} e até o dia {model.salesComparison.previousCutoff || '—'} em {monthLabel(model.salesComparison.previousMonth)}. Cada ponto soma as vendas desde o início do mês, incluindo valores ainda a receber.</p>
+          {model.salesComparison.points.length ? <div className="dv-chart" role="img" aria-label="Comparação das vendas acumuladas do mês selecionado e do mês anterior por dia"><ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 1, height: 1 }}><LineChart data={model.salesComparison.points} margin={{ top: 12, right: 16, left: 0, bottom: 0 }}><CartesianGrid stroke="#eef0f6" vertical={false} strokeDasharray="4 5" /><XAxis dataKey="day" axisLine={false} tickLine={false} minTickGap={18} tick={{ fill: '#8b93a6', fontSize: 11 }} tickFormatter={value => String(value).padStart(2, '0')} /><YAxis tickFormatter={compactNumber} axisLine={false} tickLine={false} width={52} tick={{ fill: '#8b93a6', fontSize: 11 }} /><Tooltip formatter={value => formatCurrency(value)} labelFormatter={value => `Acumulado até o dia ${value}`} contentStyle={{ borderRadius: 12, border: '1px solid #eceef6', fontSize: 12 }} /><Line type="linear" dataKey="atual" name={monthLabel(month)} stroke="#5865ef" strokeWidth={3} dot={model.salesComparison.points.length === 1} activeDot={{ r: 5 }} isAnimationActive={false} /><Line type="linear" dataKey="anterior" name={monthLabel(model.salesComparison.previousMonth)} stroke="#24b6a4" strokeWidth={2.5} strokeDasharray="6 4" dot={model.salesComparison.points.length === 1} activeDot={{ r: 5 }} connectNulls={false} isAnimationActive={false} /></LineChart></ResponsiveContainer></div> : <Empty icon={Scissors} title="Este período ainda não começou" description="As vendas aparecerão aqui conforme os serviços forem concluídos." />}
         </section>
 
         <div className="dv-lower-grid"><section className="dv-panel"><div className="dv-panel-heading"><div><span className="dv-section-icon"><Scissors size={19} /></span><div><h2>Os favoritos dos pets</h2><p>Serviços concluídos em {monthLabel(month)}</p></div></div></div>{model.services.length ? <div className="dv-services">{model.services.slice(0, 5).map((service, index) => <Link key={service.id} to={appointmentsLink({ month, status: 'concluido', service: service.id === 'outros' ? '' : service.id })} className="dv-service"><span className="dv-rank">{String(index + 1).padStart(2, '0')}</span><div><div className="dv-service-title"><strong>{service.name}</strong><span>{service.count} <small>serviços</small></span></div><div className="dv-service-bar"><i style={{ width: `${service.count / model.services[0].count * 100}%`, background: palette[index] }} /></div></div><span className="dv-service-amount">{formatCurrency(service.revenue)}</span></Link>)}</div> : <Empty icon={Scissors} title="Os favoritos vão aparecer aqui" description="Conclua atendimentos neste mês para acompanhar seus serviços mais procurados." />}</section>

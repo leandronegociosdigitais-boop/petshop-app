@@ -69,6 +69,30 @@ export function buildMonthlyResults(finance, year, now = new Date()) {
   return months.map(row => ({ ...row, apurado: row.apurado / 100, despesas: row.despesas / 100, liquido: (row.apurado - row.despesas) / 100 }))
 }
 
+export function buildSalesComparison(appointments, month, now = new Date()) {
+  const today = getLocalDateISO(now)
+  const previousMonth = shiftMonth(month, -1)
+  const lastDay = Number(monthRange(month).end.slice(8))
+  const previousLastDay = Number(monthRange(previousMonth).end.slice(8))
+  const cutoff = month > today.slice(0, 7) ? 0 : month === today.slice(0, 7) ? Number(today.slice(8)) : lastDay
+  const daily = Array.from({ length: cutoff }, (_, index) => ({ day: index + 1, atual: 0, anterior: index < previousLastDay ? 0 : null }))
+  for (const row of appointments) {
+    if (row.status !== 'concluido') continue
+    const date = extractDateKey(row.data_hora)
+    const day = Number(date.slice(8))
+    if (!day || day > cutoff || day > lastDay && date.slice(0, 7) === month) continue
+    const key = date.slice(0, 7) === month ? 'atual' : date.slice(0, 7) === previousMonth ? 'anterior' : null
+    if (key && daily[day - 1]?.[key] !== null) daily[day - 1][key] += cents(appointmentAmount(row))
+  }
+  let atual = 0, anterior = 0
+  const points = daily.map(row => {
+    atual += row.atual
+    if (row.anterior !== null) anterior += row.anterior
+    return { day: row.day, atual: atual / 100, anterior: row.anterior === null ? null : anterior / 100 }
+  })
+  return { month, previousMonth, cutoff, previousCutoff: Math.min(cutoff, previousLastDay), points, currentTotal: atual / 100, previousTotal: anterior / 100 }
+}
+
 export function buildDashboard(data, month, day, now = new Date()) {
   const today = getLocalDateISO(now)
   const period = monthRange(month)
@@ -137,5 +161,6 @@ export function buildDashboard(data, month, day, now = new Date()) {
     receivables: [...receivables].sort(byDue), bills: [...bills].sort(byDue), overdueReceivables, overdueBills, lateAppointments,
     agenda, agendaCounts, days, annual, services, payments,
     monthlyResults: buildMonthlyResults(finance, Number(month.slice(0, 4)), now),
+    salesComparison: buildSalesComparison(appointments, month, now),
   }
 }
