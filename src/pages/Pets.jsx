@@ -27,7 +27,8 @@ const ESPECIE_OPTIONS = ['Cachorro', 'Gato', 'Passaro', 'Roedor', 'Outro']
 const RACAS_CACHORRO = [
   'Shih Tzu', 'Yorkshire Terrier', 'Spitz Alemao', 'Golden Retriever',
   'Labrador Retriever', 'Bulldog Frances', 'Poodle', 'Pinscher',
-  'Dachshund', 'Border Collie', 'Pastor Alemao', 'Rottweiler',
+  'Dachshund', 'Salsicha (Dachshund)', 'Pug', 'Husky Siberiano', 'Lhasa Apso',
+  'Border Collie', 'Pastor Alemao', 'Rottweiler',
   'Maltes', 'Beagle', 'American Bully', 'Chow Chow', 'Pit Bull', 'Vira-lata', 'Outro',
 ]
 

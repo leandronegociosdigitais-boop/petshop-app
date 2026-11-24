@@ -88,6 +88,9 @@ export default function Atendimentos() {
   const [serviceFilter, setServiceFilter] = useState(initialLink.service)
   const [atendimentos, setAtendimentos] = useState([])
   const [clientes, setClientes] = useState([])
+  const [clienteSearch, setClienteSearch] = useState('')
+  const normalizeName = value => (value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim()
+  const matchingClientes = clientes.filter(cliente => normalizeName(cliente.nome).includes(normalizeName(clienteSearch)))
   const [pets, setPets] = useState([])
   const [servicos, setServicos] = useState([])
   const [loading, setLoading] = useState(true)
@@ -165,12 +168,14 @@ export default function Atendimentos() {
   }
 
   function openCreateModal() {
+    setClienteSearch('')
     setEditingId(null)
     setForm(EMPTY_FORM)
     setModalOpen(true)
   }
 
   function openEditModal(atendimento) {
+    setClienteSearch('')
     setEditingId(atendimento.id)
     setForm({
       cliente_id: atendimento.cliente_id || '',
@@ -192,6 +197,7 @@ export default function Atendimentos() {
   }
 
   function closeModal() {
+    setClienteSearch('')
     setModalOpen(false)
     setEditingId(null)
     setForm(EMPTY_FORM)
@@ -714,22 +720,35 @@ export default function Atendimentos() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Cliente */}
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label htmlFor="atendimento-cliente" className="mb-1 block text-sm font-medium text-gray-700">
                   Cliente <span className="text-red-500">*</span>
                 </label>
+                <input
+                  type="search"
+                  aria-label="Buscar cliente pelo nome"
+                  aria-controls="atendimento-cliente"
+                  value={clienteSearch}
+                  onChange={(event) => setClienteSearch(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('atendimento-cliente')?.focus() } }}
+                  placeholder="Digite o nome do cliente para buscar..."
+                  className="mb-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
                 <select
+                  id="atendimento-cliente"
                   required
                   value={form.cliente_id}
                   onChange={(e) => handleFormChange('cliente_id', e.target.value)}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="">Selecione o cliente</option>
-                  {clientes.map((c) => (
+                  {form.cliente_id && !matchingClientes.some(cliente => cliente.id === form.cliente_id) && <option value={form.cliente_id}>{clientes.find(cliente => cliente.id === form.cliente_id)?.nome || 'Cliente selecionado'} (selecionado)</option>}
+                  {matchingClientes.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.nome}
                     </option>
                   ))}
                 </select>
+                {clienteSearch.trim() && <p className="mt-1 text-xs text-gray-500" role="status">{matchingClientes.length ? `${matchingClientes.length} cliente(s) encontrado(s). Selecione o nome na lista.` : 'Nenhum cliente encontrado. Tente outro nome.'}</p>}
               </div>
 
               {/* Pet (filtered by selected client) */}
